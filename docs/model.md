@@ -39,6 +39,8 @@ erDiagram
     numeric masti
     uuid ko_je_uneo FK
     timestamptz kreirano
+    uuid izmenio FK "poslednji koji je menjao"
+    timestamptz izmenjeno
   }
   UNOS {
     uuid id PK
@@ -58,7 +60,7 @@ erDiagram
 
 ## Odluke
 - **Korisnici** su Supabase `auth.users` (email, hešovana lozinka); `profil` je 1:1 sa njima.
-- **Proizvodi su zajednički**: svi čitaju, svako dodaje, menja/briše samo `ko_je_uneo`.
+- **Proizvodi su zajednički** (samo ulogovani korisnici): svi čitaju, dodaju i menjaju; briše samo `ko_je_uneo`. `izmenio`/`izmenjeno` pamte poslednju izmenu.
 - **Unosi su privatni**: RLS dozvoljava samo `korisnik_id = auth.uid()`. Isto važi za `profil`.
 - **Snapshot**: unos kopira ime i vrednosti (već izračunate za količinu), pa izmena proizvoda ne menja istoriju, a dnevni zbir je prost `SUM`.
 - **Datum** šalje app (lokalni datum korisnika), ne server.

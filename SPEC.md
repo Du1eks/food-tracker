@@ -5,7 +5,7 @@
 ### Funkcionalni
 - Registracija i login
 - Profil: visina, težina, godine, pol, cilj (smršati / održavati / bulk), treninzi nedeljno, koraci dnevno → izračun dnevnog cilja (kcal + makrosi, Mifflin-St Jeor)
-- Zajednička baza proizvoda: svi vide sve, dodaje svako, menja/briše samo ko ga je uneo; pretraga pre dodavanja (protiv duplikata)
+- Zajednička baza proizvoda: ulogovani korisnici čitaju, dodaju i menjaju, briše samo ko ga je uneo, pamti se ko je poslednji menjao; pretraga pre dodavanja (protiv duplikata)
 - Unos obroka: izaberi proizvod + količina (g ili komad); ako proizvoda nema, unese ga ručno (vrednosti na 100 g / po komadu) i on ulazi u zajedničku bazu
 - Pretraga namirnice: prvo naša baza, pa Open Food Facts (besplatno, bez ključa); korisnik potvrdi/ispravi vrednosti i proizvod se čuva u zajedničku bazu
 - Izmena i brisanje unosa
