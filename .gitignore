@@ -1,0 +1,28 @@
+# Tajne i ključevi
+.env
+.env.*
+!.env.example
+
+# Node / Vite
+node_modules/
+dist/
+*.local
+
+# Tauri
+src-tauri/target/
+
+# Supabase lokalno
+supabase/.temp/
+supabase/.branches/
+
+# Logovi
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Claude Code lokalna podešavanja
+.claude/settings.local.json
