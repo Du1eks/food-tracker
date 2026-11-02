@@ -1,0 +1,18 @@
+.nalog { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr; }
+.nalog-traka {
+  background: var(--zelena); color: var(--tekst);
+  padding: 28px clamp(16px, 5vw, 64px) 32px;
+  border-top: 12px solid var(--tekst);
+}
+.nalog-ime { font-weight: 800; font-size: 18px; }
+.nalog-traka h1 { font-weight: 900; font-size: clamp(56px, 10vw, 112px); line-height: 0.95; letter-spacing: -0.03em; margin-top: 18px; }
+.nalog-opis { font-size: 20px; font-weight: 600; margin-top: 10px; }
+.nalog-panel { padding: 32px clamp(16px, 5vw, 64px) 48px; }
+.nalog-forma {
+  max-width: 440px; display: grid; gap: 18px;
+  background: var(--bela); border-radius: var(--r); padding: 24px;
+  box-shadow: var(--senka);
+}
+.nalog-forma .dugme.glavno { width: 100%; }
+.nalog-linkovi { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.nalog-linkovi > span { color: var(--sivi-tekst); font-weight: 600; }

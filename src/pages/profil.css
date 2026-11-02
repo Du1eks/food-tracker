@@ -1,0 +1,8 @@
+.profil { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 1100px; }
+.profil fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.formula {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  background: var(--mint); border-radius: var(--r); padding: 12px 12px 12px 14px;
+}
+.odjava { gap: 8px; justify-self: start; color: var(--sivi-tekst); }
+@media (max-width: 960px) { .profil { grid-template-columns: 1fr; } }

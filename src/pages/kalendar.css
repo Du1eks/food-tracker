@@ -1,0 +1,35 @@
+.kal-red { flex-wrap: wrap; }
+.kal-legenda { margin-left: auto; color: var(--sivi-tekst); font-weight: 600; }
+.kal { padding: 0 clamp(16px, 4vw, 32px) 48px; display: grid; gap: 12px; }
+.kal-mreza {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px;
+}
+.kal-dan-ime { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sivi-tekst); padding: 0 4px 4px; }
+.kal-polje {
+  position: relative; display: flex; flex-direction: column; justify-content: space-between;
+  aspect-ratio: 1 / 0.82; padding: 10px 12px 14px; border-radius: var(--r);
+  background: var(--bela); text-decoration: none; overflow: hidden;
+  border: 2px solid transparent;
+}
+a.kal-polje:hover { border-color: var(--tekst); }
+.kal-polje.ima { box-shadow: var(--senka); }
+.kal-polje.danas { border-color: var(--tekst); }
+.kal-polje.danas .kal-broj { background: var(--tekst); color: var(--bela); border-radius: 4px; padding: 0 6px; }
+.kal-polje.buduci { background: transparent; border: 2px dashed var(--spolja); color: var(--sivi-tekst); }
+.kal-broj { font-weight: 800; font-size: 18px; align-self: flex-start; }
+.kal-kcal { font-weight: 900; font-size: clamp(18px, 2.2vw, 30px); line-height: 1; letter-spacing: -0.02em; }
+.kal-kcal small { font-size: 0.5em; font-weight: 700; letter-spacing: 0; }
+/* traka napretka do cilja, kao zeleni pano na dnu polja */
+.kal-traka { position: absolute; left: 0; bottom: 0; height: 6px; width: 100%; background: var(--pozadina); }
+.kal-traka::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--p); background: var(--zelena); }
+
+@media (max-width: 640px) {
+  .kal-mreza { gap: 4px; }
+  .kal-polje { aspect-ratio: auto; min-height: 64px; padding: 6px 6px 10px; }
+  .kal-broj { font-size: 14px; }
+  .kal-kcal small { display: none; }
+  .kal-kcal { font-size: 14px; }
+  .kal-dan-ime { font-size: 11px; padding: 0 2px 2px; }
+  .kal-legenda { margin-left: 0; width: 100%; font-size: 14px; }
+}

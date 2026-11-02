@@ -49,6 +49,7 @@ erDiagram
     date datum "lokalni datum korisnika"
     text obrok "dorucak / rucak / vecera / uzina"
     numeric kolicina "g ili komada"
+    text jedinica "100g ili komad"
     text ime "snapshot"
     numeric kcal "snapshot"
     numeric proteini "snapshot"

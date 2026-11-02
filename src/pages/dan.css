@@ -1,0 +1,119 @@
+/* Traka ostatka: zeleni pano, crni tekst, lepi se uz vrh */
+.traka {
+  position: sticky; top: 0; z-index: 5;
+  background: var(--zelena); color: var(--tekst);
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: clamp(20px, 4vw, 48px);
+  padding: 18px clamp(16px, 4vw, 32px);
+  box-shadow: 0 8px 20px -14px rgb(17 19 17 / 0.6);
+}
+.traka-oznaka { font-weight: 700; font-size: 18px; }
+.traka-broj { font-weight: 900; font-size: clamp(56px, 7vw, 96px); line-height: 0.95; letter-spacing: -0.03em; }
+.traka-broj small { font-size: 0.36em; font-weight: 700; letter-spacing: 0; margin-left: 8px; }
+.traka-sitno { font-weight: 600; margin-top: 4px; }
+.traka-makrosi { display: flex; gap: clamp(20px, 3vw, 40px); margin: 0; }
+.traka-makrosi dt { font-weight: 700; font-size: 15px; }
+.traka-makrosi dd { margin: 4px 0 0; font-weight: 800; font-size: clamp(26px, 3vw, 40px); line-height: 1; }
+.traka-strelica { width: 72px; height: 72px; }
+.traka-strelica:hover { background: #2a2e2a; }
+.traka-profil { background: var(--tekst); color: var(--bela); border-color: var(--tekst); }
+.traka-profil:hover { background: #2a2e2a; }
+.traka-profil .plocica { background: var(--bela); color: var(--tekst); }
+
+/* Potpis: brojka se preispiše kao traka na tabli */
+@media (prefers-reduced-motion: no-preference) {
+  .preklop { display: inline-block; animation: preklop 520ms cubic-bezier(0.16, 1, 0.3, 1); }
+}
+@keyframes preklop {
+  from { clip-path: inset(0 0 100% 0); transform: translateY(-0.18em); filter: blur(2px); }
+  to { clip-path: inset(0 0 0 0); transform: none; filter: none; }
+}
+
+.dan-red { display: flex; align-items: center; gap: 12px; padding: 18px clamp(16px, 4vw, 32px); }
+.dan-red h1 { font-size: clamp(22px, 2.4vw, 28px); font-weight: 800; }
+.dan-red .plocica { width: 36px; height: 36px; }
+.dan-oznaka { background: var(--tekst); color: var(--bela); font-weight: 700; font-size: 14px; padding: 3px 10px; border-radius: 999px; }
+
+.dan {
+  display: grid; grid-template-columns: minmax(340px, 440px) 1fr; gap: 24px; align-items: start;
+  padding: 0 clamp(16px, 4vw, 32px) 48px;
+}
+
+/* Panel sa crnom glavom, kao tabla "sledeća odluka" */
+.panel { background: var(--bela); border-radius: var(--r); overflow: hidden; box-shadow: var(--senka); }
+.panel-glava {
+  display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+  background: var(--tekst); color: var(--bela); font-size: 20px; font-weight: 700;
+}
+.panel-glava .plocica { width: 32px; height: 32px; }
+.panel-telo { padding: 18px; display: grid; gap: 16px; }
+
+.pretraga { display: flex; gap: 8px; }
+.pretraga .plocica { width: 48px; height: 48px; border: 0; cursor: pointer; }
+.pretraga .plocica:hover { background: #2a2e2a; }
+.tiho-tekst { color: var(--sivi-tekst); font-weight: 600; font-size: 15px; }
+.prazno { padding: 12px 0; }
+
+.rezultati { display: grid; gap: 8px; }
+.rezultati ul { list-style: none; margin: 0; padding: 0; border: 1px solid var(--spolja); border-radius: var(--r); }
+.rezultati li + li { border-top: 1px solid var(--spolja); }
+.rezultati li button {
+  width: 100%; display: flex; justify-content: space-between; gap: 12px; text-align: left;
+  padding: 12px 14px; background: none; border: 0; cursor: pointer;
+}
+.rezultati li button:hover { background: var(--mint); }
+.rezultati small, .izabran small { display: block; color: var(--sivi-tekst); font-size: 13px; font-weight: 500; }
+.rezultati li button > span:last-child { text-align: right; font-weight: 700; white-space: nowrap; }
+.rezultati-dalje { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.unos-forma { display: grid; gap: 16px; }
+.unos-forma fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.izabran {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--mint); border-radius: var(--r); padding: 12px 12px 12px 14px;
+}
+.izabran .plocica { width: 36px; height: 36px; border: 0; cursor: pointer; }
+.dva { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end; }
+.daje { height: 48px; display: flex; align-items: center; padding: 0 14px; border-radius: var(--r); background: var(--pozadina); font-weight: 800; font-size: 20px; }
+.unos-forma .dugme.glavno { width: 100%; }
+
+/* Tabela dana */
+.dan-tabela { background: var(--bela); border-radius: var(--r); padding: 8px 24px 16px; box-shadow: var(--senka); display: grid; gap: 12px; }
+.tabela { width: 100%; border-collapse: collapse; }
+.tabela th, .tabela td { padding: 12px 8px; text-align: right; }
+.tabela th:first-child, .tabela td:first-child { text-align: left; padding-left: 0; }
+.tabela thead th { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sivi-tekst); }
+.tabela .grupa th, .tabela .grupa td {
+  border-top: var(--okvir); padding-top: 18px; font-weight: 800; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.tabela .grupa td { color: var(--sivi-tekst); text-transform: none; letter-spacing: 0; font-weight: 700; }
+.tabela .red td { border-top: 1px solid var(--pozadina); }
+.tabela tfoot th, .tabela tfoot td { border-top: var(--okvir); font-weight: 900; font-size: 18px; }
+.mak-mob { display: none; }
+.akcije { white-space: nowrap; width: 1%; padding-right: 0 !important; }
+.ikona {
+  width: 36px; height: 36px; display: inline-grid; place-items: center; border-radius: 4px;
+  border: 0; background: none; cursor: pointer; color: var(--sivi-tekst);
+}
+.ikona:hover { background: var(--tekst); color: var(--bela); }
+@media (hover: hover) {
+  .red .akcije .ikona { opacity: 0; }
+  .red:hover .akcije .ikona, .red:focus-within .akcije .ikona { opacity: 1; }
+}
+.unos.mali { height: 38px; width: 90px; font-size: 16px; padding: 0 10px; text-align: right; }
+.prazno-dan { padding: 32px 0; display: grid; gap: 6px; }
+
+@media (max-width: 960px) {
+  .dan { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .traka { grid-template-columns: 1fr auto; gap: 8px 16px; padding: 12px 16px; }
+  .traka-makrosi { grid-column: 1 / -1; grid-row: 2; justify-content: space-between; }
+  .traka-makrosi dt { font-size: 13px; }
+  .traka-strelica { width: 52px; height: 52px; }
+  .traka-sitno { font-size: 14px; }
+  .traka-profil { grid-column: 1 / -1; }
+  .dan-tabela { padding: 4px 14px 12px; }
+  .tabela .mak { display: none; }
+  .mak-mob { display: block; color: var(--sivi-tekst); font-size: 13px; }
+  .tabela th, .tabela td { padding: 10px 6px; }
+}
