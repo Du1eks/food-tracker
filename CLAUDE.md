@@ -19,7 +19,8 @@ Projekat je ujedno **vežba za učenje system design-a**, pre većeg projekta (l
 5. Autentifikacija i dozvole (ko šta vidi)
 6. Skaliranje i održavanje
 
-Trenutno smo na: **Korak 6 — Skaliranje i održavanje** (Korak 1: SPEC.md, 2: docs/model.md, 3: docs/arhitektura.md, 4: docs/api.md, 5: docs/dozvole.md).
+Plan učenja završen (Korak 1: SPEC.md, 2: docs/model.md, 3: docs/arhitektura.md, 4: docs/api.md, 5: docs/dozvole.md, 6: docs/skaliranje.md).
+Sledeće: **pravljenje MVP-a** (Supabase projekat, migracije, prve tabele).
 
 ## Stack
 Princip: **jedan backend, više klijenata** (isti pristup planiramo za logistički softver).
