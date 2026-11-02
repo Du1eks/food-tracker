@@ -3,7 +3,7 @@
 ## Zahtevi (Korak 1)
 
 ### Funkcionalni
-- Registracija i login
+- Registracija i login: email + lozinka; korisnik ostaje ulogovan posle zatvaranja app-a (refresh token), dugme "Odjavi se"; reset lozinke preko email linka
 - Profil: visina, težina, godine, pol, cilj (smršati / održavati / bulk), treninzi nedeljno, koraci dnevno → izračun dnevnog cilja (kcal + makrosi, Mifflin-St Jeor)
 - Zajednička baza proizvoda: ulogovani korisnici čitaju, dodaju i menjaju, briše samo ko ga je uneo, pamti se ko je poslednji menjao; pretraga pre dodavanja (protiv duplikata)
 - Unos obroka: izaberi proizvod + količina (g ili komad); ako proizvoda nema, unese ga ručno (vrednosti na 100 g / po komadu) i on ulazi u zajedničku bazu
