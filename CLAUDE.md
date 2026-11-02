@@ -19,7 +19,7 @@ Projekat je ujedno **vežba za učenje system design-a**, pre većeg projekta (l
 5. Autentifikacija i dozvole (ko šta vidi)
 6. Skaliranje i održavanje
 
-Trenutno smo na: **Korak 2 — Model podataka** (Korak 1 završen, vidi SPEC.md).
+Trenutno smo na: **Korak 3 — Arhitektura** (Korak 1: SPEC.md, Korak 2: docs/model.md).
 
 ## Stack
 Princip: **jedan backend, više klijenata** (isti pristup planiramo za logistički softver).
