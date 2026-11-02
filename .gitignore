@@ -26,3 +26,7 @@ Thumbs.db
 
 # Claude Code lokalna podešavanja
 .claude/settings.local.json
+
+# Lokalne beleške (ne idu na GitHub)
+CLAUDE.md
+SPEC.md
