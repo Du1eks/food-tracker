@@ -9,6 +9,7 @@ Autentifikacija (ko si) = Supabase Auth, JWT token. Autorizacija (šta smeš) = 
 | `profil` | vlasnik | trigger pri registraciji | vlasnik | — (briše se sa nalogom, cascade) |
 | `proizvod` | svi | svi | svi | samo `ko_je_uneo` |
 | `unos` | vlasnik | vlasnik | vlasnik | vlasnik |
+| `prijateljstvo` | oba (`ko_salje` i `ko_prima`) | samo `ko_salje`, status mora biti `na_cekanju` | samo `ko_prima`, samo kolona `status`, samo `na_cekanju` → `prihvaceno` | oba |
 
 ## Zamke i kako su zatvorene
 - **Tuđi `korisnik_id` u unosu**: `with check (korisnik_id = auth.uid())` proverava red posle insert/update.
@@ -52,4 +53,60 @@ end $$;
 
 create trigger proizvod_revizija before insert or update on proizvod
   for each row execute function proizvod_revizija();
+```
+
+## Prijatelji (skica)
+Zamke:
+- **Insert kao prihvaćeno**: bez `with check (status = 'na_cekanju')` možeš sam sebi "prihvatiti" prijateljstvo.
+- **Menjanje para**: RLS ne vidi kolone, pa to rešava `GRANT UPDATE (status)` (nivo kolone): `ko_salje`, `ko_prima` i `kreirano` se ne mogu menjati. `WITH CHECK` dozvoljava samo prelaz `na_cekanju` → `prihvaceno`, i samo primaocu. Trigger nije potreban.
+- **Pozivanje funkcija bez naloga**: Supabase daje `execute` i `anon`-u po defaultu, pa se skida eksplicitno (`revoke ... from public, anon`).
+- **Nadimak pri registraciji**: `nadimak_slobodan()` sme i `anon`, jer korisnik još nije ulogovan; otkriva samo da li je nadimak zauzet.
+- **Prijatelj vidi obroke**: `unos` ostaje samo vlasniku; prijatelj dobija samo zbir kroz funkciju (`security definer`, izvršava se sa pravima vlasnika baze), koja sama proverava prijateljstvo.
+- **Nabrajanje korisnika**: pretraga vraća samo tačno poklapanje nadimka (bez `like`/početka reči), pa niko ne može da izlista sve naloge.
+- **Zbir "danas"**: datum šalje app. Prijatelj u drugoj vremenskoj zoni može imati drugačiji "danas"; za ~50 korisnika prihvatljivo.
+
+```sql
+alter table prijateljstvo enable row level security;
+
+create policy "prijateljstvo citanje" on prijateljstvo for select
+  using (auth.uid() in (ko_salje, ko_prima));
+create policy "prijateljstvo zahtev" on prijateljstvo for insert
+  with check (ko_salje = auth.uid() and status = 'na_cekanju');
+create policy "prijateljstvo prihvatanje" on prijateljstvo for update
+  using (ko_prima = auth.uid() and status = 'na_cekanju')
+  with check (ko_prima = auth.uid() and status = 'prihvaceno');
+create policy "prijateljstvo brisanje" on prijateljstvo for delete
+  using (auth.uid() in (ko_salje, ko_prima));
+
+-- samo status se sme menjati (nivo kolone, ne reda)
+grant update (status) on prijateljstvo to authenticated;
+
+-- pretraga: tačno poklapanje nadimka, samo id i nadimak
+create function nadji_po_nadimku(trazeni text)
+returns table (id uuid, nadimak text)
+language sql stable security definer set search_path = public as $$
+  select id, nadimak from profil
+  where lower(nadimak) = lower(trazeni) and id <> auth.uid();
+$$;
+
+-- zbir za dan: ja + prihvaćeni prijatelji; rang računa app iz procenta
+create function dnevni_zbir_prijatelja(d date)
+returns table (id uuid, nadimak text, kcal numeric, proteini numeric, uh numeric, masti numeric, procenat numeric)
+language sql stable security definer set search_path = public as $$
+  select p.id, p.nadimak,
+         coalesce(sum(u.kcal), 0), coalesce(sum(u.proteini), 0),
+         coalesce(sum(u.uh), 0), coalesce(sum(u.masti), 0),
+         least(coalesce(sum(u.kcal), 0) / nullif(p.cilj_kcal, 0), 1)
+  from profil p
+  left join unos u on u.korisnik_id = p.id and u.datum = d
+  where p.id = auth.uid()
+     or exists (select 1 from prijateljstvo f
+                where f.status = 'prihvaceno'
+                  and ((f.ko_salje = auth.uid() and f.ko_prima = p.id)
+                    or (f.ko_prima = auth.uid() and f.ko_salje = p.id)))
+  group by p.id;
+$$;
+
+revoke execute on function nadji_po_nadimku, dnevni_zbir_prijatelja from public;
+grant  execute on function nadji_po_nadimku, dnevni_zbir_prijatelja to authenticated;
 ```

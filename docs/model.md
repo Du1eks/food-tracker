@@ -13,6 +13,7 @@ erDiagram
   }
   PROFIL {
     uuid id PK,FK "isti kao auth id"
+    text nadimak "unique, 3-20 znakova, bira se pri registraciji"
     text ime
     text pol "m / z"
     date datum_rodjenja
@@ -42,6 +43,14 @@ erDiagram
     uuid izmenio FK "poslednji koji je menjao"
     timestamptz izmenjeno
   }
+  PROFIL ||--o{ PRIJATELJSTVO : "salje zahtev"
+  PROFIL ||--o{ PRIJATELJSTVO : "prima zahtev"
+  PRIJATELJSTVO {
+    uuid ko_salje PK,FK
+    uuid ko_prima PK,FK
+    text status "na_cekanju / prihvaceno"
+    timestamptz kreirano
+  }
   UNOS {
     uuid id PK
     uuid korisnik_id FK
@@ -68,4 +77,9 @@ erDiagram
 - **Datum rođenja umesto godina**: ne čuvamo izvedene podatke koji zastarevaju.
 - **Dnevni cilj** se čuva u profilu (popunjava formula Mifflin-St Jeor, korisnik može ručno da promeni). Bez istorije ciljeva u MVP-u.
 - **Obrok** je kolona u `unos`, ne zasebna tabela.
+- **Nadimak** je kolona u `profil` sa `UNIQUE`; upis se poredi bez obzira na velika/mala slova (unique indeks na `lower(nadimak)`), da "Miki" i "miki" nisu dva nadimka.
+- **Prijateljstvo** je jedan red po paru (ne dva): `ko_salje` šalje zahtev, `ko_prima` prihvata (`status` → `prihvaceno`); odbijanje ili uklanjanje je brisanje reda.
+  - `CHECK (ko_salje <> ko_prima)`: ne možeš dodati sebe.
+  - Unique indeks na `(least(ko_salje, ko_prima), greatest(ko_salje, ko_prima))`: par A–B postoji samo jednom, bez obzira ko je prvi poslao.
+- **Rang** se ne čuva; računa se pri čitanju iz dnevnog zbira: `min(kcal / cilj_kcal, 1)`, izjednačenja su dozvoljena.
 - `CHECK` ograničenja u bazi odbijaju besmislene vrednosti.
