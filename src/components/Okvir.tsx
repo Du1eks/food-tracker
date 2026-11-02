@@ -23,7 +23,7 @@ export default function Okvir() {
   return (
     <>
       <header className="gornja">
-        <Link to="/" className="gornja-ime">Dule's tracker</Link>
+        <Link to="/" className="gornja-ime">Mouse's tracker</Link>
         <Link to="/kalendar" className="plocica svetla" aria-label="Kalendar">
           <CalendarDays size={22} strokeWidth={2.25} aria-hidden />
         </Link>

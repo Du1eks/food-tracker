@@ -31,7 +31,7 @@ Mala, besplatna app za ekipu iz teretane: zajednička baza proizvoda koju drugar
 - Projekat je i vežba za učenje system design-a; odluke treba kratko objasniti.
 
 ## Brand Commitments
-- Ime: **Dule's tracker**.
+- Ime: **Mouse's tracker**.
 - Paleta koju je korisnik zadao (obavezna):
   - Zelena `#389600`
   - Svetlozelena `#C2DCB8`

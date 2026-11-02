@@ -8,7 +8,7 @@ function Okvir({ naslov, children }: { naslov: string; children: React.ReactNode
   return (
     <div className="nalog">
       <header className="nalog-traka">
-        <p className="nalog-ime">Dule's tracker</p>
+        <p className="nalog-ime">Mouse's tracker</p>
         <h1>{naslov}</h1>
         <p className="nalog-opis">Kalorije i makrosi za ekipu iz teretane.</p>
       </header>
