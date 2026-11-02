@@ -55,7 +55,7 @@ export default function Dan() {
         )}
       </nav>
       <main className="dan">
-        <DodajNamirnicu datum={datum} onDodato={ucitaj} />
+        <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} />
         <section className="dan-tabela" aria-label="Unosi za dan">
           {greska ? <p className="greska" role="alert">{greska}</p> : <TabelaDana unosi={unosi} onPromena={ucitaj} />}
         </section>

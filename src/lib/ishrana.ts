@@ -22,11 +22,11 @@ export type Unos = Makrosi & {
   proizvod_id: string | null
 }
 
-export const OBROCI: { id: Obrok; naziv: string }[] = [
-  { id: 'dorucak', naziv: 'Doručak' },
-  { id: 'rucak', naziv: 'Ručak' },
-  { id: 'vecera', naziv: 'Večera' },
-  { id: 'uzina', naziv: 'Užina' },
+export const OBROCI: { id: Obrok; naziv: string; gotov: string }[] = [
+  { id: 'dorucak', naziv: 'Doručak', gotov: 'Gotov doručak' },
+  { id: 'rucak', naziv: 'Ručak', gotov: 'Gotov ručak' },
+  { id: 'vecera', naziv: 'Večera', gotov: 'Gotova večera' },
+  { id: 'uzina', naziv: 'Užina', gotov: 'Gotova užina' },
 ]
 
 const zaokruzi = (n: number) => Math.round(n * 10) / 10

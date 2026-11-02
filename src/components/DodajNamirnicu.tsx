@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { ArrowRight, Plus, Search, X } from 'lucide-react'
-import { OBROCI, fmt, obrokPoSatu, zaKolicinu, type Jedinica, type Obrok, type Proizvod } from '../lib/ishrana'
+import { ArrowRight, Check, Plus, Search, X } from 'lucide-react'
+import { OBROCI, fmt, obrokPoSatu, zaKolicinu, zbir, type Jedinica, type Obrok, type Proizvod, type Unos } from '../lib/ishrana'
 import { dodajProizvod, dodajUnos, pretraziProizvode } from '../lib/podaci'
 import { pretraziOFF } from '../lib/openFoodFacts'
 
@@ -10,14 +10,18 @@ const ispravanBroj = (s: string) => s.trim() !== '' && Number.isFinite(uBroj(s))
 
 type Izvor = 'baza' | 'off'
 
-export default function DodajNamirnicu({ datum, onDodato }: { datum: string; onDodato: () => void }) {
+const prazan = (ime = ''): Proizvod => ({ ime, brend: null, jedinica: '100g', kcal: 0, proteini: 0, uh: 0, masti: 0 })
+
+// Tok: izaberi obrok → dodaj jednu ili više namirnica (svaka se čuva odmah) → "Gotov doručak" zatvara obrok.
+export default function DodajNamirnicu({ datum, unosi, onDodato }: { datum: string; unosi: Unos[] | null; onDodato: () => void }) {
   const [upit, setUpit] = useState('')
   const [rezultati, setRezultati] = useState<{ izvor: Izvor; lista: Proizvod[] } | null>(null)
   const [trazi, setTrazi] = useState(false)
   const [izabran, setIzabran] = useState<Proizvod | null>(null)
   const [novi, setNovi] = useState<Proizvod | null>(null)
   const [kolicina, setKolicina] = useState('')
-  const [obrok, setObrok] = useState<Obrok>(() => obrokPoSatu(new Date().getHours()))
+  const [obrok, setObrok] = useState<Obrok | null>(null)
+  const [predlog] = useState(() => obrokPoSatu(new Date().getHours()))
   const [greska, setGreska] = useState('')
   const [radi, setRadi] = useState(false)
 
@@ -58,6 +62,7 @@ export default function DodajNamirnicu({ datum, onDodato }: { datum: string; onD
   async function dodaj(e: React.FormEvent) {
     e.preventDefault()
     if (!izabran) return
+    if (!obrok) return setGreska('Izaberi obrok.')
     const k = uBroj(kolicina)
     if (!(k > 0)) return setGreska('Upiši količinu veću od nule.')
     setRadi(true); setGreska('')
@@ -78,15 +83,42 @@ export default function DodajNamirnicu({ datum, onDodato }: { datum: string; onD
   }
 
   const pregled = izabran && uBroj(kolicina) > 0 ? zaKolicinu(izabran, uBroj(kolicina)) : null
+  const aktivan = OBROCI.find((o) => o.id === obrok)
+  const uObroku = unosi?.filter((u) => u.obrok === obrok) ?? []
 
   return (
     <section className="panel" aria-labelledby="dodaj-naslov">
-      <h2 id="dodaj-naslov" className="panel-glava">
-        <span className="plocica svetla" aria-hidden><Plus size={22} strokeWidth={2.75} /></span>
-        Sledeće: dodaj namirnicu
-      </h2>
+      <div className="panel-glava">
+        <button type="button" className="plocica svetla plus" aria-label="Unesi namirnicu ručno" onClick={() => { ponisti(); setNovi(prazan()) }}>
+          <Plus size={22} strokeWidth={2.75} aria-hidden />
+        </button>
+        <h2 id="dodaj-naslov">{aktivan ? `${aktivan.naziv}: dodaj namirnicu` : 'Sledeće: izaberi obrok'}</h2>
+      </div>
       <div className="panel-telo">
-        {!izabran && !novi && (
+        {!obrok && !izabran && !novi && (
+          <div className="obroci" role="group" aria-label="Obrok">
+            {OBROCI.map((o) => (
+              <button key={o.id} type="button" className={`dugme${o.id === predlog ? ' predlog' : ''}`} onClick={() => setObrok(o.id)}>
+                {o.naziv}
+                <span className="plocica" aria-hidden><ArrowRight size={20} strokeWidth={2.5} /></span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {aktivan && !izabran && !novi && (
+          <div className="obrok-stanje">
+            <p className="num">
+              {uObroku.length ? <><b>{uObroku.length}</b> u obroku · <b>{fmt(zbir(uObroku).kcal)} kcal</b></> : 'Još ništa u ovom obroku.'}
+            </p>
+            <button type="button" className="dugme" onClick={() => { ponisti(); setObrok(null) }}>
+              {aktivan.gotov}
+              <span className="plocica" aria-hidden><Check size={20} strokeWidth={2.75} /></span>
+            </button>
+          </div>
+        )}
+
+        {obrok && !izabran && !novi && (
           <>
             <form className="pretraga" role="search" onSubmit={(e) => { e.preventDefault(); pretrazi('baza') }}>
               <label className="sr" htmlFor="pretraga">Pretraži namirnicu</label>
@@ -114,7 +146,7 @@ export default function DodajNamirnicu({ datum, onDodato }: { datum: string; onD
                   {rezultati.izvor === 'baza' && (
                     <button type="button" className="dugme" onClick={() => pretrazi('off')}>Traži na Open Food Facts</button>
                   )}
-                  <button type="button" className="dugme tiho" onClick={() => setNovi({ ime: upit.trim(), brend: null, jedinica: '100g', kcal: 0, proteini: 0, uh: 0, masti: 0 })}>
+                  <button type="button" className="dugme tiho" onClick={() => setNovi(prazan(upit.trim()))}>
                     Unesi ručno
                   </button>
                 </div>
@@ -137,18 +169,21 @@ export default function DodajNamirnicu({ datum, onDodato }: { datum: string; onD
               </label>
               <div className="polje"><span>Daje</span><p className="daje num">{pregled ? `${fmt(pregled.kcal)} kcal` : '—'}</p></div>
             </div>
-            <fieldset className="polje">
-              <legend className="sr">Obrok</legend>
-              <span aria-hidden>Obrok</span>
-              <div className="segment">
-                {OBROCI.map((o) => (
-                  <label key={o.id}>
-                    <input type="radio" name="obrok" value={o.id} checked={obrok === o.id} onChange={() => setObrok(o.id)} />
-                    <span>{o.naziv}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
+            {/* Ručni unos preko "+" može da počne pre izbora obroka */}
+            {!aktivan && (
+              <fieldset className="polje">
+                <legend className="sr">Obrok</legend>
+                <span aria-hidden>Obrok</span>
+                <div className="segment">
+                  {OBROCI.map((o) => (
+                    <label key={o.id}>
+                      <input type="radio" name="obrok" value={o.id} checked={obrok === o.id} onChange={() => setObrok(o.id)} />
+                      <span>{o.naziv}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            )}
             {pregled && <p className="tiho-tekst num">P {fmt(pregled.proteini)} g · UH {fmt(pregled.uh)} g · M {fmt(pregled.masti)} g</p>}
             <button className="dugme glavno" type="submit" disabled={radi}>
               {radi ? 'Dodajem…' : 'Dodaj'}
