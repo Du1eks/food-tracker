@@ -7,6 +7,7 @@
 - Profil: visina, težina, godine, pol, cilj (smršati / održavati / bulk), treninzi nedeljno, koraci dnevno → izračun dnevnog cilja (kcal + makrosi, Mifflin-St Jeor)
 - Zajednička baza proizvoda: svi vide sve, dodaje svako, menja/briše samo ko ga je uneo; pretraga pre dodavanja (protiv duplikata)
 - Unos obroka: izaberi proizvod + količina (g ili komad); ako proizvoda nema, unese ga ručno (vrednosti na 100 g / po komadu) i on ulazi u zajedničku bazu
+- Pretraga namirnice: prvo naša baza, pa Open Food Facts (besplatno, bez ključa); korisnik potvrdi/ispravi vrednosti i proizvod se čuva u zajedničku bazu
 - Izmena i brisanje unosa
 - Dnevna tabela: svi unosi za dan, zbir kcal i makrosa, koliko fali do cilja
 - Kalendar: klik na dan prikazuje istoriju unosa tog dana
@@ -20,7 +21,7 @@
 - Obim: do ~50 korisnika
 - "Danas" = datum u vremenskoj zoni korisnika
 - Istorija se ne menja unazad: unos čuva kopiju vrednosti proizvoda (snapshot)
-- Bez plaćenih API-ja u MVP-u
+- Bez plaćenih API-ja i servisa (važi i posle MVP-a)
 
 ### Van MVP-a
 - Slika deklaracije (kasnije besplatan OCR u browseru uz ručnu proveru, bez plaćenog AI-ja)
@@ -43,7 +44,7 @@
 - Istorija po danima i nedeljni prosek
 - Praćenje težine (graf)
 - Brzi unos čestih obroka ("kao juče", omiljeni obroci)
-- Skeniranje deklaracije slikom (AI čita nutritivnu tabelu)
+- Skeniranje deklaracije slikom (besplatan OCR u browseru, npr. Tesseract.js, uz ručnu proveru)
 - Deljenje napretka sa prijateljima (opciono)
 - Integracija u gym app (isti backend)
 

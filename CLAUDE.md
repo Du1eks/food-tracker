@@ -39,6 +39,7 @@ Princip: **jedan backend, više klijenata** (isti pristup planiramo za logistič
 - Bez koda koji radi samo u browseru ili samo u desktop-u bez razloga; razlike između web i Tauri verzije drži na jednom mestu.
 - UI na srpskom (latinica).
 - Svaki korisnik vidi samo svoje podatke.
+- Bez plaćenih API-ja i servisa (AI, OCR, pretraga...); samo besplatne opcije.
 - Prvo MVP (vidi SPEC.md), pa proširenja.
 
 ## Git
