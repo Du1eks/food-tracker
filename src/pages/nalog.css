@@ -3,13 +3,14 @@
   background: var(--zelena); color: var(--tekst);
   padding: 28px clamp(16px, 5vw, 64px) 32px;
   border-top: 12px solid var(--tekst);
+  text-align: center;
 }
 .nalog-ime { font-weight: 800; font-size: 18px; }
 .nalog-traka h1 { font-weight: 900; font-size: clamp(56px, 10vw, 112px); line-height: 0.95; letter-spacing: -0.03em; margin-top: 18px; }
 .nalog-opis { font-size: 20px; font-weight: 600; margin-top: 10px; }
 .nalog-panel { padding: 32px clamp(16px, 5vw, 64px) 48px; }
 .nalog-forma {
-  max-width: 440px; display: grid; gap: 18px;
+  max-width: 440px; margin-inline: auto; display: grid; gap: 18px;
   background: var(--bela); border-radius: var(--r); padding: 24px;
   box-shadow: var(--senka);
 }
