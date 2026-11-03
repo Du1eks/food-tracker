@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { ChevronRight, Users } from 'lucide-react'
 import { danas } from '../lib/datum'
 import { zbirZaDan } from '../lib/podaci'
-import { rang, type Zbir } from '../lib/rang'
+import { rang, sufiksMesta, type Zbir } from '../lib/rang'
 import { useProfil } from './useProfil'
 import Maskota from './Maskota'
 import '../pages/prijatelji.css'
@@ -27,6 +27,10 @@ export default function RangPolje({ kljuc }: { kljuc: number }) {
   const r = Array.isArray(redovi) && profil ? rang(redovi, profil.id) : null
   const sam = !r || r.ukupno === 1
   const procenat = Math.round(Number(Array.isArray(redovi) ? redovi.find((x) => x.id === profil?.id)?.procenat ?? 0 : 0) * 100)
+  // Na polju je samo broj i kratak poziv; ceo opis ide čitaču ekrana
+  const opis = sam
+    ? 'Dodaj prijatelje i takmiči se ko bliže stiže do dnevnog cilja'
+    : `Rang za danas: ${r.mesto}. mesto od ${r.ukupno}${profil?.cilj_kcal ? `, ${procenat}% dnevnog cilja` : ', postavi dnevni cilj u profilu'}. Pogledaj leaderboard`
 
   return (
     <div className="rang-omot">
@@ -34,28 +38,14 @@ export default function RangPolje({ kljuc }: { kljuc: number }) {
       {redovi === 'greska' ? (
         <p className="rang rang-prazno">Rang trenutno nije dostupan.</p>
       ) : (
-        <Link to="/prijatelji" className="rang">
+        <Link to="/prijatelji" className="rang" aria-label={opis}>
           {sam ? (
-            <span className="plocica svetla rang-mesto" aria-hidden><Users size={26} strokeWidth={2.5} /></span>
+            <span className="plocica rang-mesto" aria-hidden><Users size={30} strokeWidth={2.5} /></span>
           ) : (
-            <span className="rang-mesto num" aria-hidden>{r.mesto}.</span>
+            <span key={r.mesto} className="rang-mesto num" aria-hidden>{r.mesto}<sup>{sufiksMesta(r.mesto)}</sup></span>
           )}
-          <span className="rang-tekst">
-            {sam ? (
-              <>
-                <b>Dodaj prijatelje</b>
-                <small>Takmiči se ko bliže stiže do dnevnog cilja</small>
-              </>
-            ) : (
-              <>
-                <b>Rang za danas</b>
-                <small className="num">
-                  {profil?.cilj_kcal ? `Od ${r.ukupno} · ${procenat}% dnevnog cilja kcal` : 'Postavi dnevni cilj u profilu da uđeš u rang'}
-                </small>
-              </>
-            )}
-          </span>
-          <span className="plocica svetla" aria-hidden><ChevronRight size={22} /></span>
+          <span className="rang-poziv" aria-hidden>{sam ? 'Dodaj prijatelje' : 'Pogledaj leaderboard'}</span>
+          <span className="plocica rang-strelica" aria-hidden><ChevronRight size={22} strokeWidth={2.75} /></span>
         </Link>
       )}
     </div>

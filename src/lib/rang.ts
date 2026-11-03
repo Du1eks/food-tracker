@@ -5,20 +5,37 @@ export type Poza = 'jede' | 'hoda' | 'slavi' | 'cilj'
 
 export type Rang = { mesto: number; ukupno: number; poza: Poza }
 
-// Mesto = 1 + broj onih sa većim procentom (izjednačeni dele mesto)
-export const mesto = (redovi: Zbir[], r: Zbir) => 1 + redovi.filter((x) => x.procenat > r.procenat).length
+// Ko nije uneo kalorije uvek je poslednji (sa 0%), ma koliko mali bio tuđi procenat
+const uneo = (r: Zbir) => r.kcal > 0
+const ispred = (a: Zbir, b: Zbir) => (uneo(a) && !uneo(b)) || (uneo(a) === uneo(b) && a.procenat > b.procenat)
 
-// Prvi: srećan (jede, a slavi kad je dostigao cilj); poslednji: ljut; ostali i samac: hoda.
+// Mesto = 1 + broj onih ispred (izjednačeni dele mesto); bez unosa je poslednje mesto
+export const mesto = (redovi: Zbir[], r: Zbir) =>
+  uneo(r) ? 1 + redovi.filter((x) => ispred(x, r)).length : redovi.length
+
+// Prvi: srećan (jede, a slavi kad je dostigao cilj); poslednji ili bez unosa: ljut; ostali i samac: hoda.
 export function rang(redovi: Zbir[], mojId: string): Rang | null {
   const ja = redovi.find((r) => r.id === mojId)
   if (!ja) return null
   const m = mesto(redovi, ja)
-  const nize = redovi.filter((r) => r.procenat < ja.procenat).length
+  const nikoIspod = !redovi.some((r) => ispred(ja, r))
   const poza: Poza =
-    redovi.length === 1 ? 'hoda' : m === 1 ? (ja.procenat >= 1 ? 'slavi' : 'jede') : nize === 0 ? 'cilj' : 'hoda'
+    redovi.length === 1 ? 'hoda'
+    : !uneo(ja) ? 'cilj'
+    : m === 1 ? (ja.procenat >= 1 ? 'slavi' : 'jede')
+    : nikoIspod ? 'cilj'
+    : 'hoda'
   return { mesto: m, ukupno: redovi.length, poza }
 }
 
-// Najbolji prvi; izjednačeni po nadimku, da redosled ne skače pri osvežavanju
+// Engleska oznaka mesta: 1st, 2nd, 3rd, 4th…, ali 11th, 12th, 13th
+export function sufiksMesta(n: number): string {
+  if (n % 100 >= 11 && n % 100 <= 13) return 'th'
+  return ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[n % 10] ?? 'th'
+}
+
+// Najbolji prvi, bez unosa na kraju; izjednačeni po nadimku, da redosled ne skače pri osvežavanju
 export const poRangu = (redovi: Zbir[]) =>
-  [...redovi].sort((a, b) => b.procenat - a.procenat || (a.nadimak ?? '').localeCompare(b.nadimak ?? ''))
+  [...redovi].sort(
+    (a, b) => Number(uneo(b)) - Number(uneo(a)) || b.procenat - a.procenat || (a.nadimak ?? '').localeCompare(b.nadimak ?? ''),
+  )

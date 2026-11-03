@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
 import { ArrowDown, ChevronLeft, ChevronRight } from 'lucide-react'
 import { danas, ispravan, lepDatum, pomeri } from '../lib/datum'
@@ -10,7 +10,16 @@ import TabelaDana from '../components/TabelaDana'
 import RangPolje from '../components/RangPolje'
 import './dan.css'
 
+// Rang ide u zelenu traku samo na širokom ekranu; uže od 960 px traka nema mesta, pa stoji iznad unosa.
+const uskiUpit = matchMedia('(max-width: 960px)')
+const useUski = () =>
+  useSyncExternalStore(
+    (javi) => { uskiUpit.addEventListener('change', javi); return () => uskiUpit.removeEventListener('change', javi) },
+    () => uskiUpit.matches,
+  )
+
 export default function Dan() {
+  const uski = useUski()
   const param = useParams().datum
   const datum = param ?? danas()
   const { profil } = useProfil()
@@ -38,7 +47,7 @@ export default function Dan() {
   const uneto = zbir(unosi ?? [])
   return (
     <>
-      <Traka uneto={uneto} cilj={profil} />
+      <Traka uneto={uneto} cilj={profil} rang={jeDanas && !uski && <RangPolje kljuc={uneto.kcal} />} />
       <nav className="dan-red" aria-label="Izbor dana">
         <Link className="plocica svetla" to={`/dan/${pomeri(datum, -1)}`} aria-label="Prethodni dan">
           <ChevronLeft size={22} aria-hidden />
@@ -56,7 +65,7 @@ export default function Dan() {
         )}
       </nav>
       <main className="dan">
-        {jeDanas && <RangPolje kljuc={uneto.kcal} />}
+        {jeDanas && uski && <RangPolje kljuc={uneto.kcal} />}
         <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} />
         <section className="dan-tabela" aria-label="Unosi za dan">
           {greska ? <p className="greska" role="alert">{greska}</p> : <TabelaDana unosi={unosi} onPromena={ucitaj} />}
@@ -69,7 +78,7 @@ export default function Dan() {
 type Cilj = { cilj_kcal: number | null; cilj_proteini: number | null; cilj_uh: number | null; cilj_masti: number | null }
 
 // Traka ostatka: preispiše se posle svakog unosa (ključ na vrednosti pokreće animaciju table).
-function Traka({ uneto, cilj }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | null }) {
+function Traka({ uneto, cilj, rang }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | null; rang: React.ReactNode }) {
   const imaCilj = !!cilj?.cilj_kcal
   const ostalo = (c: number | null | undefined, u: number) => (c ? c - u : null)
   const kcal = imaCilj ? ostalo(cilj!.cilj_kcal, uneto.kcal)! : uneto.kcal
@@ -99,6 +108,7 @@ function Traka({ uneto, cilj }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | n
           </div>
         ))}
       </dl>
+      {rang}
       {imaCilj ? (
         <a className="plocica traka-strelica" href="#pretraga" aria-label="Dodaj namirnicu">
           <ArrowDown size={34} strokeWidth={2.75} aria-hidden />

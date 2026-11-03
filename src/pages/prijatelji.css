@@ -1,24 +1,51 @@
-/* Polje ranga na glavnom ekranu: crna tabla, maskota stoji na gornjoj ivici */
-.rang-omot { grid-column: 1 / -1; position: relative; margin-top: 76px; }
+/* Polje ranga: bela tabla sa crnim okvirom, krupan broj mesta; miš se naslanja na levu ivicu. Isto na računaru i telefonu. */
+.rang-omot { grid-column: 1 / -1; justify-self: center; max-width: 100%; position: relative; padding-left: 66px; }
 .rang {
-  display: flex; align-items: center; gap: 16px; min-height: 76px; padding: 10px 14px 10px 18px;
-  background: var(--tekst); color: var(--bela); border-radius: var(--r); text-decoration: none;
+  display: flex; align-items: center; min-height: 84px; padding: 4px 10px 4px 16px;
+  background: var(--bela); color: var(--tekst); border: var(--okvir); border-radius: var(--r); text-decoration: none;
   box-shadow: var(--senka);
 }
-a.rang:hover { background: #2a2e2a; }
-.rang :focus-visible, a.rang:focus-visible { outline-color: var(--svetlozelena); }
-.rang-mesto { font-weight: 900; font-size: 48px; line-height: 1; letter-spacing: -0.03em; color: var(--svetlozelena); min-width: 56px; }
-.rang-mesto.plocica { width: 48px; height: 48px; min-width: 0; }
-.rang-tekst { flex: 1; display: grid; gap: 2px; min-width: 0; }
-.rang-tekst b { font-size: 20px; font-weight: 800; }
-.rang-tekst small { color: #c9cfca; font-size: 15px; font-weight: 600; }
-.rang-prazno { color: #c9cfca; font-weight: 600; }
+a.rang:hover { background: var(--mint); }
+.rang-mesto { font-weight: 900; font-size: 80px; line-height: 0.9; letter-spacing: -0.04em; color: var(--zelena); margin-right: 14px; }
+.rang-mesto sup { font-size: 0.36em; letter-spacing: 0; vertical-align: 1.15em; margin-left: 2px; }
+.rang > .rang-mesto.plocica { width: 56px; height: 56px; background: var(--zelena); color: var(--tekst); }
+/* Natpis je sakriven; polje se na prelaz mišem (ili fokus tastaturom) proširi i otkrije ga */
+.rang-poziv {
+  font-weight: 800; font-size: 17px; line-height: 1.2; white-space: nowrap;
+  max-width: 0; opacity: 0; overflow: hidden; margin-right: 0;
+  transition: max-width 450ms cubic-bezier(0.16, 1, 0.3, 1), opacity 250ms ease-out, margin-right 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+a.rang:hover .rang-poziv, a.rang:focus-visible .rang-poziv { max-width: 200px; opacity: 1; margin-right: 14px; }
+/* Telefon nema prelaz mišem: natpis je stalno vidljiv i prelama se kad nema mesta */
+@media (hover: none) {
+  .rang-poziv { max-width: none; opacity: 1; margin-right: 14px; white-space: normal; }
+}
+.rang-strelica { width: 36px; height: 36px; }
+.rang-prazno { color: var(--sivi-tekst); font-weight: 600; }
 .rang-omot .maskota {
-  position: absolute; right: clamp(24px, 6vw, 72px); bottom: calc(100% - 10px);
-  height: 118px; width: auto; pointer-events: none; z-index: 1;
+  position: absolute; left: 0; bottom: 0;
+  height: 92px; width: auto; pointer-events: none; z-index: 1;
 }
 /* na ovoj slici je miš manji zbog oblačića "You are mouse", pa je veća da tekst bude čitljiv */
-.rang-omot .maskota.cilj { height: 150px; }
+.rang-omot .maskota.cilj { height: 110px; left: -20px; }
+
+/* Broj iskoči kad se rang učita ili promeni, a strelica povremeno gurne napred */
+@media (prefers-reduced-motion: no-preference) {
+  .rang-mesto { display: inline-block; animation: rang-skok 700ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .rang-strelica svg { animation: rang-gura 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+}
+@keyframes rang-skok {
+  0% { transform: scale(0.3) translateY(10px); opacity: 0; }
+  60% { transform: scale(1.12); opacity: 1; }
+  100% { transform: none; }
+}
+@keyframes rang-gura { 0%, 70%, 100% { transform: none; } 80% { transform: translateX(4px); } }
+
+/* U zelenoj traci (računar): na sredini između masti i strelice */
+.traka:has(.rang-omot) { grid-template-columns: auto auto 1fr auto; }
+.traka .rang-omot { grid-column: auto; }
+/* Iznad unosa (uži ekran): miš je viši od polja, pa mu treba mesta da ne pokrije red sa datumom */
+.dan > .rang-omot { margin-top: 30px; }
 
 /* Blago "disanje", samo kad korisnik ne traži manje pokreta */
 @media (prefers-reduced-motion: no-preference) {
@@ -67,11 +94,3 @@ a.rang-red:hover { background: var(--mint); }
 .prijatelj-makrosi dt { font-size: 14px; font-weight: 700; color: var(--sivi-tekst); }
 .prijatelj-makrosi dd { margin: 2px 0 0; font-size: 26px; font-weight: 800; }
 
-@media (max-width: 640px) {
-  .rang-omot { margin-top: 70px; }
-  .rang { gap: 12px; padding: 10px 10px 10px 14px; }
-  .rang-mesto { font-size: 40px; min-width: 44px; }
-  .rang-tekst b { font-size: 18px; }
-  .rang-omot .maskota { height: 104px; right: 16px; }
-  .rang-omot .maskota.cilj { height: 132px; }
-}

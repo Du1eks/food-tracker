@@ -99,7 +99,8 @@
 }
 .tabela .grupa td { color: var(--sivi-tekst); text-transform: none; letter-spacing: 0; font-weight: 700; }
 .tabela .red td { border-top: 1px solid var(--pozadina); }
-.tabela tfoot th, .tabela tfoot td { border-top: var(--okvir); font-weight: 900; font-size: 18px; }
+.tabela tfoot th, .tabela tfoot td { border-top: var(--okvir); font-weight: 900; font-size: 24px; padding-top: 16px; letter-spacing: -0.01em; }
+.tabela tfoot td:nth-child(2) { font-size: 30px; }
 .mak-mob { display: none; }
 .akcije { white-space: nowrap; width: 1%; padding-right: 0 !important; }
 .ikona {
