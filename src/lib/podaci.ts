@@ -43,12 +43,33 @@ export async function obrisiUnos(id: string) {
   proveri(await supabase.from('unos').delete().eq('id', id))
 }
 
+// % i _ su džokeri u ilike; korisnikov tekst ih ne sme menjati
+const sadrzi = (upit: string) => `%${upit.replace(/[%_\\]/g, (z) => `\\${z}`)}%`
+
 export async function pretraziProizvode(upit: string): Promise<Proizvod[]> {
-  // % i _ su džokeri u ilike; korisnikov tekst ih ne sme menjati
-  const bezbedno = upit.replace(/[%_\\]/g, (z) => `\\${z}`)
   return proveri(
-    await supabase.from('proizvod').select('id,ime,brend,jedinica,kcal,proteini,uh,masti').ilike('ime', `%${bezbedno}%`).order('ime').limit(10),
+    await supabase.from('proizvod').select('id,ime,brend,jedinica,kcal,proteini,uh,masti').ilike('ime', sadrzi(upit)).order('ime').limit(10),
   )
+}
+
+// Strana Namirnice: spisak zajedničke baze, prvih `koliko` redova (prazan upit = sve)
+export type ProizvodRed = Proizvod & { id: string; ko_je_uneo: string | null }
+
+export async function spisakProizvoda(upit: string, koliko: number): Promise<{ redovi: ProizvodRed[]; ukupno: number }> {
+  let q = supabase.from('proizvod').select('id,ime,brend,jedinica,kcal,proteini,uh,masti,ko_je_uneo', { count: 'exact' })
+  if (upit.trim()) q = q.ilike('ime', sadrzi(upit.trim()))
+  const r = await q.order('ime').range(0, koliko - 1)
+  return { redovi: proveri<ProizvodRed[]>(r), ukupno: r.count ?? 0 }
+}
+
+// Svi ulogovani smeju da menjaju proizvod (RLS), baza pamti ko je poslednji; jedinica se ne menja
+export async function izmeniProizvod(id: string, izmena: Makrosi & { ime: string }) {
+  proveri(await supabase.from('proizvod').update(izmena).eq('id', id))
+}
+
+// Briše samo autor (RLS); stari unosi ostaju jer čuvaju kopiju vrednosti
+export async function obrisiProizvod(id: string) {
+  proveri(await supabase.from('proizvod').delete().eq('id', id))
 }
 
 export async function dodajProizvod(p: Proizvod): Promise<Proizvod> {

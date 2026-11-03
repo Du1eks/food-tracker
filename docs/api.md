@@ -24,6 +24,7 @@ Nigde ne šaljemo `korisnik_id = ja` za čitanje: RLS u bazi sam filtrira redove
 | Dodaj proizvod | Create | POST | `from('proizvod').insert({...})` |
 | Izmeni proizvod | Update | PATCH | `from('proizvod').update({...}).eq('id', id)` |
 | Obriši proizvod (samo vlasnik) | Delete | DELETE | `from('proizvod').delete().eq('id', id)` |
+| Spisak za stranu Namirnice (prvih N, sa brojem) | Read | GET | `from('proizvod').select('...', { count: 'exact' }).order('ime').range(0, N - 1)` |
 
 Ako proizvoda nema u našoj bazi: pretraga na Open Food Facts (direktan `fetch`, bez ključa), korisnik potvrdi vrednosti, pa `insert` u `proizvod`.
 

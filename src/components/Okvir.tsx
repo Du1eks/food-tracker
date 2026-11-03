@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet } from 'react-router'
-import { CalendarDays, UserRound, Users } from 'lucide-react'
+import { Apple, CalendarDays, UserRound, Users } from 'lucide-react'
 import { ucitajProfil, type Profil } from '../lib/podaci'
 import type { OkvirKontekst } from './useProfil'
 import './okvir.css'
@@ -28,6 +28,9 @@ export default function Okvir() {
           <CalendarDays size={22} strokeWidth={2.25} aria-hidden />
         </Link>
         <div className="gornja-desno">
+          <Link to="/namirnice" className="plocica svetla" aria-label="Namirnice">
+            <Apple size={22} strokeWidth={2.25} aria-hidden />
+          </Link>
           <Link to="/prijatelji" className="plocica svetla" aria-label="Prijatelji">
             <Users size={22} strokeWidth={2.25} aria-hidden />
           </Link>

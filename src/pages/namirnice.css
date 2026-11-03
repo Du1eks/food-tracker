@@ -1,0 +1,22 @@
+/* Strana Namirnice: zajednički spisak proizvoda */
+.namirnice { padding: 0 clamp(16px, 4vw, 32px) 48px; max-width: 860px; display: grid; gap: 16px; }
+.namirnice .dan-tabela { padding-top: 16px; }
+.nam-lista { list-style: none; margin: 0; padding: 0; }
+.nam-red { padding: 12px 0; }
+.nam-red + .nam-red { border-top: 1px solid var(--pozadina); }
+.nam-glavno { display: flex; align-items: center; gap: 12px; }
+.nam-ime { flex: 1; display: grid; min-width: 0; }
+.nam-ime b { font-size: 18px; overflow-wrap: anywhere; }
+.nam-ime small, .nam-kcal small { color: var(--sivi-tekst); font-size: 13px; font-weight: 600; }
+.nam-kcal { display: grid; text-align: right; }
+.nam-kcal b { font-size: 18px; font-weight: 800; white-space: nowrap; }
+.nam-akcije { display: flex; min-width: 72px; justify-content: flex-end; }
+.nam-mak { color: var(--sivi-tekst); font-size: 14px; font-weight: 600; margin-top: 2px; }
+.nam-forma { display: grid; gap: 12px; background: var(--mint); border-radius: var(--r); padding: 14px; margin-top: 10px; }
+.nam-cetiri { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.nam-dugmad { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.nam-dugmad .dugme.glavno { min-height: 48px; font-size: 18px; min-width: 160px; }
+.nam-dugmad .dugme.tiho { gap: 6px; }
+@media (max-width: 640px) {
+  .nam-cetiri { grid-template-columns: 1fr 1fr; }
+}
