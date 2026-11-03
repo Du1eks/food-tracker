@@ -1,14 +1,29 @@
-.nalog { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr; }
+.nalog { min-height: 100dvh; display: grid; grid-template-rows: auto auto 1fr; }
+/* Traka sa logom je ista zelena kao traka ispod; logo-zeleno.png ima svetlije zelene delove da se vide na njoj.
+   Na telefonu je logo na sredini, na širokom ekranu levo. */
+.nalog-gornja { display: flex; justify-content: center; padding: 14px clamp(16px, 4vw, 32px) 0; background: var(--zelena);
+  box-shadow: 0 1px 0 var(--zelena); /* zatvara šav od delića piksela između dve iste zelene trake (npr. na 125% zumu) */ }
+.nalog-gornja img { height: 52px; width: auto; }
+@media (min-width: 961px) {
+  .nalog-gornja { justify-content: flex-start; }
+  .nalog-gornja img { height: 72px; }
+}
 .nalog-traka {
   background: var(--zelena); color: var(--tekst);
-  padding: 28px clamp(16px, 5vw, 64px) 32px;
-  border-top: 12px solid var(--tekst);
+  padding: 32px clamp(16px, 5vw, 64px) 32px;
   text-align: center;
 }
-.nalog-ime { font-weight: 800; font-size: 18px; }
-.nalog-traka h1 { font-weight: 900; font-size: clamp(56px, 10vw, 112px); line-height: 0.95; letter-spacing: -0.03em; margin-top: 18px; }
+.nalog-traka h1 { font-weight: 900; font-size: clamp(56px, 10vw, 112px); line-height: 0.95; letter-spacing: -0.03em; }
 .nalog-opis { font-size: 20px; font-weight: 600; margin-top: 10px; }
-.nalog-panel { padding: 32px clamp(16px, 5vw, 64px) 48px; }
+.nalog-panel { padding: 32px clamp(16px, 5vw, 64px) 48px; position: relative; }
+/* Uži ekran: miš leži na vrhu forme, prst prelazi preko ivice. Širi: stoji desno od forme (440px na sredini) i pokazuje ulevo */
+.nalog-mis {
+  display: block; width: 280px; height: auto; margin: -12px auto -30px;
+  position: relative; z-index: 1; pointer-events: none;
+}
+@media (min-width: 1000px) {
+  .nalog-mis { position: absolute; top: 40px; left: calc(50% + 220px); width: 320px; margin: 0; }
+}
 .nalog-forma {
   max-width: 440px; margin-inline: auto; display: grid; gap: 18px;
   background: var(--bela); border-radius: var(--r); padding: 24px;

@@ -1,5 +1,7 @@
 /* Strana Namirnice: zajednički spisak proizvoda */
-.namirnice { padding: 0 clamp(16px, 4vw, 32px) 48px; max-width: 860px; display: grid; gap: 16px; }
+.namirnice { padding: 0 clamp(16px, 4vw, 32px) 48px; display: grid; gap: 16px; }
+/* Naslov i spisak iste širine, na sredini strane */
+.namirnice, .namirnice-naslov { max-width: 860px; margin-inline: auto; }
 .namirnice .dan-tabela { padding-top: 16px; }
 .nam-lista { list-style: none; margin: 0; padding: 0; }
 .nam-red { padding: 12px 0; }

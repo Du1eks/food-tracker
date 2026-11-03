@@ -1,0 +1,430 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-03T00:00:00Z",
+  "title": "Design System: Mouse's tracker",
+  "extensions": {
+    "colorMeta": {
+      "zelena": {
+        "role": "primary",
+        "displayName": "Signalna zelena",
+        "canonical": "oklch(59.3% 0.185 139)",
+        "tonalRamp": [
+          "oklch(15% 0.160 139)",
+          "oklch(26% 0.160 139)",
+          "oklch(38% 0.160 139)",
+          "oklch(49% 0.160 139)",
+          "oklch(61% 0.160 139)",
+          "oklch(72% 0.160 139)",
+          "oklch(84% 0.160 139)",
+          "oklch(95% 0.160 139)"
+        ]
+      },
+      "svetlozelena": {
+        "role": "neutral",
+        "displayName": "Svetlozelena",
+        "canonical": "oklch(86.6% 0.056 137)",
+        "tonalRamp": [
+          "oklch(15% 0.056 137)",
+          "oklch(26% 0.056 137)",
+          "oklch(38% 0.056 137)",
+          "oklch(49% 0.056 137)",
+          "oklch(61% 0.056 137)",
+          "oklch(72% 0.056 137)",
+          "oklch(84% 0.056 137)",
+          "oklch(95% 0.056 137)"
+        ]
+      },
+      "mint": {
+        "role": "neutral",
+        "displayName": "Mint",
+        "canonical": "oklch(95.4% 0.027 170)",
+        "tonalRamp": [
+          "oklch(15% 0.027 170)",
+          "oklch(26% 0.027 170)",
+          "oklch(38% 0.027 170)",
+          "oklch(49% 0.027 170)",
+          "oklch(61% 0.027 170)",
+          "oklch(72% 0.027 170)",
+          "oklch(84% 0.027 170)",
+          "oklch(95% 0.027 170)"
+        ]
+      },
+      "pozadina": {
+        "role": "neutral",
+        "displayName": "Podloga",
+        "canonical": "oklch(93.9% 0.016 154)",
+        "tonalRamp": [
+          "oklch(15% 0.016 154)",
+          "oklch(26% 0.016 154)",
+          "oklch(38% 0.016 154)",
+          "oklch(49% 0.016 154)",
+          "oklch(61% 0.016 154)",
+          "oklch(72% 0.016 154)",
+          "oklch(84% 0.016 154)",
+          "oklch(95% 0.016 154)"
+        ]
+      },
+      "spolja": {
+        "role": "neutral",
+        "displayName": "Spoljna siva",
+        "canonical": "oklch(88.8% 0.010 155)",
+        "tonalRamp": [
+          "oklch(15% 0.010 155)",
+          "oklch(26% 0.010 155)",
+          "oklch(38% 0.010 155)",
+          "oklch(49% 0.010 155)",
+          "oklch(61% 0.010 155)",
+          "oklch(72% 0.010 155)",
+          "oklch(84% 0.010 155)",
+          "oklch(95% 0.010 155)"
+        ]
+      },
+      "bela": {
+        "role": "neutral",
+        "displayName": "Bela",
+        "canonical": "oklch(100.0% 0.000 90)",
+        "tonalRamp": [
+          "oklch(15% 0.000 90)",
+          "oklch(26% 0.000 90)",
+          "oklch(38% 0.000 90)",
+          "oklch(49% 0.000 90)",
+          "oklch(61% 0.000 90)",
+          "oklch(72% 0.000 90)",
+          "oklch(84% 0.000 90)",
+          "oklch(95% 0.000 90)"
+        ]
+      },
+      "tekst": {
+        "role": "neutral",
+        "displayName": "Crna table",
+        "canonical": "oklch(18.4% 0.005 145)",
+        "tonalRamp": [
+          "oklch(15% 0.005 145)",
+          "oklch(26% 0.005 145)",
+          "oklch(38% 0.005 145)",
+          "oklch(49% 0.005 145)",
+          "oklch(61% 0.005 145)",
+          "oklch(72% 0.005 145)",
+          "oklch(84% 0.005 145)",
+          "oklch(95% 0.005 145)"
+        ]
+      },
+      "sivi": {
+        "role": "neutral",
+        "displayName": "Siva iz palete",
+        "canonical": "oklch(61.2% 0.008 145)",
+        "tonalRamp": [
+          "oklch(15% 0.008 145)",
+          "oklch(26% 0.008 145)",
+          "oklch(38% 0.008 145)",
+          "oklch(49% 0.008 145)",
+          "oklch(61% 0.008 145)",
+          "oklch(72% 0.008 145)",
+          "oklch(84% 0.008 145)",
+          "oklch(95% 0.008 145)"
+        ]
+      },
+      "sivi-tekst": {
+        "role": "neutral",
+        "displayName": "Tamnija siva za tekst",
+        "canonical": "oklch(48.4% 0.008 145)",
+        "tonalRamp": [
+          "oklch(15% 0.008 145)",
+          "oklch(26% 0.008 145)",
+          "oklch(38% 0.008 145)",
+          "oklch(49% 0.008 145)",
+          "oklch(61% 0.008 145)",
+          "oklch(72% 0.008 145)",
+          "oklch(84% 0.008 145)",
+          "oklch(95% 0.008 145)"
+        ]
+      },
+      "greska": {
+        "role": "error",
+        "displayName": "Greška",
+        "canonical": "oklch(50.1% 0.178 29)",
+        "tonalRamp": [
+          "oklch(15% 0.160 29)",
+          "oklch(26% 0.160 29)",
+          "oklch(38% 0.160 29)",
+          "oklch(49% 0.160 29)",
+          "oklch(61% 0.160 29)",
+          "oklch(72% 0.160 29)",
+          "oklch(84% 0.160 29)",
+          "oklch(95% 0.160 29)"
+        ]
+      },
+      "greska-bg": {
+        "role": "error",
+        "displayName": "Pozadina greške",
+        "canonical": "oklch(95.6% 0.019 22)",
+        "tonalRamp": [
+          "oklch(15% 0.019 22)",
+          "oklch(26% 0.019 22)",
+          "oklch(38% 0.019 22)",
+          "oklch(49% 0.019 22)",
+          "oklch(61% 0.019 22)",
+          "oklch(72% 0.019 22)",
+          "oklch(84% 0.019 22)",
+          "oklch(95% 0.019 22)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Ostatak kcal u traci; naslov ekrana prijave i broj na profilu prijatelja u široj skali."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Makrosi u traci i zbirovi; broj mesta u rangu."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Datum ili naslov ekrana u redu ispod trake."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Glava panela."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Tekst i vrednosti u tabeli."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Oznake polja iznad unosa, sivi-tekst."
+      },
+      "column-head": {
+        "displayName": "Column head",
+        "purpose": "Samo zaglavlja kolona tabele i dana u kalendaru, verzal."
+      }
+    },
+    "shadows": [
+      {
+        "name": "senka",
+        "value": "0 6px 18px -8px rgb(17 19 17 / 0.28)",
+        "purpose": "Paneli, tabela dana, forma prijave, polje ranga, dani kalendara sa unosom."
+      },
+      {
+        "name": "senka-trake",
+        "value": "0 8px 20px -14px rgb(17 19 17 / 0.6)",
+        "purpose": "Samo lepljiva traka ostatka."
+      },
+      {
+        "name": "fokus",
+        "value": "outline: 3px solid #111311; outline-offset: 2px",
+        "purpose": "Globalni fokus; na crnim površinama obris je svetlozelen."
+      },
+      {
+        "name": "fokus-polja",
+        "value": "0 0 0 3px #c2dcb8",
+        "purpose": "Fokus polja unosa (bez obrisa)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-tabla",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Preispis brojke (520ms), otkrivanje natpisa ranga (450ms), puls tačke profila (1.6s)."
+      },
+      {
+        "name": "preklop",
+        "value": "520ms",
+        "purpose": "Brojka u traci se preispiše kao tabla: clip-path odozgo, -0.18em, blur 2px."
+      },
+      {
+        "name": "disanje",
+        "value": "3.4s ease-in-out infinite",
+        "purpose": "Blago disanje maskote (scaleY 1.025)."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "telefon",
+        "value": "640px"
+      },
+      {
+        "name": "jedna-kolona",
+        "value": "960px"
+      }
+    ],
+    "assets": [
+      {
+        "path": "public/maskota/jede.png",
+        "kind": "raster",
+        "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
+      },
+      {
+        "path": "public/maskota/hoda.png",
+        "kind": "raster",
+        "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
+      },
+      {
+        "path": "public/maskota/slavi.png",
+        "kind": "raster",
+        "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
+      },
+      {
+        "path": "public/maskota/cilj.png",
+        "kind": "raster",
+        "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
+      },
+      {
+        "path": "public/maskota/logo.png",
+        "kind": "raster",
+        "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
+      },
+      {
+        "path": "public/maskota/logo-ikona.png",
+        "kind": "raster",
+        "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
+      },
+      {
+        "path": "public/favicon.svg",
+        "kind": "vector",
+        "provenance": "napravljen u projektu (commit a4dbc2b): crna pločica, zeleni pano, crna strelica"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Glavno dugme",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Jedina glavna akcija ekrana (Dodaj, Sačuvaj, Prijavi se): zelena, crni tekst, strelica zaključana desno.",
+      "html": "<button class=\"ds-dugme ds-glavno\">Dodaj<span class=\"ds-plocica\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></span></button>",
+      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-plocica{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:4px;background:var(--tekst);color:var(--bela)}.ds-dugme{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:0 6px 0 16px;border-radius:var(--r);border:var(--okvir);background:var(--bela);color:var(--tekst);cursor:pointer;font:inherit;font-weight:700;font-size:17px}.ds-dugme .ds-plocica{width:36px;height:36px}.ds-dugme:hover{background:var(--mint)}.ds-dugme:focus-visible{outline:3px solid var(--tekst);outline-offset:2px}.ds-glavno{background:var(--zelena);font-size:20px;font-weight:800;min-height:56px;min-width:280px}.ds-glavno:hover{background:#3fa800}.ds-dugme:disabled{opacity:.5;cursor:not-allowed}"
+    },
+    {
+      "name": "Sekundarno dugme",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Bela kontrola sa crnim okvirom 2px za sporedne akcije.",
+      "html": "<button class=\"ds-dugme\">Uzmi izračunato</button>",
+      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-plocica{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:4px;background:var(--tekst);color:var(--bela)}.ds-dugme{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:0 6px 0 16px;border-radius:var(--r);border:var(--okvir);background:var(--bela);color:var(--tekst);cursor:pointer;font:inherit;font-weight:700;font-size:17px}.ds-dugme .ds-plocica{width:36px;height:36px}.ds-dugme:hover{background:var(--mint)}.ds-dugme:focus-visible{outline:3px solid var(--tekst);outline-offset:2px}"
+    },
+    {
+      "name": "Tiho dugme",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Bez okvira i pozadine: povratak, zaboravljena lozinka, odjava.",
+      "html": "<button class=\"ds-tiho\">Nazad na danas</button>",
+      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-tiho{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 12px;border:2px solid transparent;border-radius:var(--r);background:transparent;color:var(--tekst);font:inherit;font-weight:700;font-size:17px;cursor:pointer}.ds-tiho:hover{background:var(--spolja)}.ds-tiho:focus-visible{outline:3px solid var(--tekst);outline-offset:2px}"
+    },
+    {
+      "name": "Polje unosa",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Oznaka iznad, bela kontrola sa okvirom 2px, fokus svetlozeleni prsten.",
+      "html": "<label class=\"ds-polje\"><span>Količina (g)</span><input class=\"ds-unos\" placeholder=\"npr. 150\"></label>",
+      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-polje{display:grid;gap:6px;max-width:320px}.ds-polje>span{font-size:14px;font-weight:600;color:var(--sivi-tekst)}.ds-unos{height:48px;width:100%;padding:0 14px;border:var(--okvir);border-radius:var(--r);background:var(--bela);font:inherit;font-size:17px;color:var(--tekst);caret-color:var(--zelena);box-sizing:border-box}.ds-unos::placeholder{color:var(--sivi-tekst)}.ds-unos:focus-visible{outline:none;box-shadow:0 0 0 3px var(--svetlozelena)}"
+    },
+    {
+      "name": "Segment",
+      "kind": "chip",
+      "refersTo": "segment-active",
+      "description": "Izbor jedne opcije; izabrana je crna.",
+      "html": "<div class=\"ds-segment\"><label><input type=\"radio\" name=\"c\"><span>Smršati</span></label><label><input type=\"radio\" name=\"c\"><span>Održavati</span></label><label><input type=\"radio\" name=\"c\" checked><span>Bulk</span></label></div>",
+      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-segment{display:flex;border:var(--okvir);border-radius:var(--r);overflow:hidden;max-width:360px}.ds-segment label{flex:1;cursor:pointer}.ds-segment input{position:absolute;opacity:0;pointer-events:none}.ds-segment span{display:block;padding:10px 8px;text-align:center;font-weight:600;border-right:var(--okvir)}.ds-segment label:last-child span{border-right:0}.ds-segment input:checked+span{background:var(--tekst);color:var(--bela)}.ds-segment input:focus-visible+span{box-shadow:inset 0 0 0 3px var(--svetlozelena)}"
+    },
+    {
+      "name": "Gornja traka",
+      "kind": "nav",
+      "refersTo": "top-bar",
+      "description": "Crna traka 56px: ime levo, svetle pločice; crvena tačka dok profil nije popunjen.",
+      "html": "<header class=\"ds-gornja\"><a href=\"#\" class=\"ds-ime\">Mouse's tracker</a><a href=\"#\" class=\"ds-plocica ds-svetla\" aria-label=\"Kalendar\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M16 2v4M8 2v4M3 10h18\"/></svg></a><a href=\"#\" class=\"ds-plocica ds-svetla ds-profil\" aria-label=\"Profil, nije popunjen\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"5\"/><path d=\"M20 21a8 8 0 0 0-16 0\"/></svg><span class=\"ds-tacka\"></span></a></header>",
+      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-plocica{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:4px;background:var(--tekst);color:var(--bela)}.ds-gornja{height:56px;background:var(--tekst);color:var(--bela);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 24px}.ds-ime{color:inherit;font-weight:800;font-size:18px;text-decoration:none}.ds-gornja .ds-plocica{width:38px;height:38px}.ds-svetla{background:var(--bela);color:var(--tekst)}.ds-svetla:hover{background:var(--svetlozelena)}.ds-gornja :focus-visible{outline:3px solid var(--svetlozelena);outline-offset:2px}.ds-profil{position:relative;justify-self:end}.ds-tacka{position:absolute;top:-4px;right:-4px;width:14px;height:14px;border-radius:50%;background:#b3261e;border:2px solid var(--tekst)}"
+    },
+    {
+      "name": "Traka ostatka",
+      "kind": "custom",
+      "refersTo": "traka-ostatka",
+      "description": "Potpis sveta: lepljiva zelena traka sa ostatkom kcal i makrosima; brojka se preispiše kao tabla.",
+      "html": "<section class=\"ds-traka\"><div><p class=\"ds-oznaka\">Ostalo do cilja</p><p class=\"ds-broj\"><span class=\"ds-preklop\">1 915</span><small>kcal</small></p></div><dl class=\"ds-mak\"><div><dt>Proteini</dt><dd>86 g</dd></div><div><dt>Ugljeni hidrati</dt><dd>240 g</dd></div><div><dt>Masti</dt><dd>52 g</dd></div></dl><a href=\"#\" class=\"ds-plocica ds-strelica\" aria-label=\"Dodaj namirnicu\"><svg width=\"34\" height=\"34\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 5v14\"/><path d=\"m19 12-7 7-7-7\"/></svg></a></section>",
+      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-plocica{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:4px;background:var(--tekst);color:var(--bela)}.ds-traka{background:var(--zelena);color:var(--tekst);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:32px;padding:18px 24px;box-shadow:0 8px 20px -14px rgb(17 19 17 / .6)}.ds-traka p{margin:0}.ds-oznaka{font-weight:700;font-size:18px}.ds-broj{font-weight:900;font-size:clamp(56px,7vw,96px);line-height:.95;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.ds-broj small{font-size:.36em;font-weight:700;letter-spacing:0;margin-left:8px}.ds-mak{display:flex;gap:32px;margin:0}.ds-mak dt{font-weight:700;font-size:15px;white-space:nowrap}.ds-mak dd{margin:4px 0 0;font-weight:800;font-size:clamp(26px,3vw,40px);line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}.ds-strelica{width:72px;height:72px}.ds-strelica:hover{background:#2a2e2a}.ds-strelica:focus-visible{outline:3px solid var(--tekst);outline-offset:2px}@media (prefers-reduced-motion:no-preference){.ds-preklop{display:inline-block;animation:ds-preklop 520ms cubic-bezier(.16,1,.3,1)}}@keyframes ds-preklop{from{clip-path:inset(0 0 100% 0);transform:translateY(-.18em);filter:blur(2px)}to{clip-path:inset(0);transform:none;filter:none}}"
+    },
+    {
+      "name": "Panel sa crnom glavom",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Bela površina sa crnom glavom (Title i svetla pločica), telo 18px; poruka i greška unutra.",
+      "html": "<section class=\"ds-panel\"><h2 class=\"ds-glava\"><span class=\"ds-plocica ds-svetla\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"5\"/><path d=\"M20 21a8 8 0 0 0-16 0\"/></svg></span>Tvoji podaci</h2><div class=\"ds-telo\"><p class=\"ds-poruka\">Sačuvano.</p><p class=\"ds-greska\">Ne mogu da učitam unose.</p></div></section>",
+      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-plocica{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:4px;background:var(--tekst);color:var(--bela)}.ds-panel{background:var(--bela);border-radius:var(--r);overflow:hidden;box-shadow:var(--senka);max-width:440px}.ds-glava{display:flex;align-items:center;gap:14px;padding:14px 18px;margin:0;background:var(--tekst);color:var(--bela);font-size:20px;font-weight:700}.ds-glava .ds-plocica{width:32px;height:32px}.ds-svetla{background:var(--bela);color:var(--tekst)}.ds-telo{padding:18px;display:grid;gap:16px}.ds-poruka,.ds-greska{margin:0;padding:12px 14px;border-radius:var(--r);font-weight:600}.ds-poruka{background:var(--mint)}.ds-greska{background:#fdeceb;color:#b3261e}"
+    },
+    {
+      "name": "Polje kalendara",
+      "kind": "custom",
+      "description": "Dan u mesecu: kcal i zelena traka napretka na dnu; danas sa crnim okvirom; budući dani isprekidani.",
+      "html": "<div class=\"ds-kal\"><a href=\"#\" class=\"ds-pk\"><span class=\"ds-br\">12</span><span class=\"ds-kcal\">2 840<small> kcal</small></span><span class=\"ds-tr\" style=\"--p:88%\"></span></a><a href=\"#\" class=\"ds-pk ds-danas\"><span class=\"ds-br\">13</span><span class=\"ds-kcal\">1 285<small> kcal</small></span><span class=\"ds-tr\" style=\"--p:40%\"></span></a><span class=\"ds-pk ds-buduci\"><span class=\"ds-br\">14</span></span></div>",
+      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-kal{display:grid;grid-template-columns:repeat(3,120px);gap:8px;background:var(--pozadina);padding:12px}.ds-pk{position:relative;display:flex;flex-direction:column;justify-content:space-between;aspect-ratio:1/.82;padding:10px 12px 14px;border-radius:var(--r);background:var(--bela);color:var(--tekst);text-decoration:none;overflow:hidden;border:2px solid transparent;box-shadow:var(--senka)}a.ds-pk:hover{border-color:var(--tekst)}a.ds-pk:focus-visible{outline:3px solid var(--tekst);outline-offset:2px}.ds-danas{border-color:var(--tekst)}.ds-danas .ds-br{background:var(--tekst);color:var(--bela);border-radius:4px;padding:0 6px}.ds-buduci{background:transparent;border:2px dashed var(--spolja);color:var(--sivi-tekst);box-shadow:none}.ds-br{font-weight:800;font-size:18px;align-self:flex-start}.ds-kcal{font-weight:900;font-size:24px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}.ds-kcal small{font-size:.5em;font-weight:700;letter-spacing:0}.ds-tr{position:absolute;left:0;bottom:0;height:6px;width:100%;background:var(--pozadina)}.ds-tr::after{content:'';position:absolute;inset:0 auto 0 0;width:var(--p);background:var(--zelena)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Tabla do izlaza",
+    "overview": "Svaki ekran se čita kao aerodromska signalizacija: jedna zelena traka kaže koliko je ostalo do cilja, crne kvadratne pločice nose strelice i piktograme, a sve ostalo je mirna svetlozelena podloga sa belim panelima. Brojevi su glavni sadržaj i stoje monumentalno, tabularno, težine 900; tekst oko njih je kratak i funkcionalan.\n\nGustina je radna, ne dekorativna: paneli, tabela i forma stoje jedno do drugog na računaru, a na telefonu se slažu u kolonu ispod lepljive trake. Kontrole imaju crni okvir od 2 px, kao table sa natpisima, a strelica uvek stoji uz ivicu na koju pokazuje.\n\nSvet odbija standard kategorije: bele kartice sa krugom napretka. Napredak je traka (pano, merač, linija na dnu polja kalendara), nikad krug.",
+    "keyCharacteristics": [
+      "Zadata paleta (PRODUCT.md), zelena rezervisana za signal i glavnu akciju.",
+      "Crni tekst na zelenoj, kao na aerodromskim tablama.",
+      "Monumentalne tabularne brojke (Source Sans 3, 800–900).",
+      "Crne i bele kvadratne pločice sa piktogramom (lucide, SVG).",
+      "Kontrole sa 2 px crnim okvirom, blago zaobljene (6px).",
+      "Jedna meka senka za bele površine; bez tvrdih senki."
+    ],
+    "rules": [
+      {
+        "name": "The Ink on Green Rule",
+        "body": "Na zelenoj ide crni tekst (tekst), nikad beli: belo na #389600 ne prolazi kontrast za sitan tekst.",
+        "section": "colors"
+      },
+      {
+        "name": "The Signal Rule",
+        "body": "Zelena znači ostatak, napredak ili glavnu akciju. Nije pozadina panela i nije ukras.",
+        "section": "colors"
+      },
+      {
+        "name": "The Darker Grey Rule",
+        "body": "Sav sivi tekst je sivi-tekst; sivi iz palete ostaje za netekstualne elemente.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Svaki broj koji se menja ima tabularne cifre (klasa num), da se tabla ne trese pri preispisu.",
+        "section": "typography"
+      },
+      {
+        "name": "The Monumental Figure Rule",
+        "body": "Najvažniji broj na ekranu je najveći i najteži element; oznaka iznad njega je kratka (700, 15–18px) i opisuje broj, nije naslov odeljka.",
+        "section": "typography"
+      },
+      {
+        "name": "The Soft Lift Rule",
+        "body": "Postoji jedna senka za površine i jedna za traku. Bez tvrdih pomerenih senki i bez novih nivoa.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Locked Arrow Rule",
+        "body": "U dugmetu je pločica sa strelicom zaključana uz desnu ivicu (padding 0 6px 0 16px, space-between), jer strelica pokazuje kuda dugme vodi.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** stavljaj crni tekst (tekst) na zelenu.",
+      "**Do** daj svakom promenljivom broju tabularne cifre i najveću težinu na ekranu (900).",
+      "**Do** koristi pločicu (crnu ili svetlu, 4px) za svaku strelicu i piktogram, i zaključaj strelicu uz ivicu na koju pokazuje.",
+      "**Do** daj kontrolama okvir 2px tekst i radijus 6px.",
+      "**Do** koristi sivi-tekst za sav sitan sivi tekst.",
+      "**Do** pokazuj napredak trakom (zelena ispuna na podlozi).",
+      "**Do** poštuj prefers-reduced-motion za svaku animaciju."
+    ],
+    "donts": [
+      "**Don't** stavljaj beli tekst na zelenu.",
+      "**Don't** koristi zelenu kao pozadinu panela, kartica ili ukrasa; ona je signal.",
+      "**Don't** pravi bele kartice sa krugom napretka.",
+      "**Don't** koristi sivi (#818581) za tekst.",
+      "**Don't** dodaj tvrde pomerene senke ni nove nivoe senki.",
+      "**Don't** dodaj nalepnice u verzalu iznad naslova; verzal sa razmakom je samo za zaglavlja kolona.",
+      "**Don't** uvodi drugi akcent ili drugu porodicu fontova."
+    ]
+  }
+}

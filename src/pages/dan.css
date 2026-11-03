@@ -11,7 +11,8 @@
 .traka-broj small { font-size: 0.36em; font-weight: 700; letter-spacing: 0; margin-left: 8px; }
 .traka-sitno { font-weight: 600; margin-top: 4px; }
 .traka-makrosi { display: flex; gap: clamp(20px, 3vw, 40px); margin: 0; }
-.traka-makrosi dt { font-weight: 700; font-size: 15px; }
+.traka-makrosi dt { font-weight: 700; font-size: 15px; white-space: nowrap; }
+.traka-makrosi dd { white-space: nowrap; }
 .traka-makrosi dd { margin: 4px 0 0; font-weight: 800; font-size: clamp(26px, 3vw, 40px); line-height: 1; }
 .traka-strelica { width: 72px; height: 72px; }
 .traka-strelica:hover { background: #2a2e2a; }
@@ -119,11 +120,15 @@
   .dan { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
-  .traka { grid-template-columns: 1fr auto; gap: 8px 16px; padding: 12px 16px; }
+  /* Lepljiva traka na telefonu mora biti niska (~120px) da ne pokriva tabelu; "uneto X od Y" se vidi u zbiru tabele */
+  .traka { grid-template-columns: 1fr auto; gap: 2px 16px; padding: 8px 16px; }
+  .traka-oznaka { font-size: 15px; line-height: 1; }
+  .traka-broj { font-size: 48px; }
   .traka-makrosi { grid-column: 1 / -1; grid-row: 2; justify-content: space-between; }
   .traka-makrosi dt { font-size: 13px; }
-  .traka-strelica { width: 52px; height: 52px; }
-  .traka-sitno { font-size: 14px; }
+  .traka-makrosi dd { font-size: 22px; margin-top: 2px; }
+  .traka-strelica { width: 44px; height: 44px; }
+  .traka-sitno { display: none; }
   .traka-profil { grid-column: 1 / -1; }
   .dan-tabela { padding: 4px 14px 12px; }
   .tabela .mak { display: none; }

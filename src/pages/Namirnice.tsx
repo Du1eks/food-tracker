@@ -38,7 +38,7 @@ export default function Namirnice() {
 
   return (
     <>
-      <div className="dan-red"><h1>Namirnice</h1></div>
+      <div className="dan-red namirnice-naslov"><h1>Namirnice</h1></div>
       <main className="namirnice">
         <p className="tiho-tekst">Zajednička baza: dodaje je svako, a obrisati proizvod može samo ko ga je uneo.</p>
         <form className="pretraga" onSubmit={trazi}>

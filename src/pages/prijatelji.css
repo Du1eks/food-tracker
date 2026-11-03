@@ -29,20 +29,19 @@ a.rang:hover .rang-poziv, a.rang:focus-visible .rang-poziv { max-width: 200px; o
 /* na ovoj slici je miš manji zbog oblačića "You are mouse", pa je veća da tekst bude čitljiv */
 .rang-omot .maskota.cilj { height: 110px; left: -20px; }
 
-/* Broj iskoči kad se rang učita ili promeni, a strelica povremeno gurne napred */
+/* Broj iskoči kad se rang učita ili promeni */
 @media (prefers-reduced-motion: no-preference) {
   .rang-mesto { display: inline-block; animation: rang-skok 700ms cubic-bezier(0.34, 1.56, 0.64, 1); }
-  .rang-strelica svg { animation: rang-gura 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
 }
 @keyframes rang-skok {
   0% { transform: scale(0.3) translateY(10px); opacity: 0; }
   60% { transform: scale(1.12); opacity: 1; }
   100% { transform: none; }
 }
-@keyframes rang-gura { 0%, 70%, 100% { transform: none; } 80% { transform: translateX(4px); } }
 
 /* U zelenoj traci (računar): na sredini između masti i strelice */
-.traka:has(.rang-omot) { grid-template-columns: auto auto 1fr auto; }
+.traka:has(.rang-omot) { grid-template-columns: auto auto 1fr auto; gap: clamp(16px, 2vw, 48px); }
+.traka:has(.rang-omot) .traka-makrosi { gap: clamp(16px, 2vw, 40px); }
 .traka .rang-omot { grid-column: auto; }
 /* Iznad unosa (uži ekran): miš je viši od polja, pa mu treba mesta da ne pokrije red sa datumom */
 .dan > .rang-omot { margin-top: 30px; }

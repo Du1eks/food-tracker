@@ -30,6 +30,7 @@ Thumbs.db
 # Impeccable: skice za izbor pravca i referentne slike
 .impeccable/mocks/
 .impeccable/ref/
+.impeccable/review/
 
 # Lokalne beleške (ne idu na GitHub)
 CLAUDE.md

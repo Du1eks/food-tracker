@@ -96,7 +96,7 @@ function Forma({ profil, osveziProfil }: { profil: ProfilTip; osveziProfil: () =
 
   return (
     <>
-      <div className="dan-red"><h1>Profil</h1></div>
+      <div className="dan-red profil-naslov"><h1>Profil</h1></div>
       <form className="dan profil" onSubmit={sacuvaj}>
         <section className="panel" aria-labelledby="telo-naslov">
           <h2 id="telo-naslov" className="panel-glava"><span className="plocica svetla" aria-hidden><UserRound size={20} strokeWidth={2.5} /></span>Tvoji podaci</h2>
