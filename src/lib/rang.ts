@@ -1,19 +1,24 @@
 // Rang među prijateljima i poza maskote. Čista logika, bez baze (docs/api.md: rang računa app).
-export type Zbir = { id: string; nadimak: string | null; kcal: number; proteini: number; uh: number; masti: number; procenat: number }
+export type Zbir = {
+  id: string; nadimak: string | null; kcal: number; proteini: number; uh: number; masti: number; procenat: number
+  // false = nema dnevni cilj kcal (profil nije popunjen), pa procenat ne znači ništa
+  ima_cilj: boolean
+}
 
 export type Poza = 'jede' | 'hoda' | 'slavi' | 'cilj'
 
 export type Rang = { mesto: number; ukupno: number; poza: Poza }
 
-// Ko nije uneo kalorije uvek je poslednji (sa 0%), ma koliko mali bio tuđi procenat
-const uneo = (r: Zbir) => r.kcal > 0
+// U rangu se računa samo ko ima dnevni cilj i uneo je kalorije. Ostali su uvek poslednji,
+// ma koliko mali bio tuđi procenat: bez unosa (0%) ili bez podataka u profilu ("nisu uneti podaci").
+const uneo = (r: Zbir) => r.ima_cilj && r.kcal > 0
 const ispred = (a: Zbir, b: Zbir) => (uneo(a) && !uneo(b)) || (uneo(a) === uneo(b) && a.procenat > b.procenat)
 
-// Mesto = 1 + broj onih ispred (izjednačeni dele mesto); bez unosa je poslednje mesto
+// Mesto = 1 + broj onih ispred (izjednačeni dele mesto); ko se ne računa ima poslednje mesto
 export const mesto = (redovi: Zbir[], r: Zbir) =>
   uneo(r) ? 1 + redovi.filter((x) => ispred(x, r)).length : redovi.length
 
-// Prvi: srećan (jede, a slavi kad je dostigao cilj); poslednji ili bez unosa: ljut; ostali i samac: hoda.
+// Prvi: srećan (jede, a slavi kad je dostigao cilj); poslednji ili van ranga: ljut; ostali i samac: hoda.
 export function rang(redovi: Zbir[], mojId: string): Rang | null {
   const ja = redovi.find((r) => r.id === mojId)
   if (!ja) return null
@@ -34,8 +39,12 @@ export function sufiksMesta(n: number): string {
   return ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[n % 10] ?? 'th'
 }
 
-// Najbolji prvi, bez unosa na kraju; izjednačeni po nadimku, da redosled ne skače pri osvežavanju
+// Najbolji prvi, na kraju bez unosa, pa bez podataka; izjednačeni po nadimku, da redosled ne skače pri osvežavanju
 export const poRangu = (redovi: Zbir[]) =>
   [...redovi].sort(
-    (a, b) => Number(uneo(b)) - Number(uneo(a)) || b.procenat - a.procenat || (a.nadimak ?? '').localeCompare(b.nadimak ?? ''),
+    (a, b) =>
+      Number(uneo(b)) - Number(uneo(a)) ||
+      Number(b.ima_cilj) - Number(a.ima_cilj) ||
+      b.procenat - a.procenat ||
+      (a.nadimak ?? '').localeCompare(b.nadimak ?? ''),
   )

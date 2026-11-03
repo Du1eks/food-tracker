@@ -82,4 +82,5 @@ erDiagram
   - `CHECK (ko_salje <> ko_prima)`: ne možeš dodati sebe.
   - Unique indeks na `(least(ko_salje, ko_prima), greatest(ko_salje, ko_prima))`: par A–B postoji samo jednom, bez obzira ko je prvi poslao.
 - **Rang** se ne čuva; računa se pri čitanju iz dnevnog zbira: `min(kcal / cilj_kcal, 1)`, izjednačenja su dozvoljena.
+  - Računa se samo ko ima dnevni cilj (`ima_cilj`) i uneo je kalorije. Ostali su uvek poslednji: bez unosa 0%, a bez popunjenog profila red je precrtan sa "nisu uneti podaci".
 - `CHECK` ograničenja u bazi odbijaju besmislene vrednosti.

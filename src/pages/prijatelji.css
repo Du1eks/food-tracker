@@ -72,6 +72,10 @@ a.rang-red:hover { background: var(--mint); }
 .rang-red-broj { display: grid; text-align: right; }
 .rang-red-broj b { font-size: 20px; font-weight: 800; }
 .rang-red-broj small { color: var(--sivi-tekst); font-size: 13px; font-weight: 600; }
+/* Bez dnevnog cilja: precrtan red, i dalje poslednji */
+.rang-lista li.bez-podataka .rang-red-mesto, .rang-lista li.bez-podataka .rang-red-ime b {
+  color: var(--sivi-tekst); text-decoration: line-through; text-decoration-thickness: 2px;
+}
 
 .merac { display: block; height: 10px; border-radius: 999px; background: var(--pozadina); overflow: hidden; }
 .merac i { display: block; height: 100%; background: var(--zelena); border-radius: 999px; }

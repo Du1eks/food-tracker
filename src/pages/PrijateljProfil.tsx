@@ -49,10 +49,14 @@ export default function PrijateljProfil() {
             <h2 className="panel-glava">{mesto(zbirovi, r)}. mesto od {zbirovi.length}</h2>
             <div className="panel-telo">
               <p className="prijatelj-broj num"><span>{fmt(r.kcal)}</span><small>kcal uneto</small></p>
-              <div>
-                <p className="tiho-tekst num">{pct}% dnevnog cilja kcal</p>
-                <span className="merac velik" aria-hidden><i style={{ width: `${pct}%` }} /></span>
-              </div>
+              {r.ima_cilj ? (
+                <div>
+                  <p className="tiho-tekst num">{pct}% dnevnog cilja kcal</p>
+                  <span className="merac velik" aria-hidden><i style={{ width: `${pct}%` }} /></span>
+                </div>
+              ) : (
+                <p className="tiho-tekst">Nisu uneti podaci o profilu, pa nema dnevni cilj ni procenat.</p>
+              )}
               <dl className="prijatelj-makrosi">
                 {makrosi.map(([naziv, v]) => (
                   <div key={naziv}><dt>{naziv}</dt><dd className="num">{fmt(v)} g</dd></div>

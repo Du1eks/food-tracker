@@ -5,7 +5,9 @@ import { rang, poRangu, sufiksMesta, type Zbir } from './rang.ts'
 import { mesto } from './rang.ts'
 
 // procenat 0 znači da nije uneo ništa (kcal 0); inače je kcal srazmeran cilju od 3200
-const z = (id: string, procenat: number): Zbir => ({ id, nadimak: id, kcal: procenat * 3200, proteini: 0, uh: 0, masti: 0, procenat })
+const z = (id: string, procenat: number): Zbir => ({ id, nadimak: id, kcal: procenat * 3200, proteini: 0, uh: 0, masti: 0, procenat, ima_cilj: true })
+// profil nije popunjen: nema dnevni cilj, pa je procenat 0 bez obzira na unos
+const bez = (id: string, kcal = 0): Zbir => ({ ...z(id, 0), kcal, ima_cilj: false })
 
 // samac: nema sa kim da se poredi
 assert.deepEqual(rang([z('a', 0.5)], 'a'), { mesto: 1, ukupno: 1, poza: 'hoda' })
@@ -37,6 +39,15 @@ assert.equal(mesto(svi0, svi0[0]), 3)
 
 // više njih bez unosa dele poslednje mesto
 assert.deepEqual(rang([z('a', 0.5), z('b', 0), z('c', 0)], 'c'), { mesto: 3, ukupno: 3, poza: 'cilj' })
+
+// bez podataka u profilu: poslednji i ljut, čak i kad je nešto uneo
+const nepopunjen = [z('a', 0.02), bez('b', 900), z('c', 0)]
+assert.deepEqual(rang(nepopunjen, 'b'), { mesto: 3, ukupno: 3, poza: 'cilj' })
+assert.deepEqual(rang(nepopunjen, 'a'), { mesto: 1, ukupno: 3, poza: 'jede' })
+// ko ima cilj ali nije uneo ništa i dalje je ispred onoga bez podataka u tabeli
+assert.deepEqual(poRangu(nepopunjen).map((r) => r.id), ['a', 'c', 'b'])
+// samac bez podataka
+assert.deepEqual(rang([bez('a')], 'a'), { mesto: 1, ukupno: 1, poza: 'hoda' })
 
 // nema me na listi
 assert.equal(rang(ekipa, 'x'), null)

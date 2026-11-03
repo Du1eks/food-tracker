@@ -98,19 +98,26 @@ export default function Prijatelji() {
                       <span className="rang-red-mesto num">{mesto(zbirovi, r)}.</span>
                       <span className="rang-red-ime">
                         <b>{ja ? 'Ti' : r.nadimak}</b>
-                        <span className="merac" aria-hidden><i style={{ width: `${pct}%` }} /></span>
+                        {r.ima_cilj && <span className="merac" aria-hidden><i style={{ width: `${pct}%` }} /></span>}
                       </span>
-                      <span className="rang-red-broj num"><b>{pct}%</b><small>{fmt(r.kcal)} kcal</small></span>
+                      {r.ima_cilj ? (
+                        <span className="rang-red-broj num"><b>{pct}%</b><small>{fmt(r.kcal)} kcal</small></span>
+                      ) : (
+                        <span className="rang-red-broj"><small>Nisu uneti podaci</small></span>
+                      )}
                       {!ja && <ChevronRight size={20} aria-hidden />}
                     </>
                   )
                   return (
-                    <li key={r.id} className={ja ? 'ja' : undefined}>
+                    <li key={r.id} className={[ja && 'ja', !r.ima_cilj && 'bez-podataka'].filter(Boolean).join(' ') || undefined}>
                       {ja ? <div className="rang-red">{sadrzaj}</div> : <Link className="rang-red" to={`/prijatelji/${r.id}`}>{sadrzaj}</Link>}
                     </li>
                   )
                 })}
               </ol>
+              {zbirovi.some((r) => r.id === profil?.id && !r.ima_cilj) && (
+                <p className="poruka">Popuni <Link to="/profil">profil</Link> da ti se izračuna dnevni cilj i da uđeš u rang.</p>
+              )}
               {zbirovi.length === 1 && (
                 <p className="prazno-dan tiho-tekst"><Users size={20} aria-hidden /> Još nemaš prijatelja. Nađi ih po nadimku.</p>
               )}
