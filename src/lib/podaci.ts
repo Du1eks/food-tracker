@@ -111,6 +111,8 @@ export async function zbirZaDan(datum: string): Promise<Zbir[]> {
   const redovi = proveri<Zbir[]>(await supabase.rpc('dnevni_zbir_prijatelja', { d: datum }))
   return redovi.map((r) => ({
     ...r, kcal: Number(r.kcal), proteini: Number(r.proteini), uh: Number(r.uh), masti: Number(r.masti), procenat: Number(r.procenat),
+    // stara verzija funkcije (pre migracije ima_cilj) ne šalje polje; tad nikoga ne precrtavamo
+    ima_cilj: r.ima_cilj ?? true,
   }))
 }
 

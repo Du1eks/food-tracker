@@ -9,7 +9,8 @@ language sql stable security definer set search_path = '' as $$
   select p.id, p.nadimak,
          coalesce(sum(u.kcal), 0), coalesce(sum(u.proteini), 0),
          coalesce(sum(u.uh), 0), coalesce(sum(u.masti), 0),
-         coalesce(least(sum(u.kcal) / nullif(p.cilj_kcal, 0), 1), 0),
+         -- least() preskače null, pa je bez cilja ispadalo 100%; zato eksplicitna grana
+         case when p.cilj_kcal > 0 then least(coalesce(sum(u.kcal), 0) / p.cilj_kcal, 1) else 0 end,
          coalesce(p.cilj_kcal, 0) > 0
   from public.profil p
   left join public.unos u on u.korisnik_id = p.id and u.datum = d
