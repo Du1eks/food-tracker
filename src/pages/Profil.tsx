@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import { ArrowRight, Calculator, LogOut, UserRound } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { dnevniCilj, fmt, godineOd, type Makrosi, type Telo } from '../lib/ishrana'
-import { sacuvajProfil, type Profil as ProfilTip } from '../lib/podaci'
+import { NADIMAK_PORUKA, nadimakIspravan, sacuvajProfil, type Profil as ProfilTip } from '../lib/podaci'
 import { useProfil } from '../components/useProfil'
 import './dan.css'
 import './profil.css'
@@ -29,7 +29,7 @@ export default function Profil() {
 function Forma({ profil, osveziProfil }: { profil: ProfilTip; osveziProfil: () => Promise<void> }) {
   const idi = useNavigate()
   const [f, setF] = useState({
-    ime: profil.ime ?? '', pol: profil.pol ?? '', datum_rodjenja: profil.datum_rodjenja ?? '',
+    nadimak: profil.nadimak ?? '', ime: profil.ime ?? '', pol: profil.pol ?? '', datum_rodjenja: profil.datum_rodjenja ?? '',
     visina_cm: s(profil.visina_cm), tezina_kg: s(profil.tezina_kg), treninga_nedeljno: s(profil.treninga_nedeljno),
     koraka_dnevno: s(profil.koraka_dnevno), cilj: profil.cilj ?? '', ciljna_tezina_kg: s(profil.ciljna_tezina_kg),
     cilj_kcal: s(profil.cilj_kcal), cilj_proteini: s(profil.cilj_proteini), cilj_uh: s(profil.cilj_uh), cilj_masti: s(profil.cilj_masti),
@@ -53,6 +53,7 @@ function Forma({ profil, osveziProfil }: { profil: ProfilTip; osveziProfil: () =
 
   async function sacuvaj(e: React.FormEvent) {
     e.preventDefault()
+    if (f.nadimak.trim() && !nadimakIspravan(f.nadimak)) return setGreska(NADIMAK_PORUKA)
     for (const [k, [min, max, poruka]] of Object.entries(GRANICE)) {
       const v = f[k as keyof typeof f]
       if (v && !(uBroj(v) >= min && uBroj(v) <= max)) return setGreska(poruka)
@@ -66,15 +67,16 @@ function Forma({ profil, osveziProfil }: { profil: ProfilTip; osveziProfil: () =
     setRadi(true); setGreska('')
     try {
       await sacuvajProfil({
-        id: profil.id, ime: f.ime.trim() || null, pol: (f.pol || null) as ProfilTip['pol'], datum_rodjenja: f.datum_rodjenja || null,
+        id: profil.id, nadimak: f.nadimak.trim() || null, ime: f.ime.trim() || null, pol: (f.pol || null) as ProfilTip['pol'], datum_rodjenja: f.datum_rodjenja || null,
         visina_cm: broj(f.visina_cm), tezina_kg: broj(f.tezina_kg), treninga_nedeljno: broj(f.treninga_nedeljno),
         koraka_dnevno: broj(f.koraka_dnevno), cilj: (f.cilj || null) as ProfilTip['cilj'], ciljna_tezina_kg: broj(f.ciljna_tezina_kg),
         ...ciljevi,
       })
       await osveziProfil()
       idi('/')
-    } catch {
-      setGreska('Profil nije sačuvan. Proveri vrednosti i internet.')
+    } catch (e) {
+      const zauzet = e instanceof Error && /profil_nadimak_jedinstven/.test(e.message)
+      setGreska(zauzet ? 'Nadimak je zauzet. Probaj drugi.' : 'Profil nije sačuvan. Proveri vrednosti i internet.')
       setRadi(false)
     }
   }
@@ -99,6 +101,9 @@ function Forma({ profil, osveziProfil }: { profil: ProfilTip; osveziProfil: () =
         <section className="panel" aria-labelledby="telo-naslov">
           <h2 id="telo-naslov" className="panel-glava"><span className="plocica svetla" aria-hidden><UserRound size={20} strokeWidth={2.5} /></span>Tvoji podaci</h2>
           <div className="panel-telo">
+            <label className="polje"><span>Nadimak (po njemu te prijatelji nalaze)</span>
+              <input className="unos" value={f.nadimak} onChange={set('nadimak')} autoComplete="nickname" minLength={3} maxLength={20} />
+            </label>
             <label className="polje"><span>Ime</span><input className="unos" value={f.ime} onChange={set('ime')} autoComplete="given-name" /></label>
             <fieldset className="polje"><legend className="sr">Pol</legend><span aria-hidden>Pol</span>{izbor('pol', [['m', 'Muški'], ['z', 'Ženski']])}</fieldset>
             <div className="dva">

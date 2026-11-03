@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { ArrowRight } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { NADIMAK_PORUKA, nadimakIspravan, nadimakSlobodan } from '../lib/podaci'
 import './nalog.css'
 
 function Okvir({ naslov, children }: { naslov: string; children: React.ReactNode }) {
@@ -32,6 +33,8 @@ function prevedi(poruka: string): string {
   if (/email not confirmed/i.test(poruka)) return 'Email još nije potvrđen. Klikni link koji smo ti poslali.'
   if (/already registered/i.test(poruka)) return 'Nalog sa ovim emailom već postoji. Prijavi se.'
   if (/password should be at least/i.test(poruka)) return 'Lozinka mora imati bar 6 znakova.'
+  // trigger za profil puca na unique indeksu kad neko drugi u međuvremenu uzme nadimak
+  if (/database error saving new user/i.test(poruka)) return 'Nalog nije napravljen. Nadimak je verovatno upravo zauzet, probaj drugi.'
   if (/rate limit/i.test(poruka)) return 'Previše pokušaja. Sačekaj par minuta pa probaj ponovo.'
   return poruka
 }
@@ -81,6 +84,7 @@ export function Prijava() {
 }
 
 export function Registracija() {
+  const [nadimak, setNadimak] = useState('')
   const [email, setEmail] = useState('')
   const [lozinka, setLozinka] = useState('')
   const [ponovo, setPonovo] = useState('')
@@ -90,9 +94,21 @@ export function Registracija() {
 
   async function registruj(e: React.FormEvent) {
     e.preventDefault()
+    if (!nadimakIspravan(nadimak)) return setGreska(NADIMAK_PORUKA)
     if (lozinka !== ponovo) return setGreska('Lozinke se ne poklapaju.')
     setRadi(true); setGreska('')
-    const { error } = await supabase.auth.signUp({ email, password: lozinka, options: { emailRedirectTo: location.origin } })
+    try {
+      if (!(await nadimakSlobodan(nadimak))) {
+        setRadi(false)
+        return setGreska('Nadimak je zauzet. Probaj drugi.')
+      }
+    } catch {
+      setRadi(false)
+      return setGreska('Ne mogu da proverim nadimak. Proveri internet pa probaj ponovo.')
+    }
+    const { error } = await supabase.auth.signUp({
+      email, password: lozinka, options: { emailRedirectTo: location.origin, data: { nadimak: nadimak.trim() } },
+    })
     setRadi(false)
     if (error) setGreska(prevedi(error.message))
     else setPoslato(true)
@@ -111,6 +127,9 @@ export function Registracija() {
   return (
     <Okvir naslov="Registracija">
       <form className="nalog-forma" onSubmit={registruj}>
+        <label className="polje"><span>Nadimak (3–20 znakova, po njemu te prijatelji nalaze)</span>
+          <input className="unos" autoComplete="nickname" required minLength={3} maxLength={20} value={nadimak} onChange={(e) => setNadimak(e.target.value)} />
+        </label>
         <label className="polje"><span>Email</span>
           <input className="unos" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
         </label>

@@ -7,6 +7,7 @@ import { unosiZaDan } from '../lib/podaci'
 import { useProfil } from '../components/useProfil'
 import DodajNamirnicu from '../components/DodajNamirnicu'
 import TabelaDana from '../components/TabelaDana'
+import RangPolje from '../components/RangPolje'
 import './dan.css'
 
 export default function Dan() {
@@ -55,6 +56,7 @@ export default function Dan() {
         )}
       </nav>
       <main className="dan">
+        {jeDanas && <RangPolje kljuc={uneto.kcal} />}
         <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} />
         <section className="dan-tabela" aria-label="Unosi za dan">
           {greska ? <p className="greska" role="alert">{greska}</p> : <TabelaDana unosi={unosi} onPromena={ucitaj} />}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet } from 'react-router'
-import { CalendarDays, UserRound } from 'lucide-react'
+import { CalendarDays, UserRound, Users } from 'lucide-react'
 import { ucitajProfil, type Profil } from '../lib/podaci'
 import type { OkvirKontekst } from './useProfil'
 import './okvir.css'
@@ -27,10 +27,15 @@ export default function Okvir() {
         <Link to="/kalendar" className="plocica svetla" aria-label="Kalendar">
           <CalendarDays size={22} strokeWidth={2.25} aria-hidden />
         </Link>
-        <Link to="/profil" className="plocica svetla gornja-profil" aria-label={nepopunjen ? 'Profil, nije popunjen' : 'Profil'}>
-          <UserRound size={22} strokeWidth={2.25} aria-hidden />
-          {nepopunjen && <span className="tacka" aria-hidden />}
-        </Link>
+        <div className="gornja-desno">
+          <Link to="/prijatelji" className="plocica svetla" aria-label="Prijatelji">
+            <Users size={22} strokeWidth={2.25} aria-hidden />
+          </Link>
+          <Link to="/profil" className="plocica svetla gornja-profil" aria-label={nepopunjen ? 'Profil, nije popunjen' : 'Profil'}>
+            <UserRound size={22} strokeWidth={2.25} aria-hidden />
+            {nepopunjen && <span className="tacka" aria-hidden />}
+          </Link>
+        </div>
       </header>
       <Outlet context={{ profil, osveziProfil } satisfies OkvirKontekst} />
     </>

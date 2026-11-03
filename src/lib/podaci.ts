@@ -1,9 +1,11 @@
 // Svi pozivi baze na jednom mestu (docs/api.md). RLS u bazi sam filtrira na ulogovanog korisnika.
 import { supabase } from './supabase'
 import type { Makrosi, Proizvod, Unos } from './ishrana'
+import type { Zbir } from './rang'
 
 export type Profil = {
   id: string
+  nadimak: string | null
   ime: string | null
   pol: 'm' | 'z' | null
   datum_rodjenja: string | null
@@ -61,6 +63,55 @@ export async function ucitajProfil(): Promise<Profil | null> {
 export async function sacuvajProfil(p: Profil) {
   const { id, ...izmena } = p
   proveri(await supabase.from('profil').update(izmena).eq('id', id))
+}
+
+// Prijatelji (docs/api.md). profil je privatan, pa nadimke i tuđe zbirove izdaju funkcije u bazi.
+export type Zahtev = {
+  drugi_id: string
+  drugi_nadimak: string | null
+  status: 'na_cekanju' | 'prihvaceno'
+  poslao_sam: boolean
+  kreirano: string
+}
+
+// Isto ograničenje kao CHECK na profil.nadimak
+export const NADIMAK_PORUKA = 'Nadimak mora imati od 3 do 20 znakova.'
+export const nadimakIspravan = (s: string) => s.trim().length >= 3 && s.trim().length <= 20
+
+export async function nadimakSlobodan(trazeni: string): Promise<boolean> {
+  return proveri(await supabase.rpc('nadimak_slobodan', { trazeni }))
+}
+
+export async function nadjiPoNadimku(trazeni: string): Promise<{ id: string; nadimak: string } | null> {
+  const redovi = proveri<{ id: string; nadimak: string }[]>(await supabase.rpc('nadji_po_nadimku', { trazeni }))
+  return redovi[0] ?? null
+}
+
+export async function mojiZahtevi(): Promise<Zahtev[]> {
+  return proveri(await supabase.rpc('moji_zahtevi'))
+}
+
+export async function posaljiZahtev(kome: string) {
+  proveri(await supabase.from('prijateljstvo').insert({ ko_prima: kome }))
+}
+
+// RLS dozvoljava prihvatanje samo primaocu i brisanje samo redova u kojima sam i ja,
+// pa je filter po drugoj strani dovoljan.
+export async function prihvatiZahtev(odKoga: string) {
+  proveri(await supabase.from('prijateljstvo').update({ status: 'prihvaceno' }).eq('ko_salje', odKoga))
+}
+
+// Odbij / povuci zahtev / ukloni prijatelja
+export async function ukloniPrijateljstvo(drugi: string) {
+  proveri(await supabase.from('prijateljstvo').delete().or(`ko_salje.eq.${drugi},ko_prima.eq.${drugi}`))
+}
+
+// Ja + prihvaćeni prijatelji, zbir za dan (nikad sirovi unosi)
+export async function zbirZaDan(datum: string): Promise<Zbir[]> {
+  const redovi = proveri<Zbir[]>(await supabase.rpc('dnevni_zbir_prijatelja', { d: datum }))
+  return redovi.map((r) => ({
+    ...r, kcal: Number(r.kcal), proteini: Number(r.proteini), uh: Number(r.uh), masti: Number(r.masti), procenat: Number(r.procenat),
+  }))
 }
 
 // Kalendar: zbir kcal po danu za opseg datuma

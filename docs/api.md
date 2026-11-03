@@ -45,8 +45,8 @@ Tabele idu kroz `from(...)`, a funkcije koje izdaju samo deo podataka kroz **RPC
 | Nađi korisnika po nadimku | RPC | `rpc('nadji_po_nadimku', { trazeni })` → niz od 0 ili 1 reda `{ id, nadimak }` |
 | Pošalji zahtev | Create | `from('prijateljstvo').insert({ ko_prima: id })` (`ko_salje` i `status` popunjava baza) |
 | Zahtevi i prijatelji (sa nadimcima) | RPC | `rpc('moji_zahtevi')` → `{ drugi_id, drugi_nadimak, status, poslao_sam, kreirano }`; dolazni zahtevi su `status = 'na_cekanju' && !poslao_sam` |
-| Prihvati zahtev | Update | `from('prijateljstvo').update({ status: 'prihvaceno' }).eq('ko_salje', drugiId).eq('ko_prima', ja)` |
-| Odbij zahtev / povuci zahtev / ukloni prijatelja | Delete | `from('prijateljstvo').delete().or('and(ko_salje.eq.A,ko_prima.eq.B),and(ko_salje.eq.B,ko_prima.eq.A)')` (A = ja, B = drugi) |
+| Prihvati zahtev | Update | `from('prijateljstvo').update({ status: 'prihvaceno' }).eq('ko_salje', drugiId)` (RLS: sme samo primalac) |
+| Odbij zahtev / povuci zahtev / ukloni prijatelja | Delete | `from('prijateljstvo').delete().or('ko_salje.eq.B,ko_prima.eq.B')` (B = drugi; RLS ostavlja samo redove u kojima sam i ja) |
 | Rang lista i brojke za danas | RPC | `rpc('dnevni_zbir_prijatelja', { d: danas() })` |
 | Stari nalog postavlja nadimak | Update | `from('profil').update({ nadimak }).eq('id', userId)` |
 
