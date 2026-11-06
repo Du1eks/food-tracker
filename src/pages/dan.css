@@ -58,7 +58,7 @@
   display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
   padding-bottom: 16px; border-bottom: 1px solid var(--spolja);
 }
-.panel-telo { padding: 18px; display: grid; gap: 16px; }
+.panel-telo { padding: 18px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
 
 .pretraga { display: flex; gap: 8px; }
 .pretraga .plocica { width: 48px; height: 48px; border: 0; cursor: pointer; }
@@ -88,7 +88,11 @@
 .dva { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end; }
 /* Bez min-width: 0 polje datuma (ima svoju najmanju širinu) probija kolonu i preklapa susedno polje */
 .dva > .polje, .dva .unos { min-width: 0; }
+/* iOS Safari ignora width za type=date dok ne skineš sistemski izgled */
+.unos[type="date"] { appearance: none; -webkit-appearance: none; display: block; max-width: 100%; text-align: left; }
 @media (max-width: 380px) { .dva { grid-template-columns: 1fr; } }
+/* Datum rođenja i visina su na telefonu jedno ispod drugog: datum traži više mesta nego što dve kolone imaju */
+@media (max-width: 480px) { .dva:has(input[type="date"]) { grid-template-columns: 1fr; } }
 .daje { height: 48px; display: flex; align-items: center; padding: 0 14px; border-radius: var(--r); background: var(--pozadina); font-weight: 800; font-size: 20px; }
 .unos-forma .dugme.glavno { width: 100%; }
 
