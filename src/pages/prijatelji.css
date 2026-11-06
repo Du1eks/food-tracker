@@ -16,8 +16,8 @@ a.rang:hover { background: var(--mint); }
   transition: max-width 450ms cubic-bezier(0.16, 1, 0.3, 1), opacity 250ms ease-out, margin-right 450ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 a.rang:hover .rang-poziv, a.rang:focus-visible .rang-poziv { max-width: 200px; opacity: 1; margin-right: 14px; }
-/* Telefon nema prelaz mišem: natpis je stalno vidljiv i prelama se kad nema mesta */
-@media (hover: none) {
+/* Telefon nema prelaz mišem (a uzak prozor ne sme da ostane bez natpisa): natpis je stalno vidljiv i prelama se kad nema mesta */
+@media (hover: none), (max-width: 640px) {
   .rang-poziv { max-width: none; opacity: 1; margin-right: 14px; white-space: normal; }
 }
 .rang-strelica { width: 36px; height: 36px; }
@@ -31,7 +31,8 @@ a.rang:hover .rang-poziv, a.rang:focus-visible .rang-poziv { max-width: 200px; o
 
 /* Broj iskoči kad se rang učita ili promeni */
 @media (prefers-reduced-motion: no-preference) {
-  .rang-mesto { display: inline-block; animation: rang-skok 700ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+  /* :not(.plocica) jer inline-block ruši centriranje ikone u zelenoj pločici */
+  .rang-mesto:not(.plocica) { display: inline-block; animation: rang-skok 700ms cubic-bezier(0.34, 1.56, 0.64, 1); }
 }
 @keyframes rang-skok {
   0% { transform: scale(0.3) translateY(10px); opacity: 0; }
@@ -45,6 +46,8 @@ a.rang:hover .rang-poziv, a.rang:focus-visible .rang-poziv { max-width: 200px; o
 .traka .rang-omot { grid-column: auto; }
 /* Iznad unosa (uži ekran): miš je viši od polja, pa mu treba mesta da ne pokrije red sa datumom */
 .dan > .rang-omot { margin-top: 30px; }
+/* Poza "You are mouse" viri 20px levo od polja, pa joj treba margina da ne ostane uz ivicu ekrana */
+.dan > .rang-omot:has(.maskota.cilj) { margin-left: 24px; }
 
 /* Blago "disanje", samo kad korisnik ne traži manje pokreta */
 @media (prefers-reduced-motion: no-preference) {

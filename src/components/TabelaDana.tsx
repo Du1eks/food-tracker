@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Check, Pencil, Trash2, X } from 'lucide-react'
+import { Check, ChevronDown, Pencil, Trash2, X } from 'lucide-react'
 import { OBROCI, fmt, skaliraj, zbir, type Unos } from '../lib/ishrana'
 import { izmeniUnos, obrisiUnos } from '../lib/podaci'
 
@@ -9,6 +9,7 @@ export default function TabelaDana({ unosi, onPromena }: { unosi: Unos[] | null;
   const [menja, setMenja] = useState<string | null>(null)
   const [nova, setNova] = useState('')
   const [greska, setGreska] = useState('')
+  const [zatvoreni, setZatvoreni] = useState<string[]>([])
 
   if (!unosi) return <p className="tiho-tekst" role="status">Učitavam unose…</p>
   if (unosi.length === 0)
@@ -48,8 +49,14 @@ export default function TabelaDana({ unosi, onPromena }: { unosi: Unos[] | null;
           const grupa = unosi.filter((u) => u.obrok === o.id)
           if (!grupa.length) return null
           return (
-            <tbody key={o.id}>
-              <tr className="grupa"><th scope="rowgroup" colSpan={2}>{o.naziv}</th><td colSpan={5}>{fmt(zbir(grupa).kcal)} kcal</td></tr>
+            <tbody key={o.id} className={zatvoreni.includes(o.id) ? 'zatvoren' : undefined}>
+              <tr className="grupa"><th scope="rowgroup" colSpan={2}>
+                {/* Skupljanje radi samo na telefonu (CSS); na računaru je dugme bez efekta */}
+                <button type="button" className="grupa-dugme" aria-expanded={!zatvoreni.includes(o.id)}
+                  onClick={() => setZatvoreni(zatvoreni.includes(o.id) ? zatvoreni.filter((x) => x !== o.id) : [...zatvoreni, o.id])}>
+                  {o.naziv}<ChevronDown size={18} strokeWidth={2.75} aria-hidden />
+                </button>
+              </th><td colSpan={5}>{fmt(zbir(grupa).kcal)} kcal</td></tr>
               {grupa.map((u) => (
                 <tr key={u.id} className="red">
                   <td>{u.ime}<small className="mak-mob">P {fmt(u.proteini)} · UH {fmt(u.uh)} · M {fmt(u.masti)}</small></td>

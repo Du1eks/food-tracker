@@ -86,6 +86,9 @@
 }
 .izabran .plocica { width: 36px; height: 36px; border: 0; cursor: pointer; }
 .dva { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end; }
+/* Bez min-width: 0 polje datuma (ima svoju najmanju širinu) probija kolonu i preklapa susedno polje */
+.dva > .polje, .dva .unos { min-width: 0; }
+@media (max-width: 380px) { .dva { grid-template-columns: 1fr; } }
 .daje { height: 48px; display: flex; align-items: center; padding: 0 14px; border-radius: var(--r); background: var(--pozadina); font-weight: 800; font-size: 20px; }
 .unos-forma .dugme.glavno { width: 100%; }
 
@@ -103,6 +106,8 @@
 .tabela tfoot th, .tabela tfoot td { border-top: var(--okvir); font-weight: 900; font-size: 24px; padding-top: 16px; letter-spacing: -0.01em; }
 .tabela tfoot td:nth-child(2) { font-size: 30px; }
 .mak-mob { display: none; }
+.grupa-dugme { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; cursor: default; }
+.grupa-dugme svg { display: none; transition: transform 200ms ease-out; }
 .akcije { white-space: nowrap; width: 1%; padding-right: 0 !important; }
 .ikona {
   width: 36px; height: 36px; display: inline-grid; place-items: center; border-radius: 4px;
@@ -134,4 +139,9 @@
   .tabela .mak { display: none; }
   .mak-mob { display: block; color: var(--sivi-tekst); font-size: 13px; }
   .tabela th, .tabela td { padding: 10px 6px; }
+  /* Obroci se skupljaju strelicom; zbir kcal obroka ostaje vidljiv u zaglavlju */
+  .grupa-dugme { cursor: pointer; min-height: 32px; }
+  .grupa-dugme svg { display: block; }
+  .zatvoren .grupa-dugme svg { transform: rotate(-90deg); }
+  .zatvoren .red { display: none; }
 }
