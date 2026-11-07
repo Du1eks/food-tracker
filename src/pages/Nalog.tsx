@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { ArrowRight } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { NADIMAK_PORUKA, nadimakIspravan, nadimakSlobodan } from '../lib/podaci'
@@ -16,7 +16,7 @@ function Okvir({ naslov, children }: { naslov: string; children: React.ReactNode
       <main className="nalog-panel">
         {/* Uži ekran: miš leži na formi i pokazuje nadole; širi: stoji desno i pokazuje ulevo (isti prelom kao u nalog.css) */}
         <picture>
-          <source media="(max-width: 999px)" srcSet="/maskota/pokazuje_dole.png" />
+          <source media="(max-width: 1099px)" srcSet="/maskota/pokazuje_dole.png" />
           <img className="nalog-mis" src="/maskota/pokazuje.png" alt="Miš pokazuje na formu: nemoj da si miš" />
         </picture>
         {children}
@@ -43,6 +43,8 @@ function prevedi(poruka: string): string {
   // trigger za profil puca na unique indeksu kad neko drugi u međuvremenu uzme nadimak
   if (/database error saving new user/i.test(poruka)) return 'Nalog nije napravljen. Nadimak je verovatno upravo zauzet, probaj drugi.'
   if (/rate limit/i.test(poruka)) return 'Previše pokušaja. Sačekaj par minuta pa probaj ponovo.'
+  if (/token has expired or is invalid/i.test(poruka)) return 'Kod nije ispravan ili je istekao. Vrati se na prijavu i zatraži novi.'
+  if (/auth session missing/i.test(poruka)) return 'Upiši kod koji smo ti poslali na email.'
   return poruka
 }
 
@@ -52,6 +54,7 @@ export function Prijava() {
   const [greska, setGreska] = useState('')
   const [poruka, setPoruka] = useState('')
   const [radi, setRadi] = useState(false)
+  const idi = useNavigate()
 
   async function prijavi(e: React.FormEvent) {
     e.preventDefault()
@@ -64,9 +67,10 @@ export function Prijava() {
   async function zaboravio() {
     if (!email) return setGreska('Upiši email, pa klikni "Zaboravio si lozinku?".')
     setGreska('')
+    // Email nosi kod (šablon u Supabase-u), pa isti tok radi i na webu i u desktop app-u
     const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${location.origin}/nova-lozinka` })
     if (error) setGreska(prevedi(error.message))
-    else setPoruka(`Poslali smo link za novu lozinku na ${email}.`)
+    else idi('/nova-lozinka', { state: { email } })
   }
 
   return (
@@ -157,8 +161,12 @@ export function Registracija() {
   )
 }
 
-// Link iz emaila za reset lozinke otvara ovu stranu sa privremenom sesijom.
+// Kod iz emaila (verifyOtp) daje privremenu sesiju, pa se lozinka menja. Ruta nije "gost", da prijava
+// posle koda ne preusmeri na glavni ekran pre promene lozinke. Bez koda radi i stari link (sesija već postoji).
 export function NovaLozinka() {
+  const stanje = useLocation().state as { email?: string } | null
+  const [email, setEmail] = useState(stanje?.email ?? '')
+  const [kod, setKod] = useState('')
   const [lozinka, setLozinka] = useState('')
   const [greska, setGreska] = useState('')
   const [radi, setRadi] = useState(false)
@@ -167,6 +175,10 @@ export function NovaLozinka() {
   async function sacuvaj(e: React.FormEvent) {
     e.preventDefault()
     setRadi(true); setGreska('')
+    if (kod.trim()) {
+      const { error } = await supabase.auth.verifyOtp({ email, token: kod.trim(), type: 'recovery' })
+      if (error) { setRadi(false); return setGreska(prevedi(error.message)) }
+    }
     const { error } = await supabase.auth.updateUser({ password: lozinka })
     setRadi(false)
     if (error) setGreska(prevedi(error.message))
@@ -176,11 +188,22 @@ export function NovaLozinka() {
   return (
     <Okvir naslov="Nova lozinka">
       <form className="nalog-forma" onSubmit={sacuvaj}>
+        {stanje?.email && <p className="poruka" role="status">Poslali smo kod na <b>{stanje.email}</b>. Proveri i spam.</p>}
+        <label className="polje"><span>Email</span>
+          <input className="unos" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+        </label>
+        <label className="polje"><span>Kod iz email-a</span>
+          <input className="unos" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6,10}" maxLength={10} value={kod} onChange={(e) => setKod(e.target.value.replace(/\D/g, ''))} />
+        </label>
         <label className="polje"><span>Nova lozinka (bar 6 znakova)</span>
           <input className="unos" type="password" autoComplete="new-password" minLength={6} required value={lozinka} onChange={(e) => setLozinka(e.target.value)} />
         </label>
         {greska && <p className="greska" role="alert">{greska}</p>}
         <Posalji tekst="Sačuvaj lozinku" radi={radi} />
+        <div className="nalog-linkovi">
+          <span>Nije stigao kod?</span>
+          <Link className="dugme" to="/login">Nazad na prijavu</Link>
+        </div>
       </form>
     </Okvir>
   )

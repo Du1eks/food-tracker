@@ -265,7 +265,7 @@ Izbor jedne opcije (pol, cilj, obrok): okvir 2px, pregrade 2px, izabrana opcija 
 - **Poruka / izabrano:** mint površina, 6px, 12px 14px, bez okvira.
 
 ### Navigation
-- **Gornja traka:** crna, 56px, tri kolone: ime levo (800/18px), pločica kalendara u sredini, pločice desno (namirnice, prijatelji, profil). Crvena tačka 14px sa pulsom na pločici profila dok profil nije popunjen. Ekran prijave umesto nje ima zeleni gornji deo (var(--zelena)) spojen sa trakom naslova, sa logom `logo-zeleno.png` (52px na sredini, od 961px 72px levo): to je original logo čiji su zeleni delovi posvetljeni na #b0e878 da se vide na #389600. Od 1000px desno od forme stoji `pokazuje.png` (miš pokazuje ulevo na formu); na užem ekranu `pokazuje_dole.png` (280px) leži na vrhu forme i prstom prelazi preko njene ivice.
+- **Gornja traka:** crna, 56px, tri kolone: ime levo (800/18px), pločica kalendara u sredini, pločice desno (namirnice, prijatelji, profil). Crvena tačka 14px sa pulsom na pločici profila dok profil nije popunjen. Ekran prijave umesto nje ima zeleni gornji deo (var(--zelena)) spojen sa trakom naslova, sa logom `logo-zeleno.png` (52px na sredini, od 961px 72px levo): to je original logo čiji su zeleni delovi posvetljeni na #b0e878 da se vide na #389600. Od 1100px desno od forme stoji `pokazuje.png` (miš pokazuje ulevo na formu); na užem ekranu `pokazuje_dole.png` (280px) leži na vrhu forme i prstom prelazi preko njene ivice.
 - **Red datuma:** svetle pločice ‹ ›, naslov (Headline), crna oznaka "danas" (pill, 700/14px).
 
 ### Traka ostatka (signature)
