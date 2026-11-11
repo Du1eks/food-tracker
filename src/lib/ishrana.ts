@@ -45,6 +45,12 @@ export function zaKolicinu(p: Makrosi & { jedinica: Jedinica }, kolicina: number
   }
 }
 
+// Obrnuto od zaKolicinu: iz snapshot-a unosa vraća vrednosti na 100 g ili po komadu (za izmenu i čuvanje u bazu).
+export function poJedinici(u: Makrosi & { kolicina: number; jedinica: Jedinica }): Makrosi {
+  const f = u.jedinica === '100g' ? u.kolicina / 100 : u.kolicina
+  return { kcal: zaokruzi(u.kcal / f), proteini: zaokruzi(u.proteini / f), uh: zaokruzi(u.uh / f), masti: zaokruzi(u.masti / f) }
+}
+
 // Izmena količine postojećeg unosa: snapshot se skalira, proizvod možda više ne postoji.
 export function skaliraj(u: Makrosi & { kolicina: number }, novaKolicina: number): Makrosi {
   return zaKolicinu({ ...u, jedinica: 'komad' }, novaKolicina / u.kolicina)

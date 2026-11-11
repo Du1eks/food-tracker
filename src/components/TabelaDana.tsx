@@ -1,13 +1,20 @@
 import { useState } from 'react'
-import { Check, ChevronDown, Pencil, Trash2, X } from 'lucide-react'
-import { OBROCI, fmt, skaliraj, zbir, type Unos } from '../lib/ishrana'
-import { izmeniUnos, obrisiUnos } from '../lib/podaci'
+import { Check, ChevronDown, Pencil, Plus, Trash2, X } from 'lucide-react'
+import { OBROCI, fmt, poJedinici, skaliraj, uBroj, zaKolicinu, zbir, type Makrosi, type Unos } from '../lib/ishrana'
+import { dodajProizvod, izmeniUnos, obrisiUnos } from '../lib/podaci'
 
 const kol = (u: Unos) => `${fmt(u.kolicina)} ${u.jedinica === '100g' ? 'g' : 'kom'}`
+const POLJA = [['kcal', 'kcal'], ['proteini', 'P'], ['uh', 'UH'], ['masti', 'M']] as const
+type Vrednosti = Record<keyof Makrosi, string>
+const dobar = (s: string) => s.trim() !== '' && Number.isFinite(uBroj(s)) && uBroj(s) >= 0
+const tekst = (n: number) => String(n).replace('.', ',')
 
 export default function TabelaDana({ unosi, onPromena }: { unosi: Unos[] | null; onPromena: () => void }) {
   const [menja, setMenja] = useState<string | null>(null)
   const [nova, setNova] = useState('')
+  // Vrednosti po jedinici dok se menjaju; null = unos je iz baze, menja se samo količina
+  const [v, setV] = useState<Vrednosti | null>(null)
+  const [zauzet, setZauzet] = useState(false)
   const [greska, setGreska] = useState('')
   const [zatvoreni, setZatvoreni] = useState<string[]>([])
 
@@ -21,21 +28,39 @@ export default function TabelaDana({ unosi, onPromena }: { unosi: Unos[] | null;
     )
 
   async function radi(posao: () => Promise<void>) {
-    setGreska('')
+    if (zauzet) return
+    setGreska(''); setZauzet(true)
     try {
       await posao()
       setMenja(null)
       onPromena()
     } catch {
       setGreska('Promena nije sačuvana. Proveri internet pa pokušaj ponovo.')
+    } finally {
+      setZauzet(false)
     }
   }
 
-  function sacuvaj(u: Unos) {
-    const k = Number(nova.replace(',', '.'))
-    if (!(k > 0)) return setGreska('Količina mora biti veća od nule.')
-    radi(() => izmeniUnos(u.id, { ...skaliraj(u, k), kolicina: k }))
+  function otvori(u: Unos) {
+    setMenja(u.id); setNova(tekst(u.kolicina)); setGreska('')
+    const p = poJedinici(u)
+    setV(u.proizvod_id ? null : { kcal: tekst(p.kcal), proteini: tekst(p.proteini), uh: tekst(p.uh), masti: tekst(p.masti) })
   }
+
+  function sacuvaj(u: Unos) {
+    const k = uBroj(nova)
+    if (!(k > 0)) return setGreska('Količina mora biti veća od nule.')
+    if (!v) return radi(() => izmeniUnos(u.id, { ...skaliraj(u, k), kolicina: k }))
+    if (!POLJA.every(([p]) => dobar(v[p]))) return setGreska('Vrednosti moraju biti brojevi, nula ili više.')
+    const p = { kcal: uBroj(v.kcal), proteini: uBroj(v.proteini), uh: uBroj(v.uh), masti: uBroj(v.masti) }
+    radi(() => izmeniUnos(u.id, { ...zaKolicinu({ ...p, jedinica: u.jedinica }, k), kolicina: k }))
+  }
+
+  // Procena postaje proizvod u zajedničkoj bazi, a unos se veže za njega (sledeći put miš je uzima "iz baze")
+  const uBazu = (u: Unos) => radi(async () => {
+    const p = await dodajProizvod({ ime: u.ime, brend: null, jedinica: u.jedinica, ...poJedinici(u) })
+    await izmeniUnos(u.id, { proizvod_id: p.id! })
+  })
 
   const ukupno = zbir(unosi)
   return (
@@ -57,12 +82,21 @@ export default function TabelaDana({ unosi, onPromena }: { unosi: Unos[] | null;
                   {o.naziv}<ChevronDown size={18} strokeWidth={2.75} aria-hidden />
                 </button>
               </th><td colSpan={5}>{fmt(zbir(grupa).kcal)} kcal</td></tr>
-              {grupa.map((u) => (
+              {grupa.flatMap((u) => [
                 <tr key={u.id} className="red">
-                  <td>{u.ime}<small className="mak-mob">P {fmt(u.proteini)} · UH {fmt(u.uh)} · M {fmt(u.masti)}</small></td>
+                  <td>
+                    {u.ime}
+                    {!u.proizvod_id && menja !== u.id && (
+                      <button type="button" className="izvor u-bazu" disabled={zauzet} aria-label={`Sačuvaj ${u.ime} u bazu namirnica`} onClick={() => uBazu(u)}>
+                        <Plus size={13} strokeWidth={3} aria-hidden />U bazu
+                      </button>
+                    )}
+                    <small className="mak-mob">P {fmt(u.proteini)} · UH {fmt(u.uh)} · M {fmt(u.masti)}</small>
+                  </td>
                   <td>
                     {menja === u.id ? (
                       <input className="unos mali num" inputMode="decimal" aria-label={`Nova količina za ${u.ime}`} value={nova} autoFocus
+                        aria-invalid={!(uBroj(nova) > 0)}
                         onChange={(e) => setNova(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') sacuvaj(u); if (e.key === 'Escape') setMenja(null) }} />
                     ) : kol(u)}
                   </td>
@@ -73,18 +107,35 @@ export default function TabelaDana({ unosi, onPromena }: { unosi: Unos[] | null;
                   <td className="akcije">
                     {menja === u.id ? (
                       <>
-                        <button className="ikona" aria-label="Sačuvaj količinu" onClick={() => sacuvaj(u)}><Check size={18} aria-hidden /></button>
+                        <button className="ikona" aria-label="Sačuvaj izmenu" disabled={zauzet} onClick={() => sacuvaj(u)}><Check size={18} aria-hidden /></button>
                         <button className="ikona" aria-label="Otkaži izmenu" onClick={() => setMenja(null)}><X size={18} aria-hidden /></button>
                       </>
                     ) : (
                       <>
-                        <button className="ikona" aria-label={`Izmeni ${u.ime}`} onClick={() => { setMenja(u.id); setNova(String(u.kolicina)) }}><Pencil size={18} aria-hidden /></button>
-                        <button className="ikona" aria-label={`Obriši ${u.ime}`} onClick={() => radi(() => obrisiUnos(u.id))}><Trash2 size={18} aria-hidden /></button>
+                        <button className="ikona" aria-label={`Izmeni ${u.ime}`} onClick={() => otvori(u)}><Pencil size={18} aria-hidden /></button>
+                        <button className="ikona" aria-label={`Obriši ${u.ime}`} disabled={zauzet} onClick={() => radi(() => obrisiUnos(u.id))}><Trash2 size={18} aria-hidden /></button>
                       </>
                     )}
                   </td>
-                </tr>
-              ))}
+                </tr>,
+                menja === u.id && v && (
+                  <tr key={`${u.id}-v`} className="red-vrednosti">
+                    <td colSpan={7}>
+                      <fieldset className="pregled-vrednosti">
+                        <legend className="tiho-tekst">{u.jedinica === '100g' ? 'Vrednosti na 100 g' : 'Vrednosti za 1 komad'}</legend>
+                        {POLJA.map(([k, naziv]) => (
+                          <label key={k} className="polje">
+                            <span>{naziv}</span>
+                            <input className="unos mali num" inputMode="decimal" value={v[k]} aria-invalid={!dobar(v[k])}
+                              onChange={(e) => setV({ ...v, [k]: e.target.value })}
+                              onKeyDown={(e) => { if (e.key === 'Enter') sacuvaj(u); if (e.key === 'Escape') setMenja(null) }} />
+                          </label>
+                        ))}
+                      </fieldset>
+                    </td>
+                  </tr>
+                ),
+              ])}
             </tbody>
           )
         })}

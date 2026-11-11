@@ -36,7 +36,7 @@ export async function dodajUnos(u: Omit<Unos, 'id'> | Omit<Unos, 'id'>[]) {
   proveri(await supabase.from('unos').insert(u))
 }
 
-export async function izmeniUnos(id: string, izmena: Makrosi & { kolicina: number }) {
+export async function izmeniUnos(id: string, izmena: (Makrosi & { kolicina: number }) | { proizvod_id: string }) {
   proveri(await supabase.from('unos').update(izmena).eq('id', id))
 }
 

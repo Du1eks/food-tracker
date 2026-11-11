@@ -1,6 +1,6 @@
 // Pokretanje: node src/lib/ishrana.test.ts
 import assert from 'node:assert/strict'
-import { zaKolicinu, skaliraj, zbir, obrokPoSatu, dnevniCilj, godineOd } from './ishrana.ts'
+import { zaKolicinu, poJedinici, skaliraj, zbir, obrokPoSatu, dnevniCilj, godineOd } from './ishrana.ts'
 
 const sir = { kcal: 79, proteini: 13.3, uh: 4, masti: 1, jedinica: '100g' as const }
 assert.deepEqual(zaKolicinu(sir, 150), { kcal: 119, proteini: 20, uh: 6, masti: 1.5 })
@@ -9,6 +9,10 @@ const tortilja = { kcal: 180, proteini: 5, uh: 30, masti: 4, jedinica: 'komad' a
 assert.deepEqual(zaKolicinu(tortilja, 2), { kcal: 360, proteini: 10, uh: 60, masti: 8 })
 
 assert.deepEqual(skaliraj({ kcal: 119, proteini: 20, uh: 6, masti: 1.5, kolicina: 150 }, 300), { kcal: 238, proteini: 40, uh: 12, masti: 3 })
+
+// poJedinici vraća vrednosti proizvoda iz snapshot-a unosa (za "Sačuvaj u bazu")
+assert.deepEqual(poJedinici({ kcal: 330, proteini: 21, uh: 3, masti: 24, kolicina: 3, jedinica: 'komad' }), { kcal: 110, proteini: 7, uh: 1, masti: 8 })
+assert.deepEqual(poJedinici({ kcal: 119, proteini: 20, uh: 6, masti: 1.5, kolicina: 150, jedinica: '100g' }), { kcal: 79.3, proteini: 13.3, uh: 4, masti: 1 })
 
 assert.deepEqual(zbir([]), { kcal: 0, proteini: 0, uh: 0, masti: 0 })
 assert.deepEqual(zbir([{ kcal: 119, proteini: 20, uh: 6, masti: 1.5 }, { kcal: 180, proteini: 5, uh: 30, masti: 4 }]), { kcal: 299, proteini: 25, uh: 36, masti: 5.5 })

@@ -30,7 +30,7 @@ a.rang:hover .rang-poziv, a.rang:focus-visible .rang-poziv { max-width: 200px; o
 .rang-omot .maskota.cilj { height: 110px; left: -20px; }
 /* Oblačić iznad miša; rep pokazuje nadole ka njegovoj glavi */
 .rang-govor {
-  position: absolute; left: 4px; bottom: calc(100% + 14px); z-index: 6;
+  position: absolute; left: 4px; bottom: calc(100% + 14px); z-index: 2; /* ispod lepljive trake (z-index 5) */
   width: max-content; max-width: 230px; padding: 8px 12px;
   background: var(--bela); color: var(--tekst); border: var(--okvir); border-radius: var(--r);
   font-weight: 700; font-size: 15px; line-height: 1.3; text-wrap: balance; box-shadow: var(--senka);

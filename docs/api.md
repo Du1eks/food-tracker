@@ -67,7 +67,7 @@ Jedina akcija koja ne ide pravo u bazu, nego kroz **Edge Function** (mali progra
 | 4 | funkcija | proverava odgovor AI-ja i vraća `{ stavke: [{ ime, kolicina, jedinica, obrok, izvor, proizvod_id, kcal, proteini, uh, masti }] }` |
 | 5 | app | pregled, pa `from('unos').insert([...])` (svi redovi u jednom zahtevu) |
 
-- **`izvor`:** `baza` = vrednosti našeg proizvoda, `procena` = procena AI-ja. Korisnik u pregledu može da ispravi vrednosti procene; pri upisu svaka procena postaje novi proizvod u zajedničkoj bazi (`from('proizvod').insert`), pa je sledeći put "iz baze".
+- **`izvor`:** `baza` = vrednosti našeg proizvoda, `procena` = procena AI-ja. Korisnik u pregledu može da ispravi vrednosti procene. Procena se upisuje samo u dnevnik (`proizvod_id` = null); u tabeli dana može da joj ispravi vrednosti (na 100 g / po komadu) i dugmetom "U bazu" je pošalje u zajedničku bazu (`from('proizvod').insert`, pa `from('unos').update({ proizvod_id })`), pa je sledeći put "iz baze".
 - **`obrok`:** `null` kad ga korisnik nije naveo; app tada pita pre upisa.
 - **Greške:** `{ greska }` sa kodom: `prijava` (401), `tekst` (400), `limit` (429), `ai_limit` (503), `ai` (502/503), `server` (500).
 - Logika provere je u `supabase/functions/_shared/obrok.ts` (testovi: `npm test`).

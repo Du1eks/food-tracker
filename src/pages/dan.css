@@ -166,6 +166,14 @@
 /* Odakle su vrednosti: naša baza (puna oznaka) ili procena AI-ja (samo okvir) */
 .izvor { display: inline-block; margin-right: 6px; padding: 0 6px; border-radius: 999px; border: 1px solid var(--tekst); color: var(--tekst); font-weight: 700; }
 .izvor.baza { background: var(--tekst); color: var(--bela); }
+/* Procena u tabeli: dugme da postane namirnica u bazi (oblik iste oznake, uvek vidljivo) */
+.u-bazu {
+  display: inline-flex; align-items: center; gap: 3px; margin: 0 0 0 8px; min-height: 26px; padding: 0 9px;
+  background: var(--bela); font: inherit; font-size: 12px; cursor: pointer; vertical-align: 1px;
+}
+.u-bazu:hover { background: var(--tekst); color: var(--bela); }
+.u-bazu:disabled { opacity: 0.5; cursor: default; }
+.tabela .red-vrednosti td { padding: 0 0 12px; text-align: left; }
 .pregled-kol { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--sivi-tekst); }
 .pregled-kol .unos.mali { width: 76px; }
 .pregled-dalje { display: grid; grid-template-columns: auto 1fr; gap: 12px; }
@@ -212,5 +220,5 @@
   .grupa-dugme { cursor: pointer; min-height: 32px; }
   .grupa-dugme svg { display: block; }
   .zatvoren .grupa-dugme svg { transform: rotate(-90deg); }
-  .zatvoren .red { display: none; }
+  .zatvoren .red, .zatvoren .red-vrednosti { display: none; }
 }

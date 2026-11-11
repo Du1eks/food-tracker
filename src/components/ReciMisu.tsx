@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ArrowRight, Pencil, Plus, X } from 'lucide-react'
 import { OBROCI, fmt, uBroj, zaKolicinu, zbir, type Makrosi, type Obrok, type Unos } from '../lib/ishrana'
-import { dodajProizvod, dodajUnos } from '../lib/podaci'
+import { dodajUnos } from '../lib/podaci'
 import { razumiObrok, type Stavka } from '../lib/razumi'
 import type { Poza } from '../lib/rang'
 import { useProfil } from './useProfil'
@@ -34,7 +34,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
   const [cuva, setCuva] = useState(false)
   const [greska, setGreska] = useState('')
   const [upisano, setUpisano] = useState(false)
-  const [novih, setNovih] = useState(0)
+  const [procena, setProcena] = useState(false)
 
   async function procitaj(e?: React.FormEvent) {
     e?.preventDefault()
@@ -60,21 +60,13 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
     if (!redovi || !spremno || cuva) return
     setCuva(true); setGreska('')
     try {
-      // Nova namirnica (procena) prvo ide u zajedničku bazu, pa je sledeći put miš uzima "iz baze".
-      // Ista namirnica dva puta u jednoj poruci pravi jedan proizvod.
-      const novi = new Map<string, string>()
-      for (const r of redovi) {
-        const kljuc = `${r.ime.toLowerCase()}|${r.jedinica}`
-        if (r.izvor === 'baza' || novi.has(kljuc)) continue
-        const p = await dodajProizvod({ ime: r.ime, brend: null, jedinica: r.jedinica, ...poJedinici(r) })
-        novi.set(kljuc, p.id!)
-      }
+      // Procena ide samo u dnevnik (proizvod_id null); u zajedničku bazu je korisnik šalje sam iz tabele.
       await dodajUnos(redovi.map((r) => ({
         datum, obrok: obroci[r.grupa]!, kolicina: kolicina(r), jedinica: r.jedinica, ime: r.ime,
-        proizvod_id: r.proizvod_id ?? novi.get(`${r.ime.toLowerCase()}|${r.jedinica}`) ?? null,
+        proizvod_id: r.proizvod_id,
         ...zaKolicinu({ ...poJedinici(r), jedinica: r.jedinica }, kolicina(r)),
       })))
-      setRedovi(null); setTekst(''); setUpisano(true); setNovih(novi.size)
+      setRedovi(null); setTekst(''); setUpisano(true); setProcena(redovi.some((r) => r.izvor === 'procena'))
       onDodato()
     } catch {
       setGreska('Nije upisano. Proveri internet pa probaj ponovo.')
@@ -105,7 +97,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
   const poruka = greska ? greska
     : cita ? 'Čitam…'
     : redovi ? (bezObroka ? 'Nisi napisao obrok. Izaberi ga ispod.' : 'Evo šta sam razumeo. Proveri, pa upiši.')
-    : upisano ? `Mljac, upisano! ${novih ? `${novih === 1 ? 'Nova namirnica je' : 'Nove namirnice su'} u bazi. ` : ''}${ostatak}`.trim()
+    : upisano ? `Mljac, upisano! ${procena ? 'Procene možeš da ispraviš i sačuvaš u bazu iz tabele. ' : ''}${ostatak}`.trim()
     : ostatak || 'Šta si jeo? Napiši mi, ja upisujem.'
   const poza: Poza = pogodjen && !redovi && !cita ? 'slavi' : upisano ? 'jede' : 'hoda'
 
