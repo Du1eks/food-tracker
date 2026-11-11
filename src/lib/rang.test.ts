@@ -1,6 +1,6 @@
 // Pokretanje: node src/lib/rang.test.ts
 import assert from 'node:assert/strict'
-import { rang, poRangu, sufiksMesta, type Zbir } from './rang.ts'
+import { rang, poRangu, staKaze, sufiksMesta, type Zbir } from './rang.ts'
 
 import { mesto } from './rang.ts'
 
@@ -56,4 +56,16 @@ assert.equal(rang(ekipa, 'x'), null)
 assert.deepEqual(poRangu([z('c', 0.2), z('d', 0), z('a', 0.9), z('b', 0.9)]).map((r) => r.id), ['a', 'b', 'c', 'd'])
 assert.deepEqual([1, 2, 3, 4, 11, 12, 13, 21, 22, 23, 101, 111, 112].map((n) => n + sufiksMesta(n)),
   ['1st', '2nd', '3rd', '4th', '11th', '12th', '13th', '21st', '22nd', '23rd', '101st', '111th', '112th'])
+// šta miš kaže: uvek ima opštih rečenica, a posebna zavisi od mesta i unosa
+{
+  const kaze = (redovi: Zbir[], id: string) => staKaze(rang(redovi, id)!, redovi.find((r) => r.id === id)!)
+  assert.ok(kaze([z('a', 0.5)], 'a').some((s) => s.includes('Dodaj drugare')))
+  assert.ok(kaze(nepopunjen, 'b').some((s) => s.includes('Popuni profil')))
+  assert.ok(kaze(jutro, 'b').some((s) => s.includes('Napiši šta si jeo')))
+  assert.ok(kaze([z('a', 1), z('b', 0.4)], 'a').some((s) => s.includes('Cilj pogođen')))
+  assert.ok(kaze(ekipa, 'a').some((s) => s.includes('Prvi si sa 90%')))
+  assert.ok(kaze(ekipa, 'b').some((s) => s.includes('2. mesto')))
+  for (const [red, id] of [[ekipa, 'c'], [svi0, 'a'], [[bez('a')], 'a']] as const)
+    assert.ok(kaze([...red], id).length >= 4 && kaze([...red], id).every((s) => s.length > 0 && s.length <= 60))
+}
 console.log('rang: ok')

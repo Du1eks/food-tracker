@@ -33,6 +33,19 @@ export function rang(redovi: Zbir[], mojId: string): Rang | null {
   return { mesto: m, ukupno: redovi.length, poza }
 }
 
+// Šta miš kod leaderboarda nasumično kaže: par rečenica iz mog mesta i procenta, plus opšte.
+export function staKaze(r: Rang, ja: Zbir): string[] {
+  const opste = ['Nemoj da si miš!', 'Protein je moj omiljeni broj.', 'Voda se ne računa, ali pij je.', 'Ja bih nešto prigrizao…']
+  if (r.ukupno === 1) return [...opste, 'Dodaj drugare, da imamo s kim da se takmičimo.']
+  if (!ja.ima_cilj) return [...opste, 'Popuni profil, pa da vidimo gde si.']
+  if (!uneo(ja)) return [...opste, 'Prazan stomak, poslednje mesto. Napiši šta si jeo!']
+  const p = Math.round(ja.procenat * 100)
+  const mesto = r.mesto === 1
+    ? (ja.procenat >= 1 ? ['Cilj pogođen. Mljac!', 'Prvi i sit. Tako se radi.'] : ['Vodiš! Ne opuštaj se.', `Prvi si sa ${p}%. Drži tempo.`])
+    : [`${r.mesto}. mesto. Hajde, prestigni ih!`, `Imaš ${p}% cilja. Još malo pa gore.`]
+  return [...opste, ...mesto]
+}
+
 // Engleska oznaka mesta: 1st, 2nd, 3rd, 4th…, ali 11th, 12th, 13th
 export function sufiksMesta(n: number): string {
   if (n % 100 >= 11 && n % 100 <= 13) return 'th'

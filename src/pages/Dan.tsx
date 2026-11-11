@@ -110,7 +110,7 @@ function Traka({ uneto, cilj, rang }: { uneto: ReturnType<typeof zbir>; cilj: Ci
       </dl>
       {rang}
       {imaCilj ? (
-        <a className="plocica traka-strelica" href="#pretraga" aria-label="Dodaj namirnicu">
+        <a className="plocica traka-strelica" href="#unos" aria-label="Dodaj namirnicu">
           <ArrowDown size={34} strokeWidth={2.75} aria-hidden />
         </a>
       ) : (

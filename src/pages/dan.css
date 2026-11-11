@@ -118,6 +118,71 @@
   border: 0; background: none; cursor: pointer; color: var(--sivi-tekst);
 }
 .ikona:hover { background: var(--tekst); color: var(--bela); }
+
+/* Miš kome pišeš: stoji levo, govori u oblačiću (tekst je u HTML-u, ne u slici) */
+.panel-glava .nazad-misu { margin-left: auto; }
+.mis { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 16px; align-items: center; min-height: 100px; }
+.mis .maskota { width: 92px; height: 100px; object-fit: contain; object-position: 50% 100%; }
+.mis-oblacic {
+  position: relative; justify-self: start; padding: 12px 14px;
+  border: var(--okvir); border-radius: var(--r); background: var(--bela);
+  font-weight: 700; font-size: 17px; line-height: 1.3; text-wrap: balance;
+}
+/* rep oblačića ka mišu: kvadrat okrenut za 45°, vide se samo dve ivice */
+.mis-oblacic::before {
+  content: ''; position: absolute; left: -9px; top: 50%; width: 14px; height: 14px;
+  background: inherit; border-left: 2px solid; border-bottom: 2px solid; border-color: inherit;
+  transform: translateY(-50%) rotate(45deg);
+}
+.mis-oblacic.lose { background: var(--greska-bg); color: var(--greska); border-color: var(--greska); }
+
+.mis-forma, .pregled { display: grid; gap: 14px; }
+.mis-tekst { height: auto; min-height: 104px; padding: 12px 14px; line-height: 1.4; resize: vertical; display: block; }
+.mis-forma .dugme.glavno { width: 100%; }
+
+/* Pregled pre upisa: po obroku, svaka namirnica u svom redu */
+.pregled-grupa { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 8px; }
+/* linija između grupa je pozadina, ne border: legend fieldseta bi presekao border */
+.pregled-grupa + .pregled-grupa { padding-top: 16px; background: linear-gradient(var(--tekst), var(--tekst)) top / 100% 2px no-repeat; }
+.pregled-grupa legend { padding: 0; margin-bottom: 8px; }
+.pregled-pitanje { font-weight: 800; font-size: 17px; }
+.pregled-lista { list-style: none; margin: 0; padding: 0; }
+.pregled-lista li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 10px 0; }
+.pregled-akcije { display: flex; }
+.ikona.aktivna { background: var(--tekst); color: var(--bela); }
+/* Izmena vrednosti procene: četiri mala polja ispod reda, preko cele širine */
+.pregled-vrednosti {
+  grid-column: 1 / -1; border: 0; margin: 0; padding: 10px 12px 12px; min-width: 0;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;
+  background: var(--mint); border-radius: var(--r);
+}
+.pregled-vrednosti legend { float: left; grid-column: 1 / -1; padding: 0; font-size: 13px; }
+.pregled-vrednosti .polje > span { font-size: 13px; }
+.pregled-vrednosti .unos.mali { width: 100%; }
+.unos[aria-invalid="true"] { border-color: var(--greska); }
+.pregled-lista li + li { border-top: 1px solid var(--spolja); }
+.pregled-ime b { display: block; overflow-wrap: anywhere; line-height: 1.25; }
+.pregled-ime small { display: block; margin-top: 3px; color: var(--sivi-tekst); font-size: 13px; font-weight: 600; }
+/* Odakle su vrednosti: naša baza (puna oznaka) ili procena AI-ja (samo okvir) */
+.izvor { display: inline-block; margin-right: 6px; padding: 0 6px; border-radius: 999px; border: 1px solid var(--tekst); color: var(--tekst); font-weight: 700; }
+.izvor.baza { background: var(--tekst); color: var(--bela); }
+.pregled-kol { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--sivi-tekst); }
+.pregled-kol .unos.mali { width: 76px; }
+.pregled-dalje { display: grid; grid-template-columns: auto 1fr; gap: 12px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Miš poskoči kad promeni pozu, pa nastavi da "živi" (zivi je u prijatelji.css) */
+  .mis .maskota { animation: mis-skok 520ms cubic-bezier(0.16, 1, 0.3, 1), zivi 7s ease-in-out 520ms infinite; }
+  /* Dok čita poruku (traje samo dok se čeka odgovor) */
+  .mis.cita .maskota { animation: mis-cita 700ms ease-in-out infinite alternate; }
+  .mis-oblacic { animation: oblacic 320ms cubic-bezier(0.16, 1, 0.3, 1); transform-origin: 0 50%; }
+  /* Redovi pregleda se ispišu jedan za drugim, istim pokretom kao brojke u traci */
+  .pregled-lista li { animation: preklop 420ms cubic-bezier(0.16, 1, 0.3, 1) backwards; animation-delay: calc(var(--i, 0) * 60ms); }
+}
+@keyframes mis-skok { from { transform: translateY(10px) scale(0.92); } to { transform: none; } }
+@keyframes mis-cita { from { transform: rotate(-4deg); } to { transform: rotate(4deg) translateY(-3px); } }
+@keyframes oblacic { from { transform: scale(0.94); opacity: 0.4; } to { transform: none; opacity: 1; } }
+
 @media (hover: hover) {
   .red .akcije .ikona { opacity: 0; }
   .red:hover .akcije .ikona, .red:focus-within .akcije .ikona { opacity: 1; }

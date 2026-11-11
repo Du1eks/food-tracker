@@ -31,9 +31,9 @@
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0; min-height: 100dvh; background: var(--pozadina); }
 h1, h2, h3, p { margin: 0; }
-button, input, select { font: inherit; color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
 ::selection { background: var(--svetlozelena); color: var(--tekst); }
-input { caret-color: var(--zelena); }
+input, textarea { caret-color: var(--zelena); }
 :focus-visible { outline: 3px solid var(--tekst); outline-offset: 2px; }
 a { color: inherit; text-underline-offset: 3px; }
 .num { font-variant-numeric: tabular-nums; }

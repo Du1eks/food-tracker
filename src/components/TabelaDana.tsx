@@ -16,7 +16,7 @@ export default function TabelaDana({ unosi, onPromena }: { unosi: Unos[] | null;
     return (
       <div className="prazno-dan">
         <p><b>Još nema unosa za ovaj dan.</b></p>
-        <p>Potraži namirnicu i dodaj je, pa se ovde pojavljuje sa zbirom.</p>
+        <p>Napiši mišu šta si jeo, pa se ovde pojavljuje sa zbirom.</p>
       </div>
     )
 

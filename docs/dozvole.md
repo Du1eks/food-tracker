@@ -111,3 +111,11 @@ $$;
 revoke execute on function nadji_po_nadimku, dnevni_zbir_prijatelja from public;
 grant  execute on function nadji_po_nadimku, dnevni_zbir_prijatelja to authenticated;
 ```
+
+## Unos tekstom (Edge Function `razumi-obrok`)
+- **Ko sme:** samo ulogovan korisnik (funkcija proverava token; sa samim javnim ključem vraća 401).
+- **Ključ za AI:** Supabase secret `GEMINI_API_KEY`, čita ga samo funkcija. U app-u i na GitHub-u ga nema.
+- **Limit:** tabela `ai_potrosnja` (korisnik, dan, broj). Klijent je ne vidi (RLS bez pravila, bez GRANT-a); menja je samo `potrosi_ai_poziv()` (`security definer`), a granica od 40 poziva dnevno je u bazi.
+- **Nepouzdan ulaz:** tekst korisnika (dužina, kontrolni znakovi), imena proizvoda iz zajedničke baze (jedan red, da ne mogu da dodaju "pravilo" u uputstvo) i odgovor AI-ja (granice za količinu i vrednosti, najviše 20 stavki, proizvod samo iz spiska).
+- **Šta AI ne može:** da upiše u bazu. Upis radi app sa tokenom korisnika, pa i dalje važe RLS i CHECK pravila tabele `unos`.
+- **Privatnost:** AI servisu ide samo tekst obroka i spisak proizvoda, bez email-a i id-a korisnika; `store: false` (Google ne čuva poruku za kasnije čitanje). Na besplatnom nivou Google može da koristi tekst za poboljšanje modela.

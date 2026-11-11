@@ -31,7 +31,8 @@ export async function unosiZaDan(datum: string): Promise<Unos[]> {
   return proveri(await supabase.from('unos').select('*').eq('datum', datum).order('kreirano'))
 }
 
-export async function dodajUnos(u: Omit<Unos, 'id'>) {
+// Lista ide u jednom zahtevu: ili se upišu svi redovi ili nijedan
+export async function dodajUnos(u: Omit<Unos, 'id'> | Omit<Unos, 'id'>[]) {
   proveri(await supabase.from('unos').insert(u))
 }
 

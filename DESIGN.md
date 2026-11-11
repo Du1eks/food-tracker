@@ -275,10 +275,15 @@ Zelena lepljiva traka: oznaka "Ostalo do cilja" / "Preko cilja" / "Uneto", ostat
 Bela ćelija 6px, broj dana 800/18px gore levo, kcal (900) dole, zelena traka napretka 6px na dnu. Danas: crni okvir 2px i broj u crnoj pločici. Budući dani: providni, isprekidan okvir spolja.
 
 ### Polje ranga
-Bela tabla sa okvirom 2px i senkom, zeleni broj mesta 80px/900, pločica sa strelicom desno; maskota se naslanja na levu ivicu. Natpis se otkriva na hover/fokus (450ms), na dodir je stalno vidljiv.
+Bela tabla sa okvirom 2px i senkom, zeleni broj mesta 80px/900, pločica sa strelicom desno; maskota se naslanja na levu ivicu i nasumično priča (oblačić iznad miša, isti stil kao u panelu za unos, rep nadole; prvi put posle 2,5 s, pa na 9–16 s, stoji 4,5 s; rečenice iz mesta i procenta, `staKaze` u src/lib/rang.ts). Oblačić je ukras (aria-hidden); opis za čitač ekrana ostaje na polju. Natpis se otkriva na hover/fokus (450ms), na dodir je stalno vidljiv.
+
+### Panel "Reci mišu šta si jeo" (ReciMisu)
+Glavni unos. Crna glava panela sa "+" (ručni unos). Miš 92px levo, desno oblačić: bela tabla sa okvirom 2px i repom ka mišu (kvadrat 14px okrenut 45°), 700/17px; greška je crvena varijanta (greska-bg, greska). Oblačić govori iz stanja i brojeva dana ("Još 50 g proteina do cilja."). Poze: `hoda` (čeka/čita), `jede` (posle upisa), `slavi` (cilj pogođen). Polje za tekst je textarea 104px sa istim okvirom kao `.unos`, Enter šalje, Shift+Enter novi red.
+Pregled pre upisa: grupe po obroku (segment kontrola), ispod svake grupe redovi: ime 700, sitan red sa oznakom izvora ("iz baze" crna puna pilula, "procena" pilula sa okvirom) i kcal/makrosima, polje količine 76px sa jedinicom, X za izbacivanje. Grupe dele linija 2px. Red sa procenom ima olovku: otvara mint polje sa četiri mala unosa (kcal, P, UH, M) po jedinici; neispravan broj dobija crveni okvir i zaključava "Upiši". Pri upisu procena ide u zajedničku bazu kao nov proizvod. Grupa bez obroka pita "Koji je ovo obrok?" (800/17px), a "Upiši N" je zaključano dok obrok nije izabran.
+Pokret (samo bez prefers-reduced-motion): miš poskoči kad promeni pozu (520ms), njiše se dok čita, oblačić se "otvori" (320ms), redovi pregleda se ispišu jedan za drugim istim preklopom kao brojke u traci (60ms razmak).
 
 ### Assets
-Jedini rasteri su `public/maskota/*.png` (jede, hoda, slavi, cilj, logo, logo-ikona), providni PNG. Poreklo: supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded (zapisano i u tEXt bloku svake slike). Maskota stoji 92px (cilj 110px) uz polje ranga i blago "diše" (scaleY 1.025, 3.4s) bez prefers-reduced-motion. Favicon je `public/favicon.png` (192×192): `logo-ikona.png` centrirana na providnom kvadratu, koristi se i kao apple-touch-icon.
+Jedini rasteri su `public/maskota/*.png` (jede, hoda, slavi, cilj, pokazuje, pokazuje_dole, logo, logo-zeleno, logo-ikona), providni PNG. Poreklo: supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded (zapisano i u tEXt bloku svake slike). Na glavnom ekranu su dva miša: kod leaderboarda (92px, cilj 110px) i u panelu za unos (92px). Oba "žive" (`zivi`, 7s: dah, nagib, mali poskok) samo bez prefers-reduced-motion; miš kod leaderboarda poskakuje dok priča. Poze `cilj` i `pokazuje` imaju tekst uslikan u oblačić, pa se ne koriste tamo gde miš govori. Favicon je `public/favicon.png` (192×192): `logo-ikona.png` centrirana na providnom kvadratu, koristi se i kao apple-touch-icon.
 
 ## Do's and Don'ts
 

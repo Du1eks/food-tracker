@@ -29,6 +29,9 @@ export const OBROCI: { id: Obrok; naziv: string; gotov: string }[] = [
   { id: 'uzina', naziv: 'Užina', gotov: 'Gotova užina' },
 ]
 
+// Korisnici kucaju i "2,5" i "2.5"
+export const uBroj = (s: string) => Number(s.replace(',', '.'))
+
 const zaokruzi = (n: number) => Math.round(n * 10) / 10
 
 // Vrednosti proizvoda su na 100 g ili po komadu; snapshot unosa čuva već preračunate brojke.

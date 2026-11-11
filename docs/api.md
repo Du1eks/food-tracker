@@ -56,6 +56,22 @@ Tabele idu kroz `from(...)`, a funkcije koje izdaju samo deo podataka kroz **RPC
 - **Datum:** šalje app (lokalni datum korisnika, kao i za unose), ne server.
 - **Greške:** zauzet nadimak je Postgres kod `23505`, nadimak van 3–20 znakova je `23514`; duplikat para u prijateljstvu je takođe `23505`.
 
+## Unos tekstom (AI)
+Jedina akcija koja ne ide pravo u bazu, nego kroz **Edge Function** (mali program na Supabase serveru): `supabase.functions.invoke('razumi-obrok', { body: { tekst } })`. Razlog: AI ključ ne sme da bude u app-u.
+
+| Korak | Gde | Šta |
+|---|---|---|
+| 1 | app | šalje `{ tekst }` (do 500 znakova) i token korisnika |
+| 2 | funkcija | proverava token, tekst i dnevni limit (`rpc('potrosi_ai_poziv')`, 40 poziva po korisniku) |
+| 3 | funkcija | čita zajedničke proizvode, zove Gemini (ključ je Supabase secret `GEMINI_API_KEY`) |
+| 4 | funkcija | proverava odgovor AI-ja i vraća `{ stavke: [{ ime, kolicina, jedinica, obrok, izvor, proizvod_id, kcal, proteini, uh, masti }] }` |
+| 5 | app | pregled, pa `from('unos').insert([...])` (svi redovi u jednom zahtevu) |
+
+- **`izvor`:** `baza` = vrednosti našeg proizvoda, `procena` = procena AI-ja. Korisnik u pregledu može da ispravi vrednosti procene; pri upisu svaka procena postaje novi proizvod u zajedničkoj bazi (`from('proizvod').insert`), pa je sledeći put "iz baze".
+- **`obrok`:** `null` kad ga korisnik nije naveo; app tada pita pre upisa.
+- **Greške:** `{ greska }` sa kodom: `prijava` (401), `tekst` (400), `limit` (429), `ai_limit` (503), `ai` (502/503), `server` (500).
+- Logika provere je u `supabase/functions/_shared/obrok.ts` (testovi: `npm test`).
+
 ## Odluke
 - **Dnevni zbir** računa frontend iz liste unosa za dan (lista je ionako potrebna za tabelu; baza je jedini izvor istine).
 - **Nedeljni/mesečni prosek** (kasnije) računa baza (`sum`/`avg` ili view), da se ne vuku stotine redova.

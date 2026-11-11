@@ -1,19 +1,20 @@
 import { useState } from 'react'
-import { ArrowRight, Check, Plus, Search, X } from 'lucide-react'
-import { OBROCI, fmt, obrokPoSatu, zaKolicinu, zbir, type Jedinica, type Obrok, type Proizvod, type Unos } from '../lib/ishrana'
+import { ArrowRight, Check, MessageSquareText, Plus, Search, X } from 'lucide-react'
+import { OBROCI, fmt, obrokPoSatu, uBroj, zaKolicinu, zbir, type Jedinica, type Obrok, type Proizvod, type Unos } from '../lib/ishrana'
 import { dodajProizvod, dodajUnos, pretraziProizvode } from '../lib/podaci'
 import { pretraziOFF } from '../lib/openFoodFacts'
+import ReciMisu from './ReciMisu'
 
-// Korisnici kucaju i "2,5" i "2.5"
-const uBroj = (s: string) => Number(s.replace(',', '.'))
 const ispravanBroj = (s: string) => s.trim() !== '' && Number.isFinite(uBroj(s)) && uBroj(s) >= 0
 
 type Izvor = 'baza' | 'off'
 
 const prazan = (ime = ''): Proizvod => ({ ime, brend: null, jedinica: '100g', kcal: 0, proteini: 0, uh: 0, masti: 0 })
 
-// Tok: izaberi obrok → dodaj jednu ili više namirnica (svaka se čuva odmah) → "Gotov doručak" zatvara obrok.
+// Podrazumevano se piše mišu (ReciMisu). "+" otvara ručni tok, koji radi i bez AI-ja:
+// izaberi obrok → dodaj jednu ili više namirnica (svaka se čuva odmah) → "Gotov doručak" zatvara obrok.
 export default function DodajNamirnicu({ datum, unosi, onDodato }: { datum: string; unosi: Unos[] | null; onDodato: () => void }) {
+  const [rucno, setRucno] = useState(false)
   const [upit, setUpit] = useState('')
   const [rezultati, setRezultati] = useState<{ izvor: Izvor; lista: Proizvod[] } | null>(null)
   const [trazi, setTrazi] = useState(false)
@@ -86,13 +87,19 @@ export default function DodajNamirnicu({ datum, unosi, onDodato }: { datum: stri
   const aktivan = OBROCI.find((o) => o.id === obrok)
   const uObroku = unosi?.filter((u) => u.obrok === obrok) ?? []
 
+  if (!rucno)
+    return <ReciMisu datum={datum} unosi={unosi} onDodato={onDodato} onRucno={() => { setRucno(true); setNovi(prazan()) }} />
+
   return (
-    <section className="panel" aria-labelledby="dodaj-naslov">
+    <section className="panel" id="unos" aria-labelledby="dodaj-naslov">
       <div className="panel-glava">
         <button type="button" className="plocica svetla plus" aria-label="Unesi namirnicu ručno" onClick={() => { ponisti(); setNovi(prazan()) }}>
           <Plus size={22} strokeWidth={2.75} aria-hidden />
         </button>
         <h2 id="dodaj-naslov">{aktivan ? `${aktivan.naziv}: dodaj namirnicu` : 'Sledeće: izaberi obrok'}</h2>
+        <button type="button" className="plocica svetla plus nazad-misu" aria-label="Nazad na pisanje mišu" onClick={() => { ponisti(); setObrok(null); setRucno(false) }}>
+          <MessageSquareText size={20} strokeWidth={2.5} aria-hidden />
+        </button>
       </div>
       <div className="panel-telo">
         {!obrok && !izabran && !novi && (
