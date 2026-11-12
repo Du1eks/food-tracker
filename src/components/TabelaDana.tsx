@@ -140,7 +140,13 @@ export default function TabelaDana({ unosi, onPromena }: { unosi: Unos[] | null;
           )
         })}
         <tfoot>
-          <tr><th scope="row" colSpan={2}>Ukupno</th><td>{fmt(ukupno.kcal)}</td><td className="mak">{fmt(ukupno.proteini)}</td><td className="mak">{fmt(ukupno.uh)}</td><td className="mak">{fmt(ukupno.masti)}</td><td /></tr>
+          <tr>
+            <th scope="row" colSpan={2}>Ukupno</th>
+            <td>{fmt(ukupno.kcal)}<small className="jed-mob">kcal</small></td>
+            <td className="mak">{fmt(ukupno.proteini)}</td><td className="mak">{fmt(ukupno.uh)}</td><td className="mak">{fmt(ukupno.masti)}</td>
+            {/* Na telefonu kolone P/UH/M nema, pa zbir proteina stoji u slobodnoj koloni akcija, pored kcal */}
+            <td className="p-mob"><span>{fmt(ukupno.proteini)}<small className="jed-mob">g proteina</small></span></td>
+          </tr>
         </tfoot>
       </table>
     </>

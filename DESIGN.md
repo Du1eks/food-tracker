@@ -212,7 +212,7 @@ Bočni razmak svuda je clamp(16px, 4vw, 32px), isti za gornju traku, traku ostat
 
 Ritam razmaka: 8, 12, 16, 18, 24, 32, 48 px. Unutrašnjost panela 18px sa 16px između polja; parovi polja u dve kolone sa 12px.
 
-Prelomi: ispod 960px sve ide u jednu kolonu (forma iznad tabele, polje ranga iznad unosa). Ispod 640px traka ostatka postaje niska (oko 120px, broj 48px, makrosi u drugom redu, strelica 44px), tabela krije kolone P/UH/M i pokazuje ih kao sitan red ispod imena, kalendar smanjuje polja.
+Prelomi: ispod 960px sve ide u jednu kolonu (forma iznad tabele, polje ranga iznad unosa). Ispod 640px traka ostatka postaje niska (oko 120px, broj 48px, makrosi u drugom redu, strelica 44px), tabela krije kolone P/UH/M i pokazuje ih kao sitan red ispod imena (u zbiru pored kcal stoje i proteini, sa jedinicom sitno ispod broja), kalendar smanjuje polja.
 
 Traka ostatka je lepljiva (sticky, top 0) na svim širinama.
 
