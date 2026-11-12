@@ -109,7 +109,7 @@
 .tabela .red td { border-top: 1px solid var(--pozadina); }
 .tabela tfoot th, .tabela tfoot td { border-top: var(--okvir); font-weight: 900; font-size: 24px; padding-top: 16px; letter-spacing: -0.01em; }
 .tabela tfoot td:nth-child(2) { font-size: 30px; }
-.mak-mob { display: none; }
+.mak-mob, .jed-mob, .p-mob > span { display: none; }
 .grupa-dugme { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; cursor: default; }
 .grupa-dugme svg { display: none; transition: transform 200ms ease-out; }
 .akcije { white-space: nowrap; width: 1%; padding-right: 0 !important; }
@@ -215,6 +215,10 @@
   .dan-tabela { padding: 4px 14px 12px; }
   .tabela .mak { display: none; }
   .mak-mob { display: block; color: var(--sivi-tekst); font-size: 13px; }
+  /* Zbir: kcal i proteini jedan pored drugog, jedinica sitno ispod broja */
+  .tabela tfoot .p-mob { font-size: 30px; white-space: nowrap; }
+  .p-mob > span, .jed-mob { display: block; }
+  .jed-mob { margin-top: 2px; color: var(--sivi-tekst); font-size: 13px; font-weight: 700; letter-spacing: 0; }
   .tabela th, .tabela td { padding: 10px 6px; }
   /* Obroci se skupljaju strelicom; zbir kcal obroka ostaje vidljiv u zaglavlju */
   .grupa-dugme { cursor: pointer; min-height: 32px; }
