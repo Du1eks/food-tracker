@@ -1,4 +1,5 @@
 // Rang među prijateljima i poza maskote. Čista logika, bez baze (docs/api.md: rang računa app).
+import { pomeri } from './datum.ts'
 export type Zbir = {
   id: string; nadimak: string | null; kcal: number; proteini: number; uh: number; masti: number; procenat: number
   // false = nema dnevni cilj kcal (profil nije popunjen), pa procenat ne znači ništa
@@ -61,3 +62,7 @@ export const poRangu = (redovi: Zbir[]) =>
       b.procenat - a.procenat ||
       (a.nadimak ?? '').localeCompare(b.nadimak ?? ''),
   )
+
+// Miš je tužan kad 3 dana nema nijednog unosa (dan pa još dva prazna). Ko nikad nije uneo ništa nije tužan, tek je počeo.
+// ISO datumi (YYYY-MM-DD) se porede kao tekst.
+export const tuzan = (poslednjiUnos: string | null, dan: string) => poslednjiUnos !== null && poslednjiUnos <= pomeri(dan, -3)
