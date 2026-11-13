@@ -12,7 +12,7 @@ type Izvor = 'baza' | 'off'
 const prazan = (ime = ''): Proizvod => ({ ime, brend: null, jedinica: '100g', kcal: 0, proteini: 0, uh: 0, masti: 0 })
 
 // Podrazumevano se piše mišu (ReciMisu). "+" otvara ručni tok, koji radi i bez AI-ja:
-// izaberi obrok → dodaj jednu ili više namirnica (svaka se čuva odmah) → "Gotov doručak" zatvara obrok.
+// izaberi obrok → pretraži (ili "Unesi ručno") → dodaj jednu ili više namirnica (svaka se čuva odmah) → "Gotov doručak" zatvara obrok.
 export default function DodajNamirnicu({ datum, unosi, onDodato }: { datum: string; unosi: Unos[] | null; onDodato: () => void }) {
   const [rucno, setRucno] = useState(false)
   const [upit, setUpit] = useState('')
@@ -88,12 +88,12 @@ export default function DodajNamirnicu({ datum, unosi, onDodato }: { datum: stri
   const uObroku = unosi?.filter((u) => u.obrok === obrok) ?? []
 
   if (!rucno)
-    return <ReciMisu datum={datum} unosi={unosi} onDodato={onDodato} onRucno={() => { setRucno(true); setNovi(prazan()) }} />
+    return <ReciMisu datum={datum} unosi={unosi} onDodato={onDodato} onRucno={() => setRucno(true)} />
 
   return (
     <section className="panel" id="unos" aria-labelledby="dodaj-naslov">
       <div className="panel-glava">
-        <button type="button" className="plocica svetla plus" aria-label="Unesi namirnicu ručno" onClick={() => { ponisti(); setNovi(prazan()) }}>
+        <button type="button" className="plocica svetla plus" aria-label="Unesi namirnicu ručno" onClick={() => { ponisti(); setObrok(null) }}>
           <Plus size={22} strokeWidth={2.75} aria-hidden />
         </button>
         <h2 id="dodaj-naslov">{aktivan ? `${aktivan.naziv}: dodaj namirnicu` : 'Sledeće: izaberi obrok'}</h2>
@@ -176,21 +176,6 @@ export default function DodajNamirnicu({ datum, unosi, onDodato }: { datum: stri
               </label>
               <div className="polje"><span>Daje</span><p className="daje num">{pregled ? `${fmt(pregled.kcal)} kcal` : '—'}</p></div>
             </div>
-            {/* Ručni unos preko "+" može da počne pre izbora obroka */}
-            {!aktivan && (
-              <fieldset className="polje">
-                <legend className="sr">Obrok</legend>
-                <span aria-hidden>Obrok</span>
-                <div className="segment">
-                  {OBROCI.map((o) => (
-                    <label key={o.id}>
-                      <input type="radio" name="obrok" value={o.id} checked={obrok === o.id} onChange={() => setObrok(o.id)} />
-                      <span>{o.naziv}</span>
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-            )}
             {pregled && <p className="tiho-tekst num">P {fmt(pregled.proteini)} g · UH {fmt(pregled.uh)} g · M {fmt(pregled.masti)} g</p>}
             <button className="dugme glavno" type="submit" disabled={radi}>
               {radi ? 'Dodajem…' : 'Dodaj'}
