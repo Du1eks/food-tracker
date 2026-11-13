@@ -5,6 +5,7 @@ import { dodajUnos } from '../lib/podaci'
 import { razumiObrok, type Stavka } from '../lib/razumi'
 import type { Poza } from '../lib/rang'
 import { useProfil } from './useProfil'
+import { useTuzan } from './useTuzan'
 import Maskota from './Maskota'
 
 const POLJA = [['kcal', 'kcal'], ['proteini', 'P'], ['uh', 'UH'], ['masti', 'M']] as const
@@ -35,6 +36,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
   const [greska, setGreska] = useState('')
   const [upisano, setUpisano] = useState(false)
   const [procena, setProcena] = useState(false)
+  const tuzan = useTuzan(unosi?.length)
 
   async function procitaj(e?: React.FormEvent) {
     e?.preventDefault()
@@ -111,8 +113,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
       </div>
       <div className="panel-telo">
         <div className={`mis${cita ? ' cita' : ''}`}>
-          {/* ključ na pozi: miš "poskoči" samo kad se stanje promeni */}
-          <Maskota key={poza} poza={poza} />
+          <Maskota poza={poza} cita={cita} tuzan={tuzan} greska={greska} />
           <p key={poruka} className={`mis-oblacic${greska ? ' lose' : ''}`} role={greska ? 'alert' : 'status'}>{poruka}</p>
         </div>
 
