@@ -251,22 +251,22 @@
     ],
     "assets": [
       {
-        "path": "public/maskota/jede.png",
+        "path": "public/maskota/jede.webp",
         "kind": "raster",
         "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
       },
       {
-        "path": "public/maskota/hoda.png",
+        "path": "public/maskota/hoda.webp",
         "kind": "raster",
         "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
       },
       {
-        "path": "public/maskota/slavi.png",
+        "path": "public/maskota/slavi.webp",
         "kind": "raster",
         "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
       },
       {
-        "path": "public/maskota/cilj.png",
+        "path": "public/maskota/cilj.webp",
         "kind": "raster",
         "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
       },

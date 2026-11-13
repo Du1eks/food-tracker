@@ -8,7 +8,7 @@ import './nalog.css'
 function Okvir({ naslov, children }: { naslov: string; children: React.ReactNode }) {
   return (
     <div className="nalog">
-      <div className="nalog-gornja"><img src="/maskota/logo-zeleno.png" alt="Mouse's tracker" /></div>
+      <div className="nalog-gornja"><img src="/maskota/logo-zeleno.webp" alt="Mouse's tracker" /></div>
       <header className="nalog-traka">
         <h1>{naslov}</h1>
         <p className="nalog-opis">Kalorije i makrosi za ekipu iz teretane.</p>
@@ -16,8 +16,8 @@ function Okvir({ naslov, children }: { naslov: string; children: React.ReactNode
       <main className="nalog-panel">
         {/* Uži ekran: miš leži na formi i pokazuje nadole; širi: stoji desno i pokazuje ulevo (isti prelom kao u nalog.css) */}
         <picture>
-          <source media="(max-width: 1099px)" srcSet="/maskota/pokazuje_dole.png" />
-          <img className="nalog-mis" src="/maskota/pokazuje.png" alt="Miš pokazuje na formu: nemoj da si miš" />
+          <source media="(max-width: 1099px)" srcSet="/maskota/pokazuje_dole.webp" />
+          <img className="nalog-mis" src="/maskota/pokazuje.webp" alt="Miš pokazuje na formu: nemoj da si miš" />
         </picture>
         {children}
       </main>

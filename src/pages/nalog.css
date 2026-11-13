@@ -1,5 +1,5 @@
 .nalog { min-height: 100dvh; display: grid; grid-template-rows: auto auto 1fr; }
-/* Traka sa logom je ista zelena kao traka ispod; logo-zeleno.png ima svetlije zelene delove da se vide na njoj.
+/* Traka sa logom je ista zelena kao traka ispod; logo-zeleno.webp ima svetlije zelene delove da se vide na njoj.
    Na telefonu je logo na sredini, na širokom ekranu levo. */
 .nalog-gornja { display: flex; justify-content: center; padding: 14px clamp(16px, 4vw, 32px) 0; background: var(--zelena);
   box-shadow: 0 1px 0 var(--zelena); /* zatvara šav od delića piksela između dve iste zelene trake (npr. na 125% zumu) */ }
