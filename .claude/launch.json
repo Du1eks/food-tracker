@@ -8,12 +8,6 @@
       "port": 5173
     },
     {
-      "name": "web-a",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--port", "5180", "--strictPort"],
-      "port": 5180
-    },
-    {
       "name": "build-preview",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "preview"],
