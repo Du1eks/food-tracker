@@ -46,7 +46,7 @@ Mala, besplatna app za ekipu iz teretane: zajednička baza proizvoda koju drugar
 - `foods.json`: prvi stvarni proizvodi (obrani sir, pileća prsa narezak, tortilja...).
 - Primer dana iz SPEC-a: 150 g sira, 1 tortilja, 200 g pilećih prsa, 10 g kikirikija (~520 kcal, ~52 g P).
 - Primer profila: 177 cm, 73 kg, cilj 77 kg (blagi bulk), trening 4–5x nedeljno, ~10 000 koraka; cilj ~3200 kcal, P 130–160 g, M 70–90 g.
-- Maskota (miš) i logo: slike u `public/maskota/` (WebP: jede, hoda, slavi, cilj, pokazuje, pokazuje_dole, logo-zeleno; PNG: logo, logo-ikona; Rive: mis.riv), dodao korisnik (commit 8a33656). Fotografija nema.
+- Maskota (miš) i logo: slike u `public/maskota/` (WebP: jede, hoda, slavi, cilj, pokazuje, pokazuje_dole, logo-zeleno; PNG: logo, logo-ikona), dodao korisnik (commit 8a33656). Fotografija nema.
 
 ## Product Principles
 1. Brzina unosa iznad svega: najčešća akcija (dodaj namirnicu) mora biti na dohvat ruke.

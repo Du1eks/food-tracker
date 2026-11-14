@@ -5,7 +5,6 @@ import { danas } from '../lib/datum'
 import { zbirZaDan } from '../lib/podaci'
 import { rang, staKaze, sufiksMesta, type Zbir } from '../lib/rang'
 import { useProfil } from './useProfil'
-import { useTuzan } from './useTuzan'
 import Maskota from './Maskota'
 import '../pages/prijatelji.css'
 
@@ -15,7 +14,6 @@ export default function RangPolje({ kljuc }: { kljuc: number }) {
   const { profil } = useProfil()
   const [redovi, setRedovi] = useState<Zbir[] | 'greska' | null>(null)
   const [govor, setGovor] = useState<string | null>(null)
-  const tuzan = useTuzan(kljuc)
 
   useEffect(() => {
     let aktivan = true
@@ -57,7 +55,7 @@ export default function RangPolje({ kljuc }: { kljuc: number }) {
 
   return (
     <div className={`rang-omot${govor ? ' govori' : ''}`}>
-      {r && <Maskota poza={r.poza} tuzan={tuzan} />}
+      {r && <Maskota poza={r.poza} />}
       {/* Ćaskanje je ukras: čitač ekrana dobija sve bitno iz opisa polja */}
       {govor && <p key={govor} className="rang-govor" aria-hidden>{govor}</p>}
       {redovi === 'greska' ? (

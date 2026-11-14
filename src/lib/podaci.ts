@@ -31,12 +31,6 @@ export async function unosiZaDan(datum: string): Promise<Unos[]> {
   return proveri(await supabase.from('unos').select('*').eq('datum', datum).order('kreirano'))
 }
 
-// Datum mog poslednjeg unosa (null = nikad ništa), za tužnog miša
-export async function poslednjiUnos(): Promise<string | null> {
-  const r = proveri(await supabase.from('unos').select('datum').order('datum', { ascending: false }).limit(1).maybeSingle())
-  return (r as { datum: string } | null)?.datum ?? null
-}
-
 // Lista ide u jednom zahtevu: ili se upišu svi redovi ili nijedan
 export async function dodajUnos(u: Omit<Unos, 'id'> | Omit<Unos, 'id'>[]) {
   proveri(await supabase.from('unos').insert(u))

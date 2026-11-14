@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict'
 import { rang, poRangu, staKaze, sufiksMesta, type Zbir } from './rang.ts'
 
-import { mesto, tuzan } from './rang.ts'
+import { mesto } from './rang.ts'
 
 // procenat 0 znači da nije uneo ništa (kcal 0); inače je kcal srazmeran cilju od 3200
 const z = (id: string, procenat: number): Zbir => ({ id, nadimak: id, kcal: procenat * 3200, proteini: 0, uh: 0, masti: 0, procenat, ima_cilj: true })
@@ -69,11 +69,3 @@ assert.deepEqual([1, 2, 3, 4, 11, 12, 13, 21, 22, 23, 101, 111, 112].map((n) => 
     assert.ok(kaze([...red], id).length >= 4 && kaze([...red], id).every((s) => s.length > 0 && s.length <= 60))
 }
 console.log('rang: ok')
-
-// tužan miš: 3 dana bez unosa; novi korisnik (nikad ništa) nije tužan
-assert.equal(tuzan(null, '2026-03-10'), false)
-assert.equal(tuzan('2026-03-10', '2026-03-10'), false)
-assert.equal(tuzan('2026-03-08', '2026-03-10'), false)
-assert.equal(tuzan('2026-03-07', '2026-03-10'), true)
-assert.equal(tuzan('2026-02-27', '2026-03-01'), false)
-assert.equal(tuzan('2026-02-26', '2026-03-01'), true)

@@ -124,7 +124,3 @@ a.rang-red:hover { background: var(--mint); }
 .prijatelj-makrosi dt { font-size: 14px; font-weight: 700; color: var(--sivi-tekst); }
 .prijatelj-makrosi dd { margin: 2px 0 0; font-size: 26px; font-weight: 800; }
 
-
-/* Rive miš sam sebe animira (bez CSS pokreta) i reaguje na dodir */
-.maskota.rive { aspect-ratio: 8 / 9; animation: none !important; pointer-events: auto; cursor: pointer; }
-.rang-omot .maskota.rive { width: auto; }
