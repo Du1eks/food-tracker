@@ -123,6 +123,9 @@
 .panel-glava .nazad-misu { margin-left: auto; }
 .mis { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 16px; align-items: center; min-height: 100px; }
 .mis .maskota { width: 92px; height: 100px; object-fit: contain; object-position: 50% 100%; }
+/* Živi miš (Masko klip) je veći od slike */
+.mis:has(.maskota.ziv) { grid-template-columns: 140px minmax(0, 1fr); }
+.mis .maskota.ziv { width: 140px; height: 140px; }
 .mis-oblacic {
   position: relative; justify-self: start; padding: 12px 14px;
   border: var(--okvir); border-radius: var(--r); background: var(--bela);
