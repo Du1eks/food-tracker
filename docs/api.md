@@ -49,9 +49,13 @@ Tabele idu kroz `from(...)`, a funkcije koje izdaju samo deo podataka kroz **RPC
 | Prihvati zahtev | Update | `from('prijateljstvo').update({ status: 'prihvaceno' }).eq('ko_salje', drugiId)` (RLS: sme samo primalac) |
 | Odbij zahtev / povuci zahtev / ukloni prijatelja | Delete | `from('prijateljstvo').delete().or('ko_salje.eq.B,ko_prima.eq.B')` (B = drugi; RLS ostavlja samo redove u kojima sam i ja) |
 | Rang lista i brojke za danas | RPC | `rpc('dnevni_zbir_prijatelja', { d: danas() })` |
+| Deli li prijatelj unose? | RPC | `rpc('prijatelj_deli_unose', { prijatelj })` → `true/false` (isto `false` za tuđina) |
+| Unosi prijatelja za dan | RPC | `rpc('unosi_prijatelja', { prijatelj, d })` → niz `{ ime, obrok, kolicina, jedinica, kcal, proteini, uh, masti }`; prazan ako nije prijatelj ili ne deli |
+| Uključi/isključi deljenje svojih unosa | Update | `from('profil').update({ deli_unose }).eq('id', userId)` |
 | Stari nalog postavlja nadimak | Update | `from('profil').update({ nadimak }).eq('id', userId)` |
 
 - **Zašto `moji_zahtevi`:** `profil` je privatan, pa app ne može da spoji `prijateljstvo` sa nadimkom; bez funkcije bi video samo uuid.
+- **Unosi prijatelja:** Tabela `unos` ostaje zatvorena; red po red ih izdaje funkcija, i to samo uz prihvaćeno prijateljstvo i `deli_unose = true` (opt-in, podrazumevano isključeno). Zašto dve funkcije: `unosi_prijatelja` vraća prazan niz i kad prijatelj ne deli i kad danas nije jeo ništa, pa app pita `prijatelj_deli_unose` da napiše tačnu poruku.
 - **Rang:** računa app. Sortira niz iz `dnevni_zbir_prijatelja` po `procenat` opadajuće; moje mesto je `1 + broj onih sa većim procentom` (izjednačeni dele mesto).
 - **Datum:** šalje app (lokalni datum korisnika, kao i za unose), ne server.
 - **Greške:** zauzet nadimak je Postgres kod `23505`, nadimak van 3–20 znakova je `23514`; duplikat para u prijateljstvu je takođe `23505`.

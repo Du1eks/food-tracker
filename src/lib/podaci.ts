@@ -1,6 +1,6 @@
 // Svi pozivi baze na jednom mestu (docs/api.md). RLS u bazi sam filtrira na ulogovanog korisnika.
 import { supabase } from './supabase'
-import type { Makrosi, Proizvod, Unos } from './ishrana'
+import type { Jedinica, Makrosi, Obrok, Proizvod, Unos } from './ishrana'
 import type { Zbir } from './rang'
 
 export type Profil = {
@@ -19,6 +19,8 @@ export type Profil = {
   cilj_proteini: number | null
   cilj_uh: number | null
   cilj_masti: number | null
+  // prijatelji vide moje unose samo kad ovo uključim (docs/dozvole.md)
+  deli_unose: boolean
 }
 
 // Bez greške Supabase uvek vraća podatke (osim maybeSingle, gde null znači "nema reda").
@@ -136,6 +138,18 @@ export async function zbirZaDan(datum: string): Promise<Zbir[]> {
     // stara verzija funkcije (pre migracije ima_cilj) ne šalje polje; tad nikoga ne precrtavamo
     ima_cilj: r.ima_cilj ?? true,
   }))
+}
+
+// Unosi prijatelja za dan. Baza vraća redove samo za prihvaćenog prijatelja koji je uključio deljenje.
+export type PrijateljUnos = Makrosi & { ime: string; obrok: Obrok; kolicina: number; jedinica: Jedinica }
+
+export async function prijateljDeliUnose(prijatelj: string): Promise<boolean> {
+  return proveri(await supabase.rpc('prijatelj_deli_unose', { prijatelj }))
+}
+
+export async function unosiPrijatelja(prijatelj: string, datum: string): Promise<PrijateljUnos[]> {
+  const redovi = proveri<PrijateljUnos[]>(await supabase.rpc('unosi_prijatelja', { prijatelj, d: datum }))
+  return redovi.map((r) => ({ ...r, kolicina: Number(r.kolicina), kcal: Number(r.kcal), proteini: Number(r.proteini), uh: Number(r.uh), masti: Number(r.masti) }))
 }
 
 // Kalendar: zbir kcal po danu za opseg datuma

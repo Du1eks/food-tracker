@@ -34,6 +34,7 @@ function Forma({ profil, osveziProfil }: { profil: ProfilTip; osveziProfil: () =
     koraka_dnevno: s(profil.koraka_dnevno), cilj: profil.cilj ?? '', ciljna_tezina_kg: s(profil.ciljna_tezina_kg),
     cilj_kcal: s(profil.cilj_kcal), cilj_proteini: s(profil.cilj_proteini), cilj_uh: s(profil.cilj_uh), cilj_masti: s(profil.cilj_masti),
   })
+  const [deli, setDeli] = useState(profil.deli_unose)
   const [greska, setGreska] = useState('')
   const [radi, setRadi] = useState(false)
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.value })
@@ -70,7 +71,7 @@ function Forma({ profil, osveziProfil }: { profil: ProfilTip; osveziProfil: () =
         id: profil.id, nadimak: f.nadimak.trim() || null, ime: f.ime.trim() || null, pol: (f.pol || null) as ProfilTip['pol'], datum_rodjenja: f.datum_rodjenja || null,
         visina_cm: broj(f.visina_cm), tezina_kg: broj(f.tezina_kg), treninga_nedeljno: broj(f.treninga_nedeljno),
         koraka_dnevno: broj(f.koraka_dnevno), cilj: (f.cilj || null) as ProfilTip['cilj'], ciljna_tezina_kg: broj(f.ciljna_tezina_kg),
-        ...ciljevi,
+        ...ciljevi, deli_unose: deli,
       })
       await osveziProfil()
       idi('/')
@@ -113,6 +114,10 @@ function Forma({ profil, osveziProfil }: { profil: ProfilTip; osveziProfil: () =
             <div className="dva">{broj('tezina_kg', 'Težina (kg)')}{broj('ciljna_tezina_kg', 'Ciljna težina (kg)')}</div>
             <div className="dva">{broj('treninga_nedeljno', 'Treninga nedeljno', 'numeric')}{broj('koraka_dnevno', 'Koraka dnevno', 'numeric')}</div>
             <fieldset className="polje"><legend className="sr">Cilj</legend><span aria-hidden>Cilj</span>{izbor('cilj', [['smrsati', 'Smršati'], ['odrzavati', 'Održavati'], ['bulk', 'Bulk']])}</fieldset>
+            <label className="deli">
+              <input type="checkbox" checked={deli} onChange={(e) => setDeli(e.target.checked)} />
+              <span>Prijatelji vide šta sam jeo<small>Samo prihvaćeni prijatelji i samo ono što upišeš u tabelu dana. Možeš da isključiš kad hoćeš.</small></span>
+            </label>
           </div>
         </section>
 

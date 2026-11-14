@@ -40,7 +40,12 @@ Neulogovan korisnik na zaštićenoj ruti → `/login`. Ulogovan na `/login` → 
 ## Profil (`/profil`)
 - Ime, pol, datum rođenja, visina, težina, treninga nedeljno, koraka dnevno, cilj (smršati / održavati / bulk), ciljna težina.
 - Dnevni cilj (kcal, proteini, UH, masti): popunjava formula Mifflin-St Jeor, korisnik može ručno da promeni.
+- Prekidač "Prijatelji vide šta sam jeo" (podrazumevano isključen): kad je uključen, prihvaćeni prijatelji vide moje današnje unose na mom profilu.
 - "Sačuvaj" → `/`. "Odjavi se".
+
+## Profil prijatelja (`/prijatelji/:id`)
+- Današnji zbir (kcal, % cilja, makroi), mesto na rang listi, "Ukloni iz prijatelja".
+- **Šta je jeo danas:** tabela unosa po obrocima, samo za čitanje, ako prijatelj deli unose. Ako ne deli: poruka da to može da uključi u svom profilu. Ako deli, a danas nije upisao ništa: "Danas još ništa nije upisao."
 
 ## Kalendar (`/kalendar`)
 - Mesec preko celog ekrana; svaki dan je kvadrat sa unetim kcal.

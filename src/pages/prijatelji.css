@@ -112,8 +112,8 @@ a.rang-red:hover { background: var(--mint); }
 .lista-akcije .plocica:hover { background: var(--svetlozelena); color: var(--tekst); }
 .pretraga .plocica:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* Profil prijatelja: samo današnji zbir */
-.prijatelj { padding: 0 clamp(16px, 4vw, 32px) 48px; max-width: 560px; display: grid; gap: 16px; }
+/* Profil prijatelja: današnji zbir i (ako deli) tabela unosa */
+.prijatelj { padding: 0 clamp(16px, 4vw, 32px) 48px; max-width: 720px; display: grid; gap: 16px; }
 .prijatelj-broj { font-weight: 900; font-size: clamp(56px, 12vw, 88px); line-height: 0.95; letter-spacing: -0.03em; }
 .prijatelj-broj small { font-size: 0.3em; font-weight: 700; letter-spacing: 0; margin-left: 8px; }
 .prijatelj-makrosi { display: flex; gap: clamp(20px, 5vw, 40px); margin: 0; }

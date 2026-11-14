@@ -8,3 +8,7 @@
 }
 .odjava { gap: 8px; justify-self: start; color: var(--sivi-tekst); }
 @media (max-width: 960px) { .profil { grid-template-columns: 1fr; } }
+/* Prekidač "Prijatelji vide šta sam jeo" */
+.deli { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; font-weight: 700; }
+.deli input { flex: none; width: 24px; height: 24px; margin: 1px 0 0; accent-color: var(--tekst); cursor: pointer; }
+.deli small { display: block; margin-top: 2px; font-weight: 600; font-size: 14px; color: var(--sivi-tekst); }

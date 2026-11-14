@@ -6,7 +6,7 @@ Autentifikacija (ko si) = Supabase Auth, JWT token. Autorizacija (šta smeš) = 
 ## Pravila
 | Tabela | Read | Insert | Update | Delete |
 |---|---|---|---|---|
-| `profil` | vlasnik | trigger pri registraciji | vlasnik | — (briše se sa nalogom, cascade) |
+| `profil` | vlasnik | trigger pri registraciji | vlasnik (i kolona `deli_unose`) | — (briše se sa nalogom, cascade) |
 | `proizvod` | svi | svi | svi | samo `ko_je_uneo` |
 | `unos` | vlasnik | vlasnik | vlasnik | vlasnik |
 | `prijateljstvo` | oba (`ko_salje` i `ko_prima`) | samo `ko_salje`, status mora biti `na_cekanju` | samo `ko_prima`, samo kolona `status`, samo `na_cekanju` → `prihvaceno` | oba |
@@ -61,7 +61,8 @@ Zamke:
 - **Menjanje para**: RLS ne vidi kolone, pa to rešava `GRANT UPDATE (status)` (nivo kolone): `ko_salje`, `ko_prima` i `kreirano` se ne mogu menjati. `WITH CHECK` dozvoljava samo prelaz `na_cekanju` → `prihvaceno`, i samo primaocu. Trigger nije potreban.
 - **Pozivanje funkcija bez naloga**: Supabase daje `execute` i `anon`-u po defaultu, pa se skida eksplicitno (`revoke ... from public, anon`).
 - **Nadimak pri registraciji**: `nadimak_slobodan()` sme i `anon`, jer korisnik još nije ulogovan; otkriva samo da li je nadimak zauzet.
-- **Prijatelj vidi obroke**: `unos` ostaje samo vlasniku; prijatelj dobija samo zbir kroz funkciju (`security definer`, izvršava se sa pravima vlasnika baze), koja sama proverava prijateljstvo.
+- **Prijatelj vidi zbir**: `unos` ostaje samo vlasniku; prijatelj dobija zbir kroz funkciju (`security definer`, izvršava se sa pravima vlasnika baze), koja sama proverava prijateljstvo.
+- **Prijatelj vidi unose, samo na zahtev vlasnika**: kolona `profil.deli_unose` (podrazumevano `false`, uključuje se u Profilu). Funkcija `unosi_prijatelja(prijatelj, d)` vraća redove tek kad je prijateljstvo `prihvaceno` **i** `deli_unose = true`, a inače nijedan red. Tabela `unos` se ne otvara: nema nove RLS politike, jer bi RLS otvorio sve kolone i sve dane. Funkcija vraća samo ime, obrok, količinu, jedinicu i makroe, bez id-a i `proizvod_id`. `prijatelj_deli_unose(prijatelj)` daje isti odgovor (`false`) za tuđina i za prijatelja koji ne deli, pa ne otkriva ništa. Podrazumevano isključeno jer su se korisnici registrovali uz obećanje "samo ja vidim svoje unose".
 - **Nabrajanje korisnika**: pretraga vraća samo tačno poklapanje nadimka (bez `like`/početka reči), pa niko ne može da izlista sve naloge.
 - **Zbir "danas"**: datum šalje app. Prijatelj u drugoj vremenskoj zoni može imati drugačiji "danas"; za ~50 korisnika prihvatljivo.
 
@@ -111,6 +112,33 @@ $$;
 revoke execute on function nadji_po_nadimku, dnevni_zbir_prijatelja from public;
 grant  execute on function nadji_po_nadimku, dnevni_zbir_prijatelja to authenticated;
 ```
+
+### Unosi prijatelja (opt-in, `20261114100000_unosi_prijatelja.sql`)
+```sql
+alter table profil add column deli_unose boolean not null default false;
+
+create function prijatelj_deli_unose(prijatelj uuid) returns boolean
+language sql stable security definer set search_path = '' as $$
+  select exists (
+    select 1 from public.profil p
+    join public.prijateljstvo f on f.status = 'prihvaceno'
+      and ((f.ko_salje = auth.uid() and f.ko_prima = p.id) or (f.ko_prima = auth.uid() and f.ko_salje = p.id))
+    where p.id = prijatelj and p.deli_unose);
+$$;
+
+create function unosi_prijatelja(prijatelj uuid, d date)
+returns table (ime text, obrok text, kolicina numeric, jedinica text, kcal numeric, proteini numeric, uh numeric, masti numeric)
+language sql stable security definer set search_path = '' as $$
+  select u.ime, u.obrok, u.kolicina, u.jedinica, u.kcal, u.proteini, u.uh, u.masti
+  from public.unos u
+  where u.korisnik_id = prijatelj and u.datum = d and public.prijatelj_deli_unose(prijatelj)
+  order by u.kreirano;
+$$;
+
+revoke execute on function prijatelj_deli_unose, unosi_prijatelja from public, anon;
+grant  execute on function prijatelj_deli_unose, unosi_prijatelja to authenticated;
+```
+Ko šta dobija: **vlasnik** svoje unose kroz RLS (kao ranije); **prihvaćeni prijatelj** unose tek kad vlasnik uključi deljenje; **tuđin i `anon`** ništa (tuđin dobija prazan niz, `anon` grešku jer nema `execute`). Ukidanje prijateljstva ili isključivanje prekidača deluje odmah, bez keša.
 
 ## Unos tekstom (Edge Function `razumi-obrok`)
 - **Ko sme:** samo ulogovan korisnik (funkcija proverava token; sa samim javnim ključem vraća 401).

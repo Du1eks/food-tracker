@@ -27,6 +27,7 @@ erDiagram
     numeric cilj_proteini
     numeric cilj_uh
     numeric cilj_masti
+    boolean deli_unose "default false, prijatelji vide unose samo kad se uključi"
     timestamptz azurirano
   }
   PROIZVOD {
@@ -71,7 +72,7 @@ erDiagram
 ## Odluke
 - **Korisnici** su Supabase `auth.users` (email, hešovana lozinka); `profil` je 1:1 sa njima.
 - **Proizvodi su zajednički** (samo ulogovani korisnici): svi čitaju, dodaju i menjaju; briše samo `ko_je_uneo`. `izmenio`/`izmenjeno` pamte poslednju izmenu.
-- **Unosi su privatni**: RLS dozvoljava samo `korisnik_id = auth.uid()`. Isto važi za `profil`.
+- **Unosi su privatni**: RLS dozvoljava samo `korisnik_id = auth.uid()`. Isto važi za `profil`. Izuzetak je `profil.deli_unose` (podrazumevano `false`): kad ga vlasnik uključi, prihvaćeni prijatelji čitaju njegove unose, ali samo kroz funkciju `unosi_prijatelja`, nikad direktno iz tabele.
 - **Snapshot**: unos kopira ime i vrednosti (već izračunate za količinu), pa izmena proizvoda ne menja istoriju, a dnevni zbir je prost `SUM`.
 - **Datum** šalje app (lokalni datum korisnika), ne server.
 - **Datum rođenja umesto godina**: ne čuvamo izvedene podatke koji zastarevaju.
