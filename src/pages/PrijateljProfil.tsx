@@ -49,7 +49,7 @@ export default function PrijateljProfil() {
         <h1>{r?.nadimak ?? 'Prijatelj'}</h1>
         <span className="dan-oznaka">danas</span>
       </div>
-      <main className="prijatelj flex items-center justify-center flex-col gap-4">
+      <main className="prijatelj">
         {greska && <p className="greska" role="alert">{greska}</p>}
         {zbirovi && r && (
           <section className="panel" aria-label={`Današnji unos: ${r.nadimak}`}>
