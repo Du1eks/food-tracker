@@ -6,6 +6,7 @@ import { razumiObrok, type Stavka } from '../lib/razumi'
 import type { Poza } from '../lib/rang'
 import { useProfil } from './useProfil'
 import Maskota from './Maskota'
+import { letMakrosa } from './letMakrosa'
 
 const POLJA = [['kcal', 'kcal'], ['proteini', 'P'], ['uh', 'UH'], ['masti', 'M']] as const
 type Vrednosti = Record<keyof Makrosi, string>
@@ -61,13 +62,15 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
     setCuva(true); setGreska('')
     try {
       // Procena ide samo u dnevnik (proizvod_id null); u zajedničku bazu je korisnik šalje sam iz tabele.
-      await dodajUnos(redovi.map((r) => ({
+      const stavke = redovi.map((r) => ({
         datum, obrok: obroci[r.grupa]!, kolicina: kolicina(r), jedinica: r.jedinica, ime: r.ime,
         proizvod_id: r.proizvod_id,
         ...zaKolicinu({ ...poJedinici(r), jedinica: r.jedinica }, kolicina(r)),
-      })))
+      }))
+      await dodajUnos(stavke)
       setRedovi(null); setTekst(''); setUpisano(true); setProcena(redovi.some((r) => r.izvor === 'procena'))
-      onDodato()
+      // makrosi polete u traku; brojevi (i tabela) se preračunaju kad udare
+      void letMakrosa(zbir(stavke), document.getElementById('unos'), profil?.ime?.trim().split(' ')[0] || profil?.nadimak).finally(onDodato)
     } catch {
       setGreska('Nije upisano. Proveri internet pa probaj ponovo.')
     } finally {
@@ -99,8 +102,9 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
     : redovi ? (bezObroka ? 'Nisi napisao obrok. Izaberi ga ispod.' : 'Evo šta sam razumeo. Proveri, pa upiši.')
     : upisano ? `Mljac, upisano! ${procena ? 'Procene možeš da ispraviš i sačuvaš u bazu iz tabele. ' : ''}${ostatak}`.trim()
     : ostatak || 'Šta si jeo? Napiši mi, ja upisujem.'
-  // greška: ljut miš (poza cilj); greska se briše pre svakog pokušaja, pa se ljuti i na ponovljenu grešku
-  const poza: Poza = greska ? 'cilj' : pogodjen && !redovi && !cita ? 'slavi' : upisano ? 'jede' : 'hoda'
+  // greška: ljut (poza cilj; greska se briše pre svakog pokušaja, pa se ljuti i na ponovljenu grešku);
+  // upisano: slavi; dok pišeš i proveravaš: jede; cilj pogođen: slavi
+  const poza: Poza = greska ? 'cilj' : upisano ? 'slavi' : tekst.trim() || redovi ? 'jede' : pogodjen ? 'slavi' : 'hoda'
 
   return (
     <section className="panel" id="unos" aria-labelledby="unos-naslov">
@@ -113,7 +117,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
       <div className="panel-telo">
         <div className={`mis${cita ? ' cita' : ''}`}>
           {/* ključ na pozi: miš "poskoči" samo kad se stanje promeni */}
-          <Maskota key={poza} poza={poza} ziv />
+          <Maskota key={poza} poza={poza} ziv drzi={poza === 'jede'} />
           <p key={poruka} className={`mis-oblacic${greska ? ' lose' : ''}`} role={greska ? 'alert' : 'status'}>{poruka}</p>
         </div>
 

@@ -4,6 +4,16 @@
     "ignoreFiles": [
       ".impeccable/mocks/**"
     ],
-    "ignoreValues": []
+    "ignoreValues": [
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/pages/dan.css"
+        ],
+        "createdAt": "2026-11-14T14:38:34.640Z",
+        "reason": "agent decided: fire-coloured text on the transient praise banner (.let-pohvala); the user asked for a fire-colour effect but did not confirm gradient text specifically"
+      }
+    ]
   }
 }

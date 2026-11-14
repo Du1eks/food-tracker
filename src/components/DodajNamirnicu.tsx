@@ -4,6 +4,8 @@ import { OBROCI, fmt, obrokPoSatu, uBroj, zaKolicinu, zbir, type Jedinica, type 
 import { dodajProizvod, dodajUnos, pretraziProizvode } from '../lib/podaci'
 import { pretraziOFF } from '../lib/openFoodFacts'
 import ReciMisu from './ReciMisu'
+import { letMakrosa } from './letMakrosa'
+import { useProfil } from './useProfil'
 
 const ispravanBroj = (s: string) => s.trim() !== '' && Number.isFinite(uBroj(s)) && uBroj(s) >= 0
 
@@ -14,6 +16,7 @@ const prazan = (ime = ''): Proizvod => ({ ime, brend: null, jedinica: '100g', kc
 // Podrazumevano se piše mišu (ReciMisu). "+" otvara ručni tok, koji radi i bez AI-ja:
 // izaberi obrok → pretraži (ili "Unesi ručno") → dodaj jednu ili više namirnica (svaka se čuva odmah) → "Gotov doručak" zatvara obrok.
 export default function DodajNamirnicu({ datum, unosi, onDodato }: { datum: string; unosi: Unos[] | null; onDodato: () => void }) {
+  const { profil } = useProfil()
   const [rucno, setRucno] = useState(false)
   const [upit, setUpit] = useState('')
   const [rezultati, setRezultati] = useState<{ izvor: Izvor; lista: Proizvod[] } | null>(null)
@@ -75,7 +78,7 @@ export default function DodajNamirnicu({ datum, unosi, onDodato }: { datum: stri
         ...zaKolicinu(izabran, k),
       })
       ponisti()
-      onDodato()
+      void letMakrosa(zaKolicinu(izabran, k), document.getElementById('unos'), profil?.ime?.trim().split(' ')[0] || profil?.nadimak).finally(onDodato)
     } catch {
       setGreska('Unos nije sačuvan. Proveri internet pa pokušaj ponovo.')
     } finally {

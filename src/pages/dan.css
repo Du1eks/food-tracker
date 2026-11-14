@@ -229,3 +229,49 @@
   .zatvoren .grupa-dugme svg { transform: rotate(-90deg); }
   .zatvoren .red, .zatvoren .red-vrednosti { display: none; }
 }
+
+/* Makrosi unosa lete u traku (letMakrosa.ts): zapaljena pločica, žar za njom, iskre i blesak pri udaru, natpis za jak unos */
+/* left/top su sredina komada: i bez animacije stoji centriran */
+.let-makro, .let-zar, .let-iskra, .let-blesak { position: fixed; pointer-events: none; transform: translate(-50%, -50%); }
+.let-makro {
+  white-space: nowrap; padding: 7px 13px; border: 2px solid #5a1500; border-radius: var(--r);
+  background: linear-gradient(180deg, #fff3a8, #ffd21f 22%, #ff8a00 60%, #e8380d); color: #2a0a00;
+  font-weight: 900; font-size: 22px; line-height: 1; text-shadow: 0 1px 0 rgb(255 243 168 / 0.7);
+  box-shadow: 0 0 10px 2px #ffb300, 0 0 30px 8px rgb(255 80 0 / 0.55);
+}
+.let-makro.jako { font-size: 30px; padding: 9px 16px; box-shadow: 0 0 14px 4px #ffd21f, 0 0 46px 16px rgb(255 80 0 / 0.7); }
+/* plamen: dva mutna jezika iza natpisa koji trepere različitim ritmom */
+.let-makro::before, .let-makro::after {
+  content: ''; position: absolute; z-index: -1; left: -6px; right: -6px; bottom: -3px; height: 150%;
+  border-radius: 50% 50% 28% 28%; transform-origin: 50% 100%; filter: blur(5px);
+  background: radial-gradient(ellipse at 50% 92%, #fff3a8 0%, #ffb300 30%, rgb(255 70 0 / 0.75) 58%, transparent 74%);
+  animation: plamen 170ms ease-in-out infinite alternate;
+}
+.let-makro::after { left: 14%; right: 20%; height: 185%; opacity: 0.75; animation-duration: 230ms; animation-direction: alternate-reverse; }
+@keyframes plamen {
+  from { transform: scaleY(0.82) skewX(-5deg); opacity: 0.8; }
+  to { transform: scaleY(1.18) skewX(6deg); opacity: 1; }
+}
+.let-zar { z-index: 19; width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle, #fff3a8, #ffb300 40%, #ff4d00 70%, transparent 76%); filter: blur(1px); }
+.let-iskra { z-index: 26; width: 6px; height: 6px; border-radius: 50%; background: #fff3a8; box-shadow: 0 0 6px 2px #ff8a00; }
+.let-blesak { z-index: 25; width: 60px; height: 60px; border-radius: 50%; background: radial-gradient(circle, rgb(255 243 168 / 0.95), rgb(255 138 0 / 0.6) 50%, transparent 70%); }
+.let-pohvala {
+  position: fixed; z-index: 30; left: 50%; top: 40%; width: max-content; max-width: 92vw; margin: 0; pointer-events: none;
+  display: grid; gap: 6px; text-align: center; text-wrap: balance;
+  font-weight: 900; font-size: clamp(30px, 7vw, 64px); line-height: 1.05; letter-spacing: -0.02em;
+  /* crni obrub (četiri senke) pa narandžasti sjaj, da se čita i na zelenom i na belom */
+  filter: drop-shadow(0 2px 0 var(--tekst)) drop-shadow(0 -2px 0 var(--tekst)) drop-shadow(2px 0 0 var(--tekst)) drop-shadow(-2px 0 0 var(--tekst)) drop-shadow(0 0 10px rgb(255 100 0 / 0.5));
+  animation: pohvala 2600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.let-pohvala span { background: linear-gradient(180deg, #fff3a8, #ffc21f 40%, #ff7a00 75%, #f04a12); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@keyframes pohvala {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  10% { opacity: 1; transform: translate(-50%, -50%) scale(1.14); }
+  18%, 82% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -75%) scale(1.04); }
+}
+@keyframes pohvala-mirno { 0%, 100% { opacity: 0; } 12%, 85% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .let-pohvala { transform: translate(-50%, -50%); animation: pohvala-mirno 2600ms linear forwards; }
+}
+[data-makro] { transform-origin: 0 50%; }

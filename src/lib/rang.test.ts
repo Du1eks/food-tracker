@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict'
 import { rang, poRangu, staKaze, sufiksMesta, type Zbir } from './rang.ts'
 
-import { mesto } from './rang.ts'
+import { mesto, pohvale } from './rang.ts'
 
 // procenat 0 znači da nije uneo ništa (kcal 0); inače je kcal srazmeran cilju od 3200
 const z = (id: string, procenat: number): Zbir => ({ id, nadimak: id, kcal: procenat * 3200, proteini: 0, uh: 0, masti: 0, procenat, ima_cilj: true })
@@ -70,4 +70,9 @@ assert.deepEqual([1, 2, 3, 4, 11, 12, 13, 21, 22, 23, 101, 111, 112].map((n) => 
   for (const [red, id] of [[ekipa, 'c'], [svi0, 'a'], [[bez('a')], 'a']] as const)
     assert.ok(kaze([...red], id).length >= 4 && kaze([...red], id).every((s) => s.length > 0 && s.length <= 60))
 }
+// pohvale posle unosa: >= 50 g proteina, > 800 kcal
+assert.deepEqual(pohvale({ kcal: 800, proteini: 49.9 }, 'Duško'), [])
+assert.deepEqual(pohvale({ kcal: 300, proteini: 50 }, 'Duško'), ['Getting strong, Duško!'])
+assert.deepEqual(pohvale({ kcal: 801, proteini: 10 }, ' Duško '), ['Duško is not mouse!'])
+assert.deepEqual(pohvale({ kcal: 1200, proteini: 80 }, null), ['Getting strong!', 'You are not mouse!'])
 console.log('rang: ok')

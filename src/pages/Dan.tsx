@@ -85,16 +85,16 @@ function Traka({ uneto, cilj, rang }: { uneto: ReturnType<typeof zbir>; cilj: Ci
   const preko = imaCilj && kcal < 0
 
   const makrosi = [
-    { naziv: 'Proteini', v: imaCilj ? ostalo(cilj!.cilj_proteini, uneto.proteini) : uneto.proteini },
-    { naziv: 'Ugljeni hidrati', v: imaCilj ? ostalo(cilj!.cilj_uh, uneto.uh) : uneto.uh },
-    { naziv: 'Masti', v: imaCilj ? ostalo(cilj!.cilj_masti, uneto.masti) : uneto.masti },
+    { naziv: 'Proteini', k: 'proteini', v: imaCilj ? ostalo(cilj!.cilj_proteini, uneto.proteini) : uneto.proteini },
+    { naziv: 'Ugljeni hidrati', k: 'uh', v: imaCilj ? ostalo(cilj!.cilj_uh, uneto.uh) : uneto.uh },
+    { naziv: 'Masti', k: 'masti', v: imaCilj ? ostalo(cilj!.cilj_masti, uneto.masti) : uneto.masti },
   ]
 
   return (
     <section className="traka" aria-live="polite">
       <div className="traka-glavno">
         <p className="traka-oznaka">{!imaCilj ? 'Uneto' :preko ? 'Preko cilja' : 'Ostalo do cilja'}</p>
-        <p className="traka-broj num">
+        <p className="traka-broj num" data-makro="kcal">
           <span key={kcal} className="preklop">{fmt(Math.abs(kcal))}</span>
           <small>kcal</small>
         </p>
@@ -104,7 +104,7 @@ function Traka({ uneto, cilj, rang }: { uneto: ReturnType<typeof zbir>; cilj: Ci
         {makrosi.map((m) => (
           <div key={m.naziv}>
             <dt>{m.naziv}</dt>
-            <dd className="num"><span key={m.v ?? 'x'} className="preklop">{m.v == null ? '—' : `${fmt(Math.max(m.v, 0))} g`}</span></dd>
+            <dd className="num" data-makro={m.k}><span key={m.v ?? 'x'} className="preklop">{m.v == null ? '—' : `${fmt(Math.max(m.v, 0))} g`}</span></dd>
           </div>
         ))}
       </dl>
