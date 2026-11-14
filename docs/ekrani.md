@@ -24,7 +24,7 @@ Neulogovan korisnik na zaštićenoj ruti → `/login`. Ulogovan na `/login` → 
 - Potvrda email-a je uključena: posle registracije poruka "Proveri email da potvrdiš nalog".
 
 ## Glavni ekran (`/` i `/dan/:datum`)
-- **Zaglavlje:** ikonica kalendara na sredini (→ `/kalendar`), ikonica profila u gornjem desnom uglu.
+- **Zaglavlje:** ikonica kuće levo (→ `/`, glavna strana sa tabelom dana), desno ikonice kalendara (→ `/kalendar`), namirnica, prijatelja i profila.
   Ako profil nije popunjen: crvena tačka koja pulsira na ikonici profila.
 - **Levo: unos namirnice**
   - pretraga proizvoda: prvo naša baza, pa Open Food Facts; korisnik potvrdi/ispravi vrednosti
