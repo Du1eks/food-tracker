@@ -2,7 +2,7 @@
 // Jak unos dobija i natpis preko ekrana (pohvale u lib/rang.ts).
 // Čist DOM (Web Animations API): traka i unos su odvojene komponente, a spaja ih atribut data-makro na brojevima trake.
 import { fmt, type Makrosi } from '../lib/ishrana'
-import { pohvale } from '../lib/rang'
+import { PROTEINI_JAKO, pohvale } from '../lib/rang'
 
 const NATPIS: [keyof Makrosi, (v: number) => string][] = [
   ['kcal', (v) => `${fmt(v)} kcal`],
@@ -87,7 +87,7 @@ export function letMakrosa(m: Makrosi, odakle: Element | null, ime?: string | nu
     const meta = document.querySelector(`[data-makro="${k}"]`)
     if (!meta) return []
     const cilj = sredina(meta.firstElementChild ?? meta)
-    const jako = k === 'proteini' && m.proteini >= 50
+    const jako = k === 'proteini' && m.proteini >= PROTEINI_JAKO
     // pločice stoje jedna ispod druge na sredini panela za unos
     const y = start.y + (i - 1.5) * 54
     const p = komad(`let-makro num${jako ? ' jako' : ''}`, start.x, y, tekst(m[k]))

@@ -70,11 +70,13 @@ export const poRangu = (redovi: Zbir[]) =>
       (a.nadimak ?? '').localeCompare(b.nadimak ?? ''),
   )
 
-// Natpis preko ekrana posle jakog unosa: 50 g proteina ili više, i obrok veći od 800 kcal. Bez imena se obraća sa "you".
+// Natpis na sredini ekrana posle jakog unosa (ono što je upravo upisano): 50 g proteina ili više, 800 kcal ili više; oba = oba reda.
+// Bez imena i nadimka u profilu umesto imena stoji "You".
+export const PROTEINI_JAKO = 50, KCAL_JAKO = 800
 export function pohvale(m: { kcal: number; proteini: number }, ime: string | null | undefined): string[] {
-  const ko = ime?.trim()
+  const ko = ime?.trim() || 'You'
   return [
-    ...(m.proteini >= 50 ? [ko ? `Getting strong, ${ko}!` : 'Getting strong!'] : []),
-    ...(m.kcal > 800 ? [ko ? `${ko} is not mouse!` : 'You are not mouse!'] : []),
+    ...(m.proteini >= PROTEINI_JAKO ? [`${ko} ${ko === 'You' ? 'are getting stronger' : 'getting stronger'}`] : []),
+    ...(m.kcal >= KCAL_JAKO ? [`${ko} ${ko === 'You' ? 'are not mouse' : 'is not mouse'}`] : []),
   ]
 }
