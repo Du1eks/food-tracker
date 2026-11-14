@@ -4,17 +4,6 @@
     "ignoreFiles": [
       ".impeccable/mocks/**"
     ],
-    "ignoreValues": [
-      {
-        "rule": "gradient-text",
-        "value": "*",
-        "files": [
-          "src/pages/dan.css",
-          "src/pages/Dan.css"
-        ],
-        "createdAt": "2026-11-14T14:38:34.640Z",
-        "reason": "user confirmed fire gradient text on the praise banner on 2026-11-14"
-      }
-    ]
+    "ignoreValues": []
   }
 }

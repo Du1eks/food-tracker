@@ -2,7 +2,7 @@
 // Jak unos dobija i natpis preko ekrana (pohvale u lib/rang.ts).
 // Čist DOM (Web Animations API): traka i unos su odvojene komponente, a spaja ih atribut data-makro na brojevima trake.
 import { fmt, type Makrosi } from '../lib/ishrana'
-import { PROTEINI_JAKO, pohvale } from '../lib/rang'
+import { KCAL_JAKO, PROTEINI_JAKO, pohvale } from '../lib/rang'
 
 const NATPIS: [keyof Makrosi, (v: number) => string][] = [
   ['kcal', (v) => `${fmt(v)} kcal`],
@@ -11,6 +11,7 @@ const NATPIS: [keyof Makrosi, (v: number) => string][] = [
   ['masti', (v) => `M ${fmt(v)} g`],
 ]
 const POJAVA = 300, STOJI = 380, LET = 520, RAZMAK = 80 // ms
+const DUZE = 1100 // toliko duže stoji pločica koja je prešla granicu (pohvale u lib/rang.ts)
 const sredina = (e: Element) => { const r = e.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 } }
 const tu = 'translate(-50%, -50%)'
 
@@ -38,7 +39,7 @@ function luk(dx: number, dy: number, ustranu: number, kraj: number): Keyframe[] 
   })
 }
 
-function udar(meta: Element, x: number, y: number, jako: boolean) {
+function udar(meta: Element | null, x: number, y: number, jako: boolean) {
   void pusti(komad('let-blesak', x, y), [{ transform: `${tu} scale(0.3)`, opacity: 0.95 }, { transform: `${tu} scale(${jako ? 3 : 1.8})`, opacity: 0 }], { duration: 380, easing: 'ease-out' })
   for (let n = jako ? 26 : 11; n > 0; n--) {
     const ugao = Math.random() * Math.PI * 2, d = (jako ? 50 : 26) + Math.random() * (jako ? 90 : 48)
@@ -53,7 +54,7 @@ function udar(meta: Element, x: number, y: number, jako: boolean) {
     )
   }
   // broj se trgne i na tren zasija
-  meta.animate(
+  meta?.animate(
     [
       { transform: 'none' },
       { transform: `scale(${jako ? 1.35 : 1.22}) translateY(2px)`, color: '#c42a00', textShadow: '0 0 16px #ffb300' },
@@ -87,17 +88,23 @@ export function letMakrosa(m: Makrosi, odakle: Element | null, ime?: string | nu
     const meta = document.querySelector(`[data-makro="${k}"]`)
     if (!meta) return []
     const cilj = sredina(meta.firstElementChild ?? meta)
-    const jako = k === 'proteini' && m.proteini >= PROTEINI_JAKO
+    const jako = (k === 'proteini' && m.proteini >= PROTEINI_JAKO) || (k === 'kcal' && m.kcal >= KCAL_JAKO)
     // pločice stoje jedna ispod druge na sredini panela za unos
     const y = start.y + (i - 1.5) * 54
     const p = komad(`let-makro num${jako ? ' jako' : ''}`, start.x, y, tekst(m[k]))
     p.style.zIndex = String(24 - i) // gornja pločica je iznad plamena donje, da joj se natpis čita
-    const polazak = i * RAZMAK + POJAVA + STOJI
+    const polazak = i * RAZMAK + POJAVA + STOJI + (jako ? DUZE : 0)
     const putanja = (kraj: number) => luk(cilj.x - start.x, cilj.y - y, i % 2 ? 70 : -70, kraj)
     p.animate(
-      [{ transform: `${tu} scale(0.4)`, opacity: 0 }, { transform: `${tu} scale(1.2)`, opacity: 1, offset: 0.6 }, { transform: `${tu} scale(1)`, opacity: 1 }],
+      [{ transform: `${tu} scale(0.4)`, opacity: 0 }, { transform: `${tu} scale(${jako ? 1.45 : 1.2})`, opacity: 1, offset: 0.6 }, { transform: `${tu} scale(1)`, opacity: 1 }],
       { duration: POJAVA, delay: i * RAZMAK, fill: 'backwards' },
     )
+    // pločica preko granice dok stoji pulsira i baca iskre, da se vidi da je to taj broj
+    if (jako) {
+      p.animate([{ transform: `${tu} scale(1)` }, { transform: `${tu} scale(1.14)` }, { transform: `${tu} scale(1)` }],
+        { duration: 420, delay: i * RAZMAK + POJAVA, iterations: Math.floor((STOJI + DUZE) / 420), easing: 'ease-in-out' })
+      setTimeout(() => udar(null, start.x, y, false), i * RAZMAK + POJAVA + 250)
+    }
     // žar leti za pločicom istom putanjom, sve sitniji i bleđi
     for (let j = 1; j <= 7; j++)
       void pusti(komad('let-zar', start.x, y), putanja(0.3).map((kadar, n) => ({ ...kadar, opacity: n === 0 ? 0 : 0.9 - j * 0.1 })), {
@@ -106,6 +113,8 @@ export function letMakrosa(m: Makrosi, odakle: Element | null, ime?: string | nu
     return [pusti(p, putanja(jako ? 0.7 : 0.45), { duration: LET, delay: polazak, easing: 'cubic-bezier(0.5, 0, 0.9, 0.5)', fill: 'forwards' })
       .then(() => udar(meta, cilj.x, cilj.y, jako))]
   })
+  // brojevi se preračunaju na prvi udar; natpis tek kad sleti i poslednja pločica (jaka stoji najduže), da je ne prekrije
   // ako animacija pukne ili nema trake, brojevi se ipak preračunaju i natpis se pokaže
-  return (udari.length ? Promise.race(udari).catch(() => {}) : Promise.resolve()).then(() => natpis(reci))
+  void Promise.allSettled(udari).then(() => natpis(reci))
+  return udari.length ? Promise.race(udari).catch(() => {}) : Promise.resolve()
 }
