@@ -16,7 +16,8 @@ const bezPokreta = () => window.matchMedia('(prefers-reduced-motion: reduce)').m
 const safari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 const noc = () => { const h = new Date().getHours(); return h >= 23 || h < 6 }
 
-export default function Maskota({ poza }: { poza: Poza }) {
+// ziv: Masko klip (samo kod unosa hrane); bez njega obična slika po pozi, kao kod ranga
+export default function Maskota({ poza, ziv = false }: { poza: Poza; ziv?: boolean }) {
   const [samoSlika, setSamoSlika] = useState(bezPokreta)
   const reakcijaZa = (p: Poza) => (KLIP[p] === 'miruje' ? null : KLIP[p])
   const [reakcija, setReakcija] = useState(() => reakcijaZa(poza))
@@ -31,7 +32,7 @@ export default function Maskota({ poza }: { poza: Poza }) {
   }, [reakcija])
 
   // Slika je rezerva: bez pokreta (prefers-reduced-motion) i kad klip ne može da se učita
-  if (samoSlika) return <img className={`maskota ${poza}`} src={`/maskota/${poza}.webp`} alt={ALT[poza]} />
+  if (!ziv || samoSlika) return <img className={`maskota ${poza}`} src={`/maskota/${poza}.webp`} alt={ALT[poza]} />
 
   const ime = reakcija ?? (noc() ? 'spava' : 'miruje')
   const zajedno = { className: `maskota ziv ${poza}`, onClick: () => setReakcija('prejak'), onError: () => setSamoSlika(true) }

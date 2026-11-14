@@ -99,7 +99,8 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
     : redovi ? (bezObroka ? 'Nisi napisao obrok. Izaberi ga ispod.' : 'Evo šta sam razumeo. Proveri, pa upiši.')
     : upisano ? `Mljac, upisano! ${procena ? 'Procene možeš da ispraviš i sačuvaš u bazu iz tabele. ' : ''}${ostatak}`.trim()
     : ostatak || 'Šta si jeo? Napiši mi, ja upisujem.'
-  const poza: Poza = pogodjen && !redovi && !cita ? 'slavi' : upisano ? 'jede' : 'hoda'
+  // greška: ljut miš (poza cilj); greska se briše pre svakog pokušaja, pa se ljuti i na ponovljenu grešku
+  const poza: Poza = greska ? 'cilj' : pogodjen && !redovi && !cita ? 'slavi' : upisano ? 'jede' : 'hoda'
 
   return (
     <section className="panel" id="unos" aria-labelledby="unos-naslov">
@@ -112,7 +113,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
       <div className="panel-telo">
         <div className={`mis${cita ? ' cita' : ''}`}>
           {/* ključ na pozi: miš "poskoči" samo kad se stanje promeni */}
-          <Maskota key={poza} poza={poza} />
+          <Maskota key={poza} poza={poza} ziv />
           <p key={poruka} className={`mis-oblacic${greska ? ' lose' : ''}`} role={greska ? 'alert' : 'status'}>{poruka}</p>
         </div>
 
