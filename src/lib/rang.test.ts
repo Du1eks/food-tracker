@@ -65,6 +65,8 @@ assert.deepEqual([1, 2, 3, 4, 11, 12, 13, 21, 22, 23, 101, 111, 112].map((n) => 
   assert.ok(kaze([z('a', 1), z('b', 0.4)], 'a').some((s) => s.includes('Cilj pogođen')))
   assert.ok(kaze(ekipa, 'a').some((s) => s.includes('Prvi si sa 90%')))
   assert.ok(kaze(ekipa, 'b').some((s) => s.includes('2. mesto')))
+  assert.ok(kaze(ekipa, 'c').some((s) => s.includes('You are mouse')))
+  assert.ok(!kaze(ekipa, 'b').some((s) => s.includes('You are mouse')))
   for (const [red, id] of [[ekipa, 'c'], [svi0, 'a'], [[bez('a')], 'a']] as const)
     assert.ok(kaze([...red], id).length >= 4 && kaze([...red], id).every((s) => s.length > 0 && s.length <= 60))
 }

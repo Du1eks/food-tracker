@@ -26,8 +26,6 @@ a.rang:hover .rang-poziv, a.rang:focus-visible .rang-poziv { max-width: 200px; o
   position: absolute; left: 0; bottom: 0;
   height: 92px; width: auto; pointer-events: none; z-index: 1;
 }
-/* na ovoj slici je miš manji zbog oblačića "You are mouse", pa je veća da tekst bude čitljiv */
-.rang-omot .maskota.cilj { height: 110px; left: -20px; }
 /* Oblačić iznad miša; rep pokazuje nadole ka njegovoj glavi */
 .rang-govor {
   position: absolute; left: 4px; bottom: calc(100% + 14px); z-index: 2; /* ispod lepljive trake (z-index 5) */
@@ -58,8 +56,6 @@ a.rang:hover .rang-poziv, a.rang:focus-visible .rang-poziv { max-width: 200px; o
 .traka .rang-omot { grid-column: auto; }
 /* Iznad unosa (uži ekran): miš je viši od polja, pa mu treba mesta da ne pokrije red sa datumom */
 .dan > .rang-omot { margin-top: 30px; }
-/* Poza "You are mouse" viri 20px levo od polja, pa joj treba margina da ne ostane uz ivicu ekrana */
-.dan > .rang-omot:has(.maskota.cilj) { margin-left: 24px; }
 
 /* Miš "živi": diše, povremeno se nagne ili poskoči; kad priča, poskakuje uz reči. Samo bez prefers-reduced-motion. */
 @media (prefers-reduced-motion: no-preference) {

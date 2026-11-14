@@ -5,7 +5,7 @@ const ALT: Record<Poza, string> = {
   jede: 'Miš jede i zadovoljan je',
   hoda: 'Miš šeta',
   slavi: 'Miš slavi',
-  cilj: 'Ljuti miš kaže: You are mouse',
+  cilj: 'Ljuti miš',
 }
 
 // Živi miš: Masko klipovi u public/maskota/masko. Poza iz app-a postaje kratka reakcija, pa miš opet miruje.
@@ -32,7 +32,9 @@ export default function Maskota({ poza, ziv = false }: { poza: Poza; ziv?: boole
   }, [reakcija])
 
   // Slika je rezerva: bez pokreta (prefers-reduced-motion) i kad klip ne može da se učita
-  if (!ziv || samoSlika) return <img className={`maskota ${poza}`} src={`/maskota/${poza}.webp`} alt={ALT[poza]} />
+  // slike miša sa natpisom više nema (natpis je u oblačiću): za ljutu pozu rezerva je običan miš
+  const slika = poza === 'cilj' ? 'hoda' : poza
+  if (!ziv || samoSlika) return <img className={`maskota ${slika}`} src={`/maskota/${slika}.webp`} alt={ALT[poza]} />
 
   const ime = reakcija ?? (noc() ? 'spava' : 'miruje')
   const zajedno = { className: `maskota ziv ${poza}`, onClick: () => setReakcija('prejak'), onError: () => setSamoSlika(true) }
