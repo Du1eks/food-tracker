@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { ArrowRight, Pencil, Plus, X } from 'lucide-react'
 import { OBROCI, fmt, uBroj, zaKolicinu, zbir, type Makrosi, type Obrok, type Unos } from '../lib/ishrana'
 import { dodajUnos } from '../lib/podaci'
@@ -6,6 +6,9 @@ import { razumiObrok, type Stavka } from '../lib/razumi'
 import type { Poza } from '../lib/rang'
 import { useProfil } from './useProfil'
 import Maskota from './Maskota'
+// Živi miš se učitava lenjo; ako se ne skine (nema interneta), ostaje slika
+const ZiviMis = lazy(() => import('./ZiviMis').catch(() => ({ default: ({ rezerva }: { rezerva: React.ReactElement }) => rezerva })))
+const bezPokreta = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 import { letMakrosa } from './letMakrosa'
 
 const POLJA = [['kcal', 'kcal'], ['proteini', 'P'], ['uh', 'UH'], ['masti', 'M']] as const
@@ -116,8 +119,12 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
       </div>
       <div className="panel-telo">
         <div className={`mis${cita ? ' cita' : ''}`}>
-          {/* ključ na pozi: miš "poskoči" samo kad se stanje promeni */}
-          <Maskota key={poza} poza={poza} ziv drzi={poza === 'jede'} />
+          {/* ključ na pozi: slika miša "poskoči" kad se stanje promeni; živi miš (bez prefers-reduced-motion) sam bira klip */}
+          {bezPokreta() ? <Maskota key={poza} poza={poza} /> : (
+            <Suspense fallback={<Maskota poza={poza} />}>
+              <ZiviMis rezerva={<Maskota poza={poza} />} alt="Miš" uneto={uneto} cilj={profil ?? null} brojUnosa={unosi?.length ?? null} greska={greska} profilId={profil?.id ?? null} />
+            </Suspense>
+          )}
           <p key={poruka} className={`mis-oblacic${greska ? ' lose' : ''}`} role={greska ? 'alert' : 'status'}>{poruka}</p>
         </div>
 

@@ -80,3 +80,15 @@ export function pohvale(m: { kcal: number; proteini: number }, ime: string | nul
     ...(m.kcal >= KCAL_JAKO ? [`${ko} ${ko === 'You' ? 'are not mouse' : 'is not mouse'}`] : []),
   ]
 }
+
+// Stanje živog miša (canvas "Miš u aplikaciji"): noću (22–07 po lokalnom satu) spava; cilj ispunjen (proteini ili kalorije) = slavi.
+// Ljut je samo na grešku pri unosu i kad si poslednji na rang listi (useMouseMascot), ne kad pređeš limit.
+export type CiljMisa = { cilj_kcal: number | null; cilj_proteini: number | null }
+export function stanjeMisa(uneto: { kcal: number; proteini: number }, cilj: CiljMisa | null, sat: number) {
+  const kcal = cilj?.cilj_kcal ?? 0, proteini = cilj?.cilj_proteini ?? 0
+  return {
+    spava: sat >= 22 || sat < 7,
+    slavi: (kcal > 0 && uneto.kcal >= kcal) || (proteini > 0 && uneto.proteini >= proteini),
+  }
+}
+

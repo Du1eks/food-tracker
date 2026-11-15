@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict'
 import { rang, poRangu, staKaze, sufiksMesta, type Zbir } from './rang.ts'
 
-import { mesto, pohvale } from './rang.ts'
+import { mesto, pohvale, stanjeMisa } from './rang.ts'
 
 // procenat 0 znači da nije uneo ništa (kcal 0); inače je kcal srazmeran cilju od 3200
 const z = (id: string, procenat: number): Zbir => ({ id, nadimak: id, kcal: procenat * 3200, proteini: 0, uh: 0, masti: 0, procenat, ima_cilj: true })
@@ -77,4 +77,15 @@ assert.deepEqual(pohvale({ kcal: 800, proteini: 10 }, ' Duško '), ['Duško is n
 assert.deepEqual(pohvale({ kcal: 800, proteini: 50 }, 'Duško'), ['Duško getting stronger', 'Duško is not mouse'])
 assert.deepEqual(pohvale({ kcal: 1200, proteini: 80 }, null), ['You are getting stronger', 'You are not mouse'])
 assert.deepEqual(pohvale({ kcal: 900, proteini: 0 }, '  '), ['You are not mouse'])
+// stanje živog miša: noć 22–07, cilj (proteini ili kcal); preko limita nije ljut
+const ciljM = { cilj_kcal: 3000, cilj_proteini: 150 }
+assert.deepEqual(stanjeMisa({ kcal: 1000, proteini: 50 }, ciljM, 12), { spava: false, slavi: false })
+assert.equal(stanjeMisa({ kcal: 0, proteini: 0 }, ciljM, 22).spava, true)
+assert.equal(stanjeMisa({ kcal: 0, proteini: 0 }, ciljM, 6).spava, true)
+assert.equal(stanjeMisa({ kcal: 0, proteini: 0 }, ciljM, 7).spava, false)
+assert.equal(stanjeMisa({ kcal: 0, proteini: 0 }, ciljM, 21).spava, false)
+assert.equal(stanjeMisa({ kcal: 3000, proteini: 10 }, ciljM, 12).slavi, true)
+assert.equal(stanjeMisa({ kcal: 100, proteini: 150 }, ciljM, 12).slavi, true)
+assert.deepEqual(stanjeMisa({ kcal: 5000, proteini: 0 }, ciljM, 12), { spava: false, slavi: true })
+assert.deepEqual(stanjeMisa({ kcal: 5000, proteini: 500 }, null, 12), { spava: false, slavi: false })
 console.log('rang: ok')
