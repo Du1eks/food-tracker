@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { Check, ChevronRight, Search, UserPlus, Users, X } from 'lucide-react'
+import { Check, ChevronRight, Flame, Search, UserPlus, Users, X } from 'lucide-react'
 import { danas } from '../lib/datum'
 import { fmt } from '../lib/ishrana'
 import {
@@ -8,6 +8,7 @@ import {
   type Zahtev,
 } from '../lib/podaci'
 import { mesto, poRangu, type Zbir } from '../lib/rang'
+import { opisPlamena, plamen } from '../lib/plamen'
 import { useProfil } from '../components/useProfil'
 import './dan.css'
 import './prijatelji.css'
@@ -93,11 +94,18 @@ export default function Prijatelji() {
                 {poRangu(zbirovi).map((r) => {
                   const ja = r.id === profil?.id
                   const pct = Math.round(r.procenat * 100)
+                  const gori = plamen(r)
                   const sadrzaj = (
                     <>
                       <span className="rang-red-mesto num">{mesto(zbirovi, r)}.</span>
                       <span className="rang-red-ime">
-                        <b>{ja ? 'Ti' : r.nadimak}</b>
+                        <span className="rang-red-naziv">
+                          <b>{ja ? 'Ti' : r.nadimak}</b>
+                          {/* Plamen je ukras: veći za cilj kalorija, manji plavi za cilj proteina; čitač ekrana dobija tekst */}
+                          {gori.kalorije && <Flame className="plamen kcal" size={22} fill="currentColor" aria-hidden />}
+                          {gori.proteini && <Flame className="plamen proteini" size={16} fill="currentColor" aria-hidden />}
+                          {opisPlamena(gori) && <span className="sr">, {opisPlamena(gori)}</span>}
+                        </span>
                         {r.ima_cilj && <span className="merac" aria-hidden><i style={{ width: `${pct}%` }} /></span>}
                       </span>
                       {r.ima_cilj ? (
@@ -109,7 +117,7 @@ export default function Prijatelji() {
                     </>
                   )
                   return (
-                    <li key={r.id} className={[ja && 'ja', !r.ima_cilj && 'bez-podataka'].filter(Boolean).join(' ') || undefined}>
+                    <li key={r.id} className={[ja && 'ja', !r.ima_cilj && 'bez-podataka', gori.kalorije && 'gori'].filter(Boolean).join(' ') || undefined}>
                       {ja ? <div className="rang-red">{sadrzaj}</div> : <Link className="rang-red" to={`/prijatelji/${r.id}`}>{sadrzaj}</Link>}
                     </li>
                   )

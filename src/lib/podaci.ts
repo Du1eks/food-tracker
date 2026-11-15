@@ -137,6 +137,8 @@ export async function zbirZaDan(datum: string): Promise<Zbir[]> {
     ...r, kcal: Number(r.kcal), proteini: Number(r.proteini), uh: Number(r.uh), masti: Number(r.masti), procenat: Number(r.procenat),
     // stara verzija funkcije (pre migracije ima_cilj) ne šalje polje; tad nikoga ne precrtavamo
     ima_cilj: r.ima_cilj ?? true,
+    // isto za pogodio_proteine (pre migracije zbir_pogodio_proteine): niko ne gori plavo
+    pogodio_proteine: r.pogodio_proteine ?? false,
   }))
 }
 

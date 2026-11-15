@@ -92,13 +92,15 @@ $$;
 
 -- zbir za dan: ja + prihvaćeni prijatelji; rang računa app iz procenta
 create function dnevni_zbir_prijatelja(d date)
-returns table (id uuid, nadimak text, kcal numeric, proteini numeric, uh numeric, masti numeric, procenat numeric, ima_cilj boolean)
+returns table (id uuid, nadimak text, kcal numeric, proteini numeric, uh numeric, masti numeric, procenat numeric, ima_cilj boolean, pogodio_proteine boolean)
 language sql stable security definer set search_path = public as $$
   select p.id, p.nadimak,
          coalesce(sum(u.kcal), 0), coalesce(sum(u.proteini), 0),
          coalesce(sum(u.uh), 0), coalesce(sum(u.masti), 0),
          case when p.cilj_kcal > 0 then least(coalesce(sum(u.kcal), 0) / p.cilj_kcal, 1) else 0 end,
-         coalesce(p.cilj_kcal, 0) > 0
+         coalesce(p.cilj_kcal, 0) > 0,
+         -- samo da/ne (za plamen na rang listi), nikad tuđi cilj proteina
+         coalesce(p.cilj_proteini, 0) > 0 and coalesce(sum(u.proteini), 0) >= p.cilj_proteini
   from profil p
   left join unos u on u.korisnik_id = p.id and u.datum = d
   where p.id = auth.uid()

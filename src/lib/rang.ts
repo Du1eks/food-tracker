@@ -3,6 +3,8 @@ export type Zbir = {
   id: string; nadimak: string | null; kcal: number; proteini: number; uh: number; masti: number; procenat: number
   // false = nema dnevni cilj kcal (profil nije popunjen), pa procenat ne znači ništa
   ima_cilj: boolean
+  // true = danas pogodio cilj proteina; baza šalje samo da/ne, ne i tuđi cilj (stara verzija funkcije ga ne šalje)
+  pogodio_proteine?: boolean
 }
 
 export type Poza = 'jede' | 'hoda' | 'slavi' | 'cilj'
