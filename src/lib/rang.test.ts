@@ -38,11 +38,14 @@ assert.deepEqual(rang(svi0, 'b'), { mesto: 3, ukupno: 3, poza: 'cilj' })
 assert.equal(mesto(svi0, svi0[0]), 3)
 
 // više njih bez unosa dele poslednje mesto
-assert.deepEqual(rang([z('a', 0.5), z('b', 0), z('c', 0)], 'c'), { mesto: 3, ukupno: 3, poza: 'cilj' })
+assert.deepEqual(rang([z('a', 0.5), z('b', 0), z('c', 0)], 'c'), { mesto: 2, ukupno: 3, poza: 'cilj' })
+const cetvoro = [z('a', 0.9), z('b', 0.6), z('c', 0), z('d', 0)]
+assert.equal(rang(cetvoro, 'c')?.mesto, 3)
+assert.equal(rang(cetvoro, 'd')?.mesto, 3)
 
 // bez podataka u profilu: poslednji i ljut, čak i kad je nešto uneo
 const nepopunjen = [z('a', 0.02), bez('b', 900), z('c', 0)]
-assert.deepEqual(rang(nepopunjen, 'b'), { mesto: 3, ukupno: 3, poza: 'cilj' })
+assert.deepEqual(rang(nepopunjen, 'b'), { mesto: 2, ukupno: 3, poza: 'cilj' })
 assert.deepEqual(rang(nepopunjen, 'a'), { mesto: 1, ukupno: 3, poza: 'jede' })
 // ko ima cilj ali nije uneo ništa i dalje je ispred onoga bez podataka u tabeli
 assert.deepEqual(poRangu(nepopunjen).map((r) => r.id), ['a', 'c', 'b'])

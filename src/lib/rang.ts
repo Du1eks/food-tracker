@@ -16,9 +16,13 @@ export type Rang = { mesto: number; ukupno: number; poza: Poza }
 const uneo = (r: Zbir) => r.ima_cilj && r.kcal > 0
 const ispred = (a: Zbir, b: Zbir) => (uneo(a) && !uneo(b)) || (uneo(a) === uneo(b) && a.procenat > b.procenat)
 
-// Mesto = 1 + broj onih ispred (izjednačeni dele mesto); ko se ne računa ima poslednje mesto
+// Mesto = 1 + broj onih ispred (izjednačeni dele mesto); oni bez unosa dele mesto iza svih koji su uneli.
 export const mesto = (redovi: Zbir[], r: Zbir) =>
-  uneo(r) ? 1 + redovi.filter((x) => ispred(x, r)).length : redovi.length
+  uneo(r)
+    ? 1 + redovi.filter((x) => ispred(x, r)).length
+    : redovi.some(uneo)
+      ? redovi.filter(uneo).length + 1
+      : redovi.length
 
 // Prvi: srećan (jede, a slavi kad je dostigao cilj); poslednji ili van ranga: ljut; ostali i samac: hoda.
 export function rang(redovi: Zbir[], mojId: string): Rang | null {
