@@ -150,7 +150,7 @@ Svaki ekran se čita kao aerodromska signalizacija: jedna zelena traka kaže kol
 
 Gustina je radna, ne dekorativna: paneli, tabela i forma stoje jedno do drugog na računaru, a na telefonu se slažu u kolonu ispod lepljive trake. Kontrole imaju crni okvir od 2 px, kao table sa natpisima, a strelica uvek stoji uz ivicu na koju pokazuje.
 
-Svet odbija standard kategorije: bele kartice sa krugom napretka. Napredak je traka (pano, merač, linija na dnu polja kalendara), nikad krug.
+Svet odbija standard kategorije: bele kartice sa krugom napretka. Napredak je traka (pano, merač, linija na dnu polja kalendara); jedini izuzetak je crni polukružni luk dnevnog napretka na zelenom panou glavnog ekrana, nikad krug na beloj kartici.
 
 **Key Characteristics:**
 - Zadata paleta (PRODUCT.md), zelena rezervisana za signal i glavnu akciju.
@@ -214,7 +214,7 @@ Ritam razmaka: 8, 12, 16, 18, 24, 32, 48 px. Unutrašnjost panela 18px sa 16px i
 
 Prelomi: ispod 960px sve ide u jednu kolonu (forma iznad tabele, polje ranga iznad unosa). Ispod 640px traka ostatka postaje niska (oko 120px, broj 48px, makrosi u drugom redu, strelica 44px), tabela krije kolone P/UH/M i pokazuje ih kao sitan red ispod imena (u zbiru pored kcal stoje i proteini, sa jedinicom sitno ispod broja), kalendar smanjuje polja.
 
-Traka ostatka je lepljiva (sticky, top 0) na svim širinama.
+Kartica dnevnog napretka nije lepljiva: sa lukom je visoka ~360px i na telefonu bi pokrila pola ekrana.
 
 ## Elevation & Depth
 
@@ -266,10 +266,10 @@ Izbor jedne opcije (pol, cilj, obrok): okvir 2px, pregrade 2px, izabrana opcija 
 
 ### Navigation
 - **Gornja traka:** crna, 56px, levo pločica kuće (vodi na glavnu stranu sa tabelom dana) i ime (800/18px; ispod 520px ime se krije, ostaje kuća), pločice desno (kalendar, namirnice, prijatelji, profil). Crvena tačka 14px sa pulsom na pločici profila dok profil nije popunjen. Ekran prijave umesto nje ima zeleni gornji deo (var(--zelena)) spojen sa trakom naslova, sa logom `logo-zeleno.webp` (52px na sredini, od 961px 72px levo): to je original logo čiji su zeleni delovi posvetljeni na #b0e878 da se vide na #389600. Od 1100px desno od forme stoji `pokazuje.webp` (miš pokazuje ulevo na formu); na užem ekranu `pokazuje_dole.webp` (280px) leži na vrhu forme i prstom prelazi preko njene ivice.
-- **Red datuma:** svetle pločice ‹ ›, naslov (Headline), crna oznaka "danas" (pill, 700/14px).
+- **Red datuma:** svetle pločice ‹ ›, naslov (Headline), crna oznaka "danas" (pill, 700/14px). Na glavnom ekranu umesto njega stoji nedelja: svetle pločice ‹ › menjaju nedelju, sedam dana (ime dana, ispod krug 34px): zelen sa crnom kvačicom = pogođen cilj kalorija (isto pravilo kao plamen na rang listi), crven "!" na greska-bg = prošao dan sa unosom bez cilja, siv krug = prazan dan, isprekidan i providan = budući (nije link). Danas: ime dana u crnoj pilulici; izabrani dan: bela pločica sa okvirom 2px. Ispod je manji naslov sa datumom (h1, 20px).
 
-### Traka ostatka (signature)
-Zelena lepljiva traka: oznaka "Ostalo do cilja" / "Preko cilja" / "Uneto", ostatak kcal (Display), makrosi (Figure), crna pločica 72px sa strelicom nadole desno. Posle svakog unosa brojka se preispiše kao tabla: clip-path odozgo nadole, pomeraj -0.18em i blur 2px, 520ms cubic-bezier(0.16, 1, 0.3, 1), samo bez prefers-reduced-motion. Bez cilja desno stoji crno dugme "Popuni profil za cilj".
+### Kartica dnevnog napretka (signature)
+Zeleni pano (nije lepljiv): oznaka "Dnevni napredak", crni polukružni luk (300px, debljina 15, staza crna 16%) koji se puni uneto/cilj kcal, bela pilulica sa procentom na kraju ispune; u sredini plamen (lucide `Flame`, crn, neupaljen), uneto kcal (900, 48–60px) i "od X kcal", ispod "Ostalo X kcal" / "Preko cilja X kcal". Kad je cilj kalorija pogođen, umesto plamena iskoči komad sira (SVG, 700ms) i blago se njiše (samo bez prefers-reduced-motion). Ispod tri bele kartice makroa (uneto / cilj g, tanka zelena traka 6px). Crna pločica 72px sa strelicom nadole desno (telefon: 44px u gornjem desnom uglu). Posle svakog unosa brojka se preispiše kao tabla: clip-path odozgo nadole, pomeraj -0.18em i blur 2px, 520ms cubic-bezier(0.16, 1, 0.3, 1), samo bez prefers-reduced-motion. Bez cilja desno stoji crno dugme "Popuni profil za cilj".
 
 ### Polje kalendara
 Bela ćelija 6px, broj dana 800/18px gore levo, kcal (900) dole, zelena traka napretka 6px na dnu. Danas: crni okvir 2px i broj u crnoj pločici. Budući dani: providni, isprekidan okvir spolja.

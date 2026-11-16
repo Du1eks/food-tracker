@@ -38,9 +38,7 @@ a.rang:hover .rang-poziv, a.rang:focus-visible .rang-poziv { max-width: 200px; o
   100% { transform: none; }
 }
 
-/* U zelenoj traci (računar): na sredini između masti i strelice */
-.traka:has(.rang-omot) { grid-template-columns: auto auto 1fr auto; gap: clamp(16px, 2vw, 48px); }
-.traka:has(.rang-omot) .traka-makrosi { gap: clamp(16px, 2vw, 40px); }
+/* U zelenoj kartici napretka (računar): na sredini između luka i strelice */
 .traka .rang-omot { grid-column: auto; }
 /* Iznad unosa (uži ekran): miš je viši od polja, pa mu treba mesta da ne pokrije red sa datumom */
 .dan > .rang-omot { margin-top: 30px; }

@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
-import { ArrowDown, ChevronLeft, ChevronRight } from 'lucide-react'
-import { danas, ispravan, lepDatum, pomeri } from '../lib/datum'
+import { ArrowDown, Check, ChevronLeft, ChevronRight, Flame } from 'lucide-react'
+import { danas, ispravan, izIso, lepDatum, pomeri } from '../lib/datum'
 import { fmt, zbir, type Unos } from '../lib/ishrana'
-import { unosiZaDan } from '../lib/podaci'
+import { kcalPoDanima, unosiZaDan } from '../lib/podaci'
+import { plamen } from '../lib/plamen'
 import { useProfil } from '../components/useProfil'
 import DodajNamirnicu from '../components/DodajNamirnicu'
 import TabelaDana from '../components/TabelaDana'
@@ -48,23 +49,12 @@ export default function Dan() {
   const uneto = zbir(unosi ?? [])
   return (
     <>
-      <Traka uneto={uneto} cilj={profil} rang={jeDanas && !uski && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />} />
-      <nav className="dan-red" aria-label="Izbor dana">
-        <Link className="plocica svetla" to={`/dan/${pomeri(datum, -1)}`} aria-label="Prethodni dan">
-          <ChevronLeft size={22} aria-hidden />
-        </Link>
+      <Nedelja datum={datum} kcalDana={unosi && uneto.kcal} cilj={profil?.cilj_kcal ?? null} />
+      <div className="dan-naslov">
         <h1>{lepDatum(datum)}</h1>
-        {jeDanas ? (
-          <span className="dan-oznaka">danas</span>
-        ) : (
-          <>
-            <Link className="plocica svetla" to={`/dan/${pomeri(datum, 1)}`} aria-label="Sledeći dan">
-              <ChevronRight size={22} aria-hidden />
-            </Link>
-            <Link className="dugme tiho" to="/">Nazad na danas</Link>
-          </>
-        )}
-      </nav>
+        {!jeDanas && <Link className="dugme tiho" to="/">Nazad na danas</Link>}
+      </div>
+      <Traka uneto={uneto} cilj={profil} rang={jeDanas && !uski && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />} />
       <main className="dan">
         {jeDanas && uski && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />}
         <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} govor={govor} />
@@ -78,39 +68,62 @@ export default function Dan() {
 
 type Cilj = { cilj_kcal: number | null; cilj_proteini: number | null; cilj_uh: number | null; cilj_masti: number | null }
 
-// Traka ostatka: preispiše se posle svakog unosa (ključ na vrednosti pokreće animaciju table).
+// "Pogođen cilj kalorija" je isto pravilo kao plamen na rang listi (lib/plamen.ts).
+const pogodio = (kcal: number, cilj: number | null) => plamen({ ima_cilj: !!cilj, procenat: cilj ? kcal / cilj : 0, pogodio_proteine: false }).kalorije
+
+// Luk je polukrug poluprečnika 85 oko (100, 100) u viewBox-u 200×108; pathLength=100 pa je dužina ispune = procenat.
+const LUK = 'M15 100 A85 85 0 0 1 185 100'
+
+// Kartica dnevnog napretka: preispiše se posle svakog unosa (ključ na vrednosti pokreće animaciju table).
 function Traka({ uneto, cilj, rang }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | null; rang: React.ReactNode }) {
-  const imaCilj = !!cilj?.cilj_kcal
-  const ostalo = (c: number | null | undefined, u: number) => (c ? c - u : null)
-  const kcal = imaCilj ? ostalo(cilj!.cilj_kcal, uneto.kcal)! : uneto.kcal
-  const preko = imaCilj && kcal < 0
+  const c = cilj?.cilj_kcal ?? null
+  const odnos = c ? uneto.kcal / c : 0
+  const p = Math.min(odnos, 1)
+  const ugao = Math.PI * (1 - p)
+  const razlika = c ? c - uneto.kcal : 0
 
   const makrosi = [
-    { naziv: 'Proteini', k: 'proteini', v: imaCilj ? ostalo(cilj!.cilj_proteini, uneto.proteini) : uneto.proteini },
-    { naziv: 'Ugljeni hidrati', k: 'uh', v: imaCilj ? ostalo(cilj!.cilj_uh, uneto.uh) : uneto.uh },
-    { naziv: 'Masti', k: 'masti', v: imaCilj ? ostalo(cilj!.cilj_masti, uneto.masti) : uneto.masti },
+    { naziv: 'Proteini', k: 'proteini', u: uneto.proteini, c: cilj?.cilj_proteini },
+    { naziv: 'Ugljeni hidrati', k: 'uh', u: uneto.uh, c: cilj?.cilj_uh },
+    { naziv: 'Masti', k: 'masti', u: uneto.masti, c: cilj?.cilj_masti },
   ]
 
   return (
-    <section className="traka" aria-live="polite">
-      <div className="traka-glavno">
-        <p className="traka-oznaka">{!imaCilj ? 'Uneto' :preko ? 'Preko cilja' : 'Ostalo do cilja'}</p>
-        <p className="traka-broj num" data-makro="kcal">
-          <span key={kcal} className="preklop">{fmt(Math.abs(kcal))}</span>
-          <small>kcal</small>
-        </p>
-        {imaCilj && <p className="traka-sitno num">uneto {fmt(uneto.kcal)} od {fmt(cilj!.cilj_kcal!)} kcal</p>}
-      </div>
-      <dl className="traka-makrosi">
-        {makrosi.map((m) => (
-          <div key={m.naziv}>
-            <dt>{m.naziv}</dt>
-            <dd className="num" data-makro={m.k}><span key={m.v ?? 'x'} className="preklop">{m.v == null ? '—' : `${fmt(Math.max(m.v, 0))} g`}</span></dd>
+    <section className="traka" aria-live="polite" aria-labelledby="napredak-naslov">
+      <div className="napredak">
+        <h2 id="napredak-naslov" className="traka-oznaka">Dnevni napredak</h2>
+        <div className="luk">
+          <svg viewBox="0 0 200 108" aria-hidden>
+            <path className="luk-staza" d={LUK} pathLength={100} />
+            {p > 0 && <path className="luk-ispuna" d={LUK} pathLength={100} style={{ strokeDasharray: `${p * 100} 100` }} />}
+          </svg>
+          {c && (
+            <span className="luk-procenat num" style={{ left: `${(100 + 85 * Math.cos(ugao)) / 2}%`, top: `${((100 - 85 * Math.sin(ugao)) / 108) * 100}%` }}>
+              {Math.round(odnos * 100)}%
+            </span>
+          )}
+          <div className="luk-sredina">
+            {pogodio(uneto.kcal, c) ? <Sir /> : <Flame className="luk-plamen" size={30} strokeWidth={2.25} aria-hidden />}
+            <p className="traka-broj num" data-makro="kcal"><span key={uneto.kcal} className="preklop">{fmt(uneto.kcal)}</span></p>
+            <p className="traka-sitno num">{c ? `od ${fmt(c)} kcal` : 'kcal uneto'}</p>
           </div>
-        ))}
-      </dl>
+        </div>
+        {c && <p className="traka-ostatak num">{razlika < 0 ? `Preko cilja ${fmt(-razlika)} kcal` : `Ostalo ${fmt(razlika)} kcal`}</p>}
+        <dl className="traka-makrosi">
+          {makrosi.map((m) => (
+            <div key={m.naziv}>
+              <dt>{m.naziv}</dt>
+              <dd className="num" data-makro={m.k}>
+                <span key={m.u} className="preklop">{fmt(m.u)}</span>
+                <small>{m.c ? ` / ${fmt(m.c)} g` : ' g'}</small>
+                {!!m.c && <span className="makro-traka" style={{ '--p': `${Math.min(m.u / m.c, 1) * 100}%` } as React.CSSProperties} aria-hidden />}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
       {rang}
-      {imaCilj ? (
+      {c ? (
         <a className="plocica traka-strelica" href="#unos" aria-label="Dodaj namirnicu">
           <ArrowDown size={34} strokeWidth={2.75} aria-hidden />
         </a>
@@ -121,5 +134,78 @@ function Traka({ uneto, cilj, rang }: { uneto: ReturnType<typeof zbir>; cilj: Ci
         </Link>
       )}
     </section>
+  )
+}
+
+// Komad sira: iskoči u sredini luka kad je cilj kalorija pogođen (pokret je u dan.css).
+function Sir() {
+  return (
+    <svg className="sir" viewBox="0 0 48 40" width={44} height={37} role="img" aria-label="Cilj kalorija pogođen">
+      <path d="M3 17 L36 4 L45 17 Z" fill="#ffd95a" />
+      <path d="M3 17 H45 V35 H3 Z" fill="#ffc21a" />
+      <circle cx="13" cy="25" r="3.5" fill="#e09a00" />
+      <circle cx="30" cy="29" r="2.5" fill="#e09a00" />
+      <circle cx="36" cy="22" r="2" fill="#e09a00" />
+      <path d="M3 17 L36 4 L45 17 V35 H3 Z M3 17 H45" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+const DANI = ['Pon', 'Uto', 'Sre', 'Čet', 'Pet', 'Sub', 'Ned']
+const putanja = (d: string) => (d === danas() ? '/' : `/dan/${d}`)
+
+// Nedelja izabranog dana: kvačica = pogođen cilj kalorija, "!" = prošao dan sa unosom a bez cilja, krug = budući ili prazan dan.
+// kcalDana je sveži zbir izabranog dana (null dok se učitava), da se kvačica pokaže odmah posle unosa.
+function Nedelja({ datum, kcalDana, cilj }: { datum: string; kcalDana: number | null; cilj: number | null }) {
+  const pon = pomeri(datum, -((izIso(datum).getDay() + 6) % 7))
+  const [ucitano, setUcitano] = useState<{ pon: string; kcal: Map<string, number> } | null>(null)
+  useEffect(() => {
+    let vazi = true
+    // shortcut: kad upit padne, dani ostaju prazni krugovi (grešku već javlja tabela dana)
+    kcalPoDanima(pon, pomeri(pon, 6)).then((kcal) => vazi && setUcitano({ pon, kcal }), () => {})
+    return () => { vazi = false }
+  }, [pon, kcalDana])
+
+  const dan0 = danas()
+  const sledeca = pomeri(datum, 7)
+  return (
+    <nav className="nedelja" aria-label="Izbor dana">
+      <Link className="plocica svetla" to={putanja(pomeri(datum, -7))} aria-label="Prethodna nedelja">
+        <ChevronLeft size={22} aria-hidden />
+      </Link>
+      <ol className="nedelja-dani">
+        {DANI.map((ime, i) => {
+          const d = pomeri(pon, i)
+          const kcal = d === datum && kcalDana != null ? kcalDana : ucitano?.pon === pon ? ucitano.kcal.get(d) : undefined
+          const stanje = kcal && pogodio(kcal, cilj) ? 'pogodjen' : kcal && cilj && d < dan0 ? 'promasen' : 'prazan'
+          const opis = stanje === 'pogodjen' ? ', cilj pogođen' : stanje === 'promasen' ? ', cilj nije pogođen' : ''
+          const sadrzaj = (
+            <>
+              <span className="nedelja-ime">{ime}</span>
+              <span className="nedelja-znak">{stanje === 'pogodjen' ? <Check size={20} strokeWidth={3} aria-hidden /> : stanje === 'promasen' ? '!' : null}</span>
+            </>
+          )
+          return (
+            <li key={d}>
+              {d > dan0 ? (
+                <span className="nedelja-dan buduci">{sadrzaj}</span>
+              ) : (
+                <Link className="nedelja-dan" to={putanja(d)} data-stanje={stanje} data-danas={d === dan0 || undefined}
+                  aria-current={d === datum ? 'page' : undefined} aria-label={`${lepDatum(d)}${d === dan0 ? ', danas' : ''}${opis}`}>
+                  {sadrzaj}
+                </Link>
+              )}
+            </li>
+          )
+        })}
+      </ol>
+      {pomeri(pon, 7) <= dan0 ? (
+        <Link className="plocica svetla" to={putanja(sledeca < dan0 ? sledeca : dan0)} aria-label="Sledeća nedelja">
+          <ChevronRight size={22} aria-hidden />
+        </Link>
+      ) : (
+        <span className="nedelja-prazno" aria-hidden />
+      )}
+    </nav>
   )
 }
