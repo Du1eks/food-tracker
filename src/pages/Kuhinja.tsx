@@ -16,7 +16,10 @@ import './kuhinja.css'
 const MAX_STAVKI = 20 // isto kao CHECK u bazi i granica AI-ja (supabase/functions/_shared/obrok.ts)
 const MAX_IME = 80
 
-type Urednik = { id?: string; ime: string; redovi: RedPregleda[] }
+// 1 stavka, 2–4 stavke, 5–20 stavki (više od 20 jelo ne može da ima)
+const brojStavki = (n: number) => `${n} ${n === 1 ? 'stavka' : n < 5 ? 'stavke' : 'stavki'}`
+
+type Urednik ={ id?: string; ime: string; redovi: RedPregleda[] }
 
 // Sačuvana stavka nosi vrednosti za količinu; pregled radi sa vrednostima po jedinici
 const izStavke = (s: StavkaJela, id: number) =>
@@ -193,7 +196,7 @@ export default function Kuhinja() {
                         <b>{j.ime}</b>
                         <small>{j.stavke.map((s) => s.ime).join(', ')}</small>
                       </span>
-                      <span className="nam-kcal num"><b>{fmt(z.kcal)} kcal</b><small>{j.stavke.length === 1 ? '1 stavka' : `${j.stavke.length} stavki`}</small></span>
+                      <span className="nam-kcal num"><b>{fmt(z.kcal)} kcal</b><small>{brojStavki(j.stavke.length)}</small></span>
                       <span className="nam-akcije">
                         <button className="ikona" aria-label={`Izmeni ${j.ime}`}
                           onClick={() => otvori({ id: j.id, ime: j.ime, redovi: j.stavke.map(izStavke) })}>
