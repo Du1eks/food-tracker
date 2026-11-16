@@ -368,3 +368,8 @@ a.nedelja-dan:hover { background: var(--mint); }
   .let-pohvala { transform: translate(-50%, -50%); animation: pohvala-mirno 3200ms linear forwards; }
 }
 [data-makro] { transform-origin: 0 50%; }
+
+/* Uži telefoni (do ~420px): zbir u podnožju od 30px širi poslednje dve kolone, pa tabela izlazi iz kartice */
+@media (max-width: 420px) {
+  .tabela tfoot td:nth-child(2), .tabela tfoot .p-mob { font-size: 24px; }
+}
