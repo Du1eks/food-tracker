@@ -126,6 +126,16 @@
 /* Živi miš (Masko klip) je veći od slike */
 .mis:has(.maskota.ziv) { grid-template-columns: 140px minmax(0, 1fr); }
 .mis .maskota.ziv { width: 140px; height: 140px; }
+/* Masko miš iskoči kad se učita: iz male tačke na podu naraste, odskoči i smiri se (player je unutra, jer .maskota.ziv ima animation: none) */
+@media (prefers-reduced-motion: no-preference) {
+  .maskota.ziv.spreman > * { transform-origin: 50% 100%; animation: mis-pojava 650ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+}
+@keyframes mis-pojava {
+  0% { transform: translateY(18px) scale(0.2, 0.05); opacity: 0; }
+  40% { transform: translateY(-10px) scale(0.92, 1.12); opacity: 1; }
+  70% { transform: translateY(0) scale(1.06, 0.94); }
+  100% { transform: none; }
+}
 .mis-oblacic {
   position: relative; justify-self: start; padding: 12px 14px;
   border: var(--okvir); border-radius: var(--r); background: var(--bela);

@@ -87,14 +87,17 @@ export function pohvale(m: { kcal: number; proteini: number }, ime: string | nul
   ]
 }
 
-// Stanje živog miša (canvas "Miš u aplikaciji"): noću (22–07 po lokalnom satu) spava; cilj ispunjen (proteini ili kalorije) = slavi.
-// Ljut je samo na grešku pri unosu i kad si poslednji na rang listi (useMouseMascot), ne kad pređeš limit.
+// Stanje živog miša (mis.riv): noću (00–07 po lokalnom satu) spava; cilj ispunjen (proteini ili kalorije) = slavi;
+// gladan (ljut, "nisi dugo jeo") = cilj nije ispunjen i od poslednjeg unosa danas prošlo je više od 5 sati
+// (bez unosa danas računa se od 07:00, kad se miš probudi). Noću nije gladan, spava.
 export type CiljMisa = { cilj_kcal: number | null; cilj_proteini: number | null }
-export function stanjeMisa(uneto: { kcal: number; proteini: number }, cilj: CiljMisa | null, sat: number) {
+export const GLADAN_POSLE = 5 * 60 * 60 * 1000
+export function stanjeMisa(uneto: { kcal: number; proteini: number }, cilj: CiljMisa | null, sad: Date, poslednjiUnos: Date | null) {
   const kcal = cilj?.cilj_kcal ?? 0, proteini = cilj?.cilj_proteini ?? 0
-  return {
-    spava: sat >= 22 || sat < 7,
-    slavi: (kcal > 0 && uneto.kcal >= kcal) || (proteini > 0 && uneto.proteini >= proteini),
-  }
+  const spava = sad.getHours() < 7
+  const slavi = (kcal > 0 && uneto.kcal >= kcal) || (proteini > 0 && uneto.proteini >= proteini)
+  const budjenje = new Date(sad.getFullYear(), sad.getMonth(), sad.getDate(), 7)
+  const od = poslednjiUnos && poslednjiUnos > budjenje ? poslednjiUnos : budjenje
+  return { spava, slavi, gladan: !spava && !slavi && sad.getTime() - od.getTime() > GLADAN_POSLE }
 }
 

@@ -1,19 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { ChevronRight, Users } from 'lucide-react'
 import { danas } from '../lib/datum'
 import { zbirZaDan } from '../lib/podaci'
 import { rang, staKaze, sufiksMesta, type Zbir } from '../lib/rang'
 import { useProfil } from './useProfil'
-import Maskota from './Maskota'
 import '../pages/prijatelji.css'
 
-// Polje ranga na glavnom ekranu; maskota stoji na njegovoj gornjoj ivici i povremeno nešto kaže.
+// Polje ranga na glavnom ekranu; pehar mesta stoji na njegovoj levoj ivici (pada pri svakom dolasku na stranu).
+// Ćaskanje o rangu bira ovde, a izgovara ga miš u svom oblačiću (onGovor).
 // `kljuc` se menja posle svakog unosa (uneto kcal), pa se rang preračuna.
-export default function RangPolje({ kljuc }: { kljuc: number }) {
+// 1. zlatni, 2. srebrni, 3. bronzani, dalje (i bez drugara) drveni
+const pehar = (mesto: number, sam: boolean) => (sam ? 'drvo' : (['zlato', 'srebro', 'bronza'][mesto - 1] ?? 'drvo'))
+const UDAR = 645 // ms od pojave do dodira sa zemljom (kašnjenje 150 ms + 55% od 900 ms u pehar-pad)
+// Varnice pri udaru: lepeza naviše i u stranu iz dna pehara; nasumično jednom, da crtanje ostane čisto
+const VARNICE = Array.from({ length: 22 }, (_, i) => ({
+  ugao: -100 + (200 * i) / 21 + (Math.random() - 0.5) * 8, // stepeni od uspravno
+  dalj: 55 + Math.random() * 70, duz: 16 + Math.random() * 16, kasni: Math.random() * 60,
+}))
+
+export default function RangPolje({ kljuc, onGovor }: { kljuc: number; onGovor: (recenica: string | null) => void }) {
   const { profil } = useProfil()
   const [redovi, setRedovi] = useState<Zbir[] | 'greska' | null>(null)
-  const [govor, setGovor] = useState<string | null>(null)
+  const [udar, setUdar] = useState(false)
+  const palo = useRef(false)
 
   useEffect(() => {
     let aktivan = true
@@ -35,14 +45,24 @@ export default function RangPolje({ kljuc }: { kljuc: number }) {
     let sledeci: number, gasi: number
     const reci = () => {
       if (!document.hidden) {
-        setGovor(lista[Math.floor(Math.random() * lista.length)])
-        gasi = window.setTimeout(() => setGovor(null), 4500)
+        onGovor(lista[Math.floor(Math.random() * lista.length)])
+        gasi = window.setTimeout(() => onGovor(null), 4500)
       }
       sledeci = window.setTimeout(reci, 9000 + Math.random() * 7000)
     }
     sledeci = window.setTimeout(reci, 2500)
-    return () => { clearTimeout(sledeci); clearTimeout(gasi) }
-  }, [recKljuc])
+    return () => { clearTimeout(sledeci); clearTimeout(gasi); onGovor(null) }
+  }, [recKljuc, onGovor])
+
+  // Pehar padne jednom po dolasku na stranu (ne dok si na njoj); u trenutku dodira varnice, talas i potres polja.
+  // palo se postavlja tek kad tajmer okine, jer StrictMode u razvoju pokrene efekat dvaput.
+  const vrsta = r ? pehar(r.mesto, r.ukupno === 1) : null
+  useEffect(() => {
+    if (!vrsta || palo.current) return
+    const t1 = setTimeout(() => { palo.current = true; setUdar(true) }, UDAR)
+    const t2 = setTimeout(() => setUdar(false), UDAR + 700)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
+  }, [vrsta])
 
   if (redovi === null) return <div className="rang-omot"><div className="rang" aria-hidden /></div>
 
@@ -54,10 +74,13 @@ export default function RangPolje({ kljuc }: { kljuc: number }) {
     : `Rang za danas: ${r.mesto}. mesto od ${r.ukupno}${profil?.cilj_kcal ? `, ${procenat}% dnevnog cilja` : ', postavi dnevni cilj u profilu'}. Pogledaj leaderboard`
 
   return (
-    <div className={`rang-omot${govor ? ' govori' : ''}`}>
-      {r && <Maskota poza={r.poza} />}
-      {/* Ćaskanje je ukras: čitač ekrana dobija sve bitno iz opisa polja */}
-      {govor && <p key={govor} className="rang-govor" aria-hidden>{govor}</p>}
+    <div className={`rang-omot pehar-${vrsta ?? 'nema'}${udar ? ' udar' : ''}`}>
+      {/* ukras, mesto je u opisu polja; bez ključa, pa novo mesto samo promeni sliku, bez novog pada */}
+      {vrsta && <img className="pehar" src={`/maskota/pehar-${vrsta}.webp`} alt="" />}
+      {udar && VARNICE.map((v, i) => (
+        <span key={i} className="varnica" aria-hidden
+          style={{ '--ugao': `${v.ugao}deg`, '--dalj': `${v.dalj}px`, height: v.duz, animationDelay: `${v.kasni}ms` } as React.CSSProperties} />
+      ))}
       {redovi === 'greska' ? (
         <p className="rang rang-prazno">Rang trenutno nije dostupan.</p>
       ) : (

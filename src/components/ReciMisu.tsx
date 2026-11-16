@@ -1,10 +1,12 @@
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { ArrowRight, Pencil, Plus, X } from 'lucide-react'
 import { OBROCI, fmt, uBroj, zaKolicinu, zbir, type Makrosi, type Obrok, type Unos } from '../lib/ishrana'
+import { danas } from '../lib/datum'
 import { dodajUnos } from '../lib/podaci'
 import { razumiObrok, type Stavka } from '../lib/razumi'
-import type { Poza } from '../lib/rang'
+import { stanjeMisa, type Poza } from '../lib/rang'
 import { useProfil } from './useProfil'
+import { useSad } from './useMouseMascot'
 import Maskota from './Maskota'
 // Živi miš se učitava lenjo; ako se ne skine (nema interneta), ostaje slika
 const ZiviMis = lazy(() => import('./ZiviMis').catch(() => ({ default: ({ rezerva }: { rezerva: React.ReactElement }) => rezerva })))
@@ -25,10 +27,12 @@ const poJedinici = (r: Red): Makrosi =>
 const ispravna = (r: Red) =>
   dobar(r.kol) && kolicina(r) > 0 && (r.izvor === 'baza' || POLJA.every(([k]) => dobar(r.v[k])))
 const tekstBroja = (n: number) => String(n).replace('.', ',')
+const SLAVI_POSLE_UPISA = 4000 // ms
 
 // Tok: napiši mišu šta si jeo → on pročita (AI na serveru) → pregled → "Upiši" stavlja sve u tabelu.
-export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
+export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
   datum: string; unosi: Unos[] | null; onDodato: () => void; onRucno: () => void
+  govor: string | null // usputna rečenica o rangu (RangPolje); samo kad miš nema šta važnije da kaže
 }) {
   const { profil } = useProfil()
   const [tekst, setTekst] = useState('')
@@ -39,6 +43,15 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
   const [greska, setGreska] = useState('')
   const [upisano, setUpisano] = useState(false)
   const [procena, setProcena] = useState(false)
+  const [slaviUpis, setSlaviUpis] = useState(false)
+  const sad = useSad()
+
+  // Klik na "Upiši": miš kratko slavi, pa se vraća na stanje koje traje
+  useEffect(() => {
+    if (!slaviUpis) return
+    const t = setTimeout(() => setSlaviUpis(false), SLAVI_POSLE_UPISA)
+    return () => clearTimeout(t)
+  }, [slaviUpis])
 
   async function procitaj(e?: React.FormEvent) {
     e?.preventDefault()
@@ -71,7 +84,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
         ...zaKolicinu({ ...poJedinici(r), jedinica: r.jedinica }, kolicina(r)),
       }))
       await dodajUnos(stavke)
-      setRedovi(null); setTekst(''); setUpisano(true); setProcena(redovi.some((r) => r.izvor === 'procena'))
+      setRedovi(null); setTekst(''); setUpisano(true); setSlaviUpis(true); setProcena(redovi.some((r) => r.izvor === 'procena'))
       // makrosi polete u traku; brojevi (i tabela) se preračunaju kad udare
       void letMakrosa(zbir(stavke), document.getElementById('unos'), profil?.ime?.trim().split(' ')[0] || profil?.nadimak).finally(onDodato)
     } catch {
@@ -96,6 +109,11 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
   const uneto = zbir(unosi ?? [])
   const cilj = profil?.cilj_kcal ?? 0
   const pogodjen = cilj > 0 && uneto.kcal >= cilj
+  const poslednji = unosi?.reduce<Date | null>((p, u) => (u.kreirano && (!p || new Date(u.kreirano) > p) ? new Date(u.kreirano) : p), null) ?? null
+  const misStanje = stanjeMisa(uneto, profil ?? null, sad, poslednji)
+  // "Nisi dugo jeo" samo za danas i tek kad su unosi učitani
+  const gladan = misStanje.gladan && datum === danas() && unosi != null
+  const unosiTekst = !!tekst.trim() || !!redovi
   const doProteina = (profil?.cilj_proteini ?? 0) - uneto.proteini
   const ostatak = !unosi?.length ? '' : pogodjen ? 'Cilj za danas je pogođen!'
     : cilj > 0 ? (doProteina > 0 ? `Još ${fmt(Math.round(doProteina))} g proteina do cilja.` : `Još ${fmt(cilj - uneto.kcal)} kcal do cilja.`)
@@ -104,10 +122,11 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
     : cita ? 'Čitam…'
     : redovi ? (bezObroka ? 'Nisi napisao obrok. Izaberi ga ispod.' : 'Evo šta sam razumeo. Proveri, pa upiši.')
     : upisano ? `Mljac, upisano! ${procena ? 'Procene možeš da ispraviš i sačuvaš u bazu iz tabele. ' : ''}${ostatak}`.trim()
+    : gladan && !unosiTekst ? 'Nisi dugo jeo, mišu!'
+    : govor && !unosiTekst ? govor
     : ostatak || 'Šta si jeo? Napiši mi, ja upisujem.'
-  // greška: ljut (poza cilj; greska se briše pre svakog pokušaja, pa se ljuti i na ponovljenu grešku);
-  // upisano: slavi; dok pišeš i proveravaš: jede; cilj pogođen: slavi
-  const poza: Poza = greska ? 'cilj' : upisano ? 'slavi' : tekst.trim() || redovi ? 'jede' : pogodjen ? 'slavi' : 'hoda'
+  // Slika (bez pokreta i dok se živi miš učitava): dok pišeš jede; greška ili gladan: ljut; upisano ili cilj: slavi
+  const poza: Poza = unosiTekst ? 'jede' : greska || gladan ? 'cilj' : upisano || pogodjen ? 'slavi' : 'hoda'
 
   return (
     <section className="panel" id="unos" aria-labelledby="unos-naslov">
@@ -121,8 +140,9 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno }: {
         <div className={`mis${cita ? ' cita' : ''}`}>
           {/* ključ na pozi: slika miša "poskoči" kad se stanje promeni; živi miš (bez prefers-reduced-motion) sam bira klip */}
           {bezPokreta() ? <Maskota key={poza} poza={poza} /> : (
-            <Suspense fallback={<Maskota poza={poza} />}>
-              <ZiviMis rezerva={<Maskota poza={poza} />} alt="Miš" uneto={uneto} cilj={profil ?? null} brojUnosa={unosi?.length ?? null} greska={greska} profilId={profil?.id ?? null} />
+            <Suspense fallback={<div className="maskota ziv" aria-hidden />}>
+              <ZiviMis rezerva={<Maskota poza={poza} />} alt="Miš" unosi={unosiTekst} slavi={slaviUpis || misStanje.slavi}
+                ljut={gladan} spava={misStanje.spava} greska={greska} ciljIspunjen={misStanje.slavi} brojUnosa={unosi?.length ?? null} />
             </Suspense>
           )}
           <p key={poruka} className={`mis-oblacic${greska ? ' lose' : ''}`} role={greska ? 'alert' : 'status'}>{poruka}</p>

@@ -1,29 +1,34 @@
-// Iz stanja aplikacije javlja živom mišu šta se dešava (Masko canvas "Miš u aplikaciji"):
-// set drži stanje (spava, slavi, ljut), fire šalje jedan događaj (jede). Klik šalje ZiviMis.
-// Ulaz canvasa za ljutnju se zove action::over_limit (iz prvog dogovora), a pali se na grešku i na poslednje mesto na rang listi.
+// Javlja živom mišu (Masko canvas "Miš u aplikaciji", ZiviMis.tsx) šta se dešava u aplikaciji.
+// Stanja koja traju su set (spava, slavi, ljut), a jedenje je okidač koji se ponavlja dok kucaš. Klik šalje ZiviMis.
+// Uvek je upaljeno najviše jedno stanje, po prioritetu: jede > slavi > ljut > spava > miruje.
+// Ulaz canvasa za ljutnju se zove action::over_limit (iz prvog dogovora), a pali se kad dugo nisi jeo i na grešku pri unosu.
 import { useEffect, useRef, useState } from 'react'
 import type { MaskoHandle } from '@masko/player/react'
-import { danas } from '../lib/datum'
-import { zbirZaDan } from '../lib/podaci'
-import { rang, stanjeMisa, type CiljMisa } from '../lib/rang'
 
-export type StanjeAplikacije = {
-  uneto: { kcal: number; proteini: number }
-  cilj: CiljMisa | null
-  brojUnosa: number | null // null dok se unosi učitavaju
+export type StanjeMisa = {
+  unosi: boolean // u polju je tekst ili pregled obroka: jede
+  slavi: boolean // upravo upisano ili cilj ispunjen
+  ljut: boolean // dugo nisi jeo (gladan)
+  spava: boolean // noć
   greska: string // greška pri unosu: miš se kratko naljuti
-  profilId: string | null // za rang: poslednji na rang listi = ljut
+  ciljIspunjen: boolean // za konfete, samo kad se ispuni dok je stranica otvorena
+  brojUnosa: number | null // null dok se unosi učitavaju; novi unos = miš grickne
 }
 
 const LJUT_NA_GRESKU = 2300 // ms, koliko traje klip ljut
+const RAZMAK_JEDENJA = 1800 // ms, koliko traje klip jede
 
-export function useMouseMascot(mis: MaskoHandle | null, { uneto, cilj, brojUnosa, greska, profilId }: StanjeAplikacije) {
-  const [sat, setSat] = useState(() => new Date().getHours())
+// Trenutno vreme koje se osvežava svakog minuta (za noć i za "dugo nisi jeo")
+export function useSad() {
+  const [sad, setSad] = useState(() => new Date())
   useEffect(() => {
-    const t = setInterval(() => setSat(new Date().getHours()), 60_000)
+    const t = setInterval(() => setSad(new Date()), 60_000)
     return () => clearInterval(t)
   }, [])
+  return sad
+}
 
+export function useMouseMascot(mis: MaskoHandle | null, { unosi, slavi, ljut, spava, greska, ciljIspunjen, brojUnosa }: StanjeMisa) {
   const [ljutNaGresku, setLjutNaGresku] = useState(false)
   useEffect(() => {
     if (!greska) return
@@ -32,40 +37,38 @@ export function useMouseMascot(mis: MaskoHandle | null, { uneto, cilj, brojUnosa
     return () => clearTimeout(t)
   }, [greska])
 
-  // Poslednji na današnjoj rang listi (ili bez unosa uz prijatelje): isto pravilo kao poza "cilj" kod ranga. Proverava se posle svakog unosa.
-  const [poslednji, setPoslednji] = useState(false)
-  useEffect(() => {
-    if (!profilId) return
-    let aktivan = true
-    zbirZaDan(danas())
-      .then((redovi) => aktivan && setPoslednji(rang(redovi, profilId)?.poza === 'cilj'))
-      .catch(() => {}) // bez ranga miš samo nije ljut
-    return () => { aktivan = false }
-  }, [profilId, brojUnosa])
-
-  const { spava, slavi } = stanjeMisa(uneto, cilj, sat)
   useEffect(() => {
     if (!mis) return
-    mis.set('action::sleeping', spava)
-    mis.set('action::celebrating', slavi)
-    mis.set('action::over_limit', poslednji || ljutNaGresku)
-  }, [mis, spava, slavi, poslednji, ljutNaGresku])
+    const s = !unosi && slavi
+    const l = !unosi && !s && (ljut || ljutNaGresku)
+    mis.set('action::celebrating', s)
+    mis.set('action::over_limit', l)
+    mis.set('action::sleeping', !unosi && !s && !l && spava)
+  }, [mis, unosi, slavi, ljut, ljutNaGresku, spava])
 
-  // Konfete samo kad se cilj ispuni dok je stranica otvorena (ne pri svakom učitavanju dana koji je već ispunjen)
-  const prosloSlavi = useRef<boolean | null>(null)
+  // Jedenje je jednokratan okidač, pa se ponavlja dok je u polju tekst ili pregled obroka
+  useEffect(() => {
+    if (!mis || !unosi) return
+    mis.fire('action::eat', { instant: true })
+    const t = window.setInterval(() => mis.fire('action::eat', { instant: true }), RAZMAK_JEDENJA)
+    return () => window.clearInterval(t)
+  }, [mis, unosi])
+
+// Konfete samo kad se cilj ispuni dok je stranica otvorena (ne pri svakom učitavanju dana koji je već ispunjen)
+  const prosloIspunjen = useRef<boolean | null>(null)
   useEffect(() => {
     if (brojUnosa == null) return
-    if (prosloSlavi.current === false && slavi) void konfete()
-    prosloSlavi.current = slavi
-  }, [slavi, brojUnosa])
+    if (prosloIspunjen.current === false && ciljIspunjen) void konfete()
+    prosloIspunjen.current = ciljIspunjen
+  }, [ciljIspunjen, brojUnosa])
 
-  // Novi unos (iz poruke mišu ili ručno preko +): miš jede, pa se vraća na stanje koje traje
+  // Novi unos ručno preko + (upis iz poruke mišu ide u slavlje): miš grickne, pa se vraća na stanje koje traje
   const prosliBroj = useRef<number | null>(null)
   useEffect(() => {
     if (brojUnosa == null) return
-    if (mis && prosliBroj.current != null && brojUnosa > prosliBroj.current) mis.fire('action::eat', { instant: true })
+    if (mis && !slavi && prosliBroj.current != null && brojUnosa > prosliBroj.current) mis.fire('action::eat', { instant: true })
     prosliBroj.current = brojUnosa
-  }, [mis, brojUnosa])
+  }, [mis, brojUnosa, slavi])
 }
 
 // Realističan burst preko cele aplikacije: dva topa sa strana i prasak iz sredine. Bez pokreta (prefers-reduced-motion) ništa.

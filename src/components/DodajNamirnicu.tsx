@@ -15,7 +15,7 @@ const prazan = (ime = ''): Proizvod => ({ ime, brend: null, jedinica: '100g', kc
 
 // Podrazumevano se piše mišu (ReciMisu). "+" otvara ručni tok, koji radi i bez AI-ja:
 // izaberi obrok → pretraži (ili "Unesi ručno") → dodaj jednu ili više namirnica (svaka se čuva odmah) → "Gotov doručak" zatvara obrok.
-export default function DodajNamirnicu({ datum, unosi, onDodato }: { datum: string; unosi: Unos[] | null; onDodato: () => void }) {
+export default function DodajNamirnicu({ datum, unosi, onDodato, govor }: { datum: string; unosi: Unos[] | null; onDodato: () => void; govor: string | null }) {
   const { profil } = useProfil()
   const [rucno, setRucno] = useState(false)
   const [upit, setUpit] = useState('')
@@ -91,7 +91,7 @@ export default function DodajNamirnicu({ datum, unosi, onDodato }: { datum: stri
   const uObroku = unosi?.filter((u) => u.obrok === obrok) ?? []
 
   if (!rucno)
-    return <ReciMisu datum={datum} unosi={unosi} onDodato={onDodato} onRucno={() => setRucno(true)} />
+    return <ReciMisu datum={datum} unosi={unosi} onDodato={onDodato} onRucno={() => setRucno(true)} govor={govor} />
 
   return (
     <section className="panel" id="unos" aria-labelledby="dodaj-naslov">

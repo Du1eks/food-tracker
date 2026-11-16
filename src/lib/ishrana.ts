@@ -20,6 +20,7 @@ export type Unos = Makrosi & {
   jedinica: Jedinica
   ime: string
   proizvod_id: string | null
+  kreirano?: string // vreme upisa (baza ga sama postavlja); po njemu miš zna koliko dugo nisi jeo
 }
 
 export const OBROCI: { id: Obrok; naziv: string; gotov: string }[] = [

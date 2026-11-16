@@ -26,6 +26,7 @@ export default function Dan() {
   // Pamtimo za koji su datum unosi, da se pri promeni dana ne prikažu stari.
   const [ucitano, setUcitano] = useState<{ datum: string; unosi: Unos[] } | null>(null)
   const [greska, setGreska] = useState('')
+  const [govor, setGovor] = useState<string | null>(null) // šta miš usput kaže o rangu (bira RangPolje, izgovara miš)
   const unosi = ucitano?.datum === datum ? ucitano.unosi : null
 
   const ucitaj = useCallback(async () => {
@@ -47,7 +48,7 @@ export default function Dan() {
   const uneto = zbir(unosi ?? [])
   return (
     <>
-      <Traka uneto={uneto} cilj={profil} rang={jeDanas && !uski && <RangPolje kljuc={uneto.kcal} />} />
+      <Traka uneto={uneto} cilj={profil} rang={jeDanas && !uski && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />} />
       <nav className="dan-red" aria-label="Izbor dana">
         <Link className="plocica svetla" to={`/dan/${pomeri(datum, -1)}`} aria-label="Prethodni dan">
           <ChevronLeft size={22} aria-hidden />
@@ -65,8 +66,8 @@ export default function Dan() {
         )}
       </nav>
       <main className="dan">
-        {jeDanas && uski && <RangPolje kljuc={uneto.kcal} />}
-        <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} />
+        {jeDanas && uski && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />}
+        <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} govor={govor} />
         <section className="dan-tabela" aria-label="Unosi za dan">
           {greska ? <p className="greska" role="alert">{greska}</p> : <TabelaDana unosi={unosi} onPromena={ucitaj} />}
         </section>

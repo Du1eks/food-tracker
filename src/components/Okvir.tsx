@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Link, Outlet } from 'react-router'
+import { Link, Outlet, useLocation } from 'react-router'
 import { Apple, CalendarDays, House, UserRound, Users } from 'lucide-react'
 import { ucitajProfil, type Profil } from '../lib/podaci'
 import type { OkvirKontekst } from './useProfil'
+import MisViri from './MisViri'
 import './okvir.css'
 
 export default function Okvir() {
@@ -20,6 +21,8 @@ export default function Okvir() {
   }, [])
 
   const nepopunjen = ucitan && !profil?.cilj_kcal
+  const { pathname } = useLocation()
+  const naDanu = pathname === '/' || pathname.startsWith('/dan/') // tamo je živi miš u panelu
   return (
     <>
       <header className="gornja">
@@ -47,6 +50,8 @@ export default function Okvir() {
         </div>
       </header>
       <Outlet context={{ profil, osveziProfil } satisfies OkvirKontekst} />
+      {/* ključ na stranici: pri svakom prelasku miš ponovo proviri */}
+      {!naDanu && ucitan && <MisViri key={pathname} cilj={profil} />}
     </>
   )
 }
