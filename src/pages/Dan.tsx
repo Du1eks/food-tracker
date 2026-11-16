@@ -9,6 +9,7 @@ import { useProfil } from '../components/useProfil'
 import DodajNamirnicu from '../components/DodajNamirnicu'
 import TabelaDana from '../components/TabelaDana'
 import RangPolje from '../components/RangPolje'
+import NedeljaMakroa from '../components/NedeljaMakroa'
 import './dan.css'
 
 export default function Dan() {
@@ -45,10 +46,11 @@ export default function Dan() {
       <h1 className="sr">{lepDatum(datum)}</h1>
       {!jeDanas && <div className="dan-naslov"><Link className="dugme tiho" to="/">Nazad na danas</Link></div>}
       <Traka uneto={uneto} cilj={profil} />
-      {/* Ispod luka: unos, pored njega rang (na telefonu iznad unosa), pa tabela preko cele širine (dan.css) */}
+      {/* Ispod luka: računar = unos levo, grafik makroa i rang desno, tabela preko cele širine; telefon = rang, unos, tabela (dan.css) */}
       <main className="dan">
         {jeDanas && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />}
         <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} govor={govor} />
+        <NedeljaMakroa kljuc={uneto.kcal} />
         <section className="dan-tabela" aria-label="Unosi za dan">
           {greska ? <p className="greska" role="alert">{greska}</p> : <TabelaDana unosi={unosi} onPromena={ucitaj} />}
         </section>
