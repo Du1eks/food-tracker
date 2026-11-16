@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router'
-import { Apple, CalendarDays, House, UserRound, Users } from 'lucide-react'
+import { CalendarDays, ChefHat, House, UserRound, Users } from 'lucide-react'
 import { ucitajProfil, type Profil } from '../lib/podaci'
 import type { OkvirKontekst } from './useProfil'
 import MisViri from './MisViri'
@@ -37,8 +37,8 @@ export default function Okvir() {
           <Link to="/kalendar" className="plocica svetla" aria-label="Kalendar">
             <CalendarDays size={22} strokeWidth={2.25} aria-hidden />
           </Link>
-          <Link to="/namirnice" className="plocica svetla" aria-label="Namirnice">
-            <Apple size={22} strokeWidth={2.25} aria-hidden />
+          <Link to="/kuhinja" className="plocica svetla" aria-label="Kuhinja, moja jela">
+            <ChefHat size={22} strokeWidth={2.25} aria-hidden />
           </Link>
           <Link to="/prijatelji" className="plocica svetla" aria-label="Prijatelji">
             <Users size={22} strokeWidth={2.25} aria-hidden />

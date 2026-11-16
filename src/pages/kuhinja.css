@@ -1,0 +1,9 @@
+/* Kuhinja: panel za kuvanje (isti kao "Reci mišu" na početnoj) iznad spiska mojih jela */
+.kuhinja .panel-glava { justify-content: space-between; }
+.kuhinja .zatvori { color: var(--tekst); }
+.kuhinja-ukupno { font-weight: 600; color: var(--sivi-tekst); padding-top: 12px; border-top: 2px solid var(--tekst); }
+.kuhinja-ukupno b { color: var(--tekst); font-weight: 800; font-size: 18px; }
+.kuhinja-naslov { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+/* jelo koje je otvoreno u panelu */
+.kuhinja .nam-red.menja { background: var(--mint); margin-inline: -12px; padding-inline: 12px; border-radius: var(--r); }
+.kuhinja-baza { justify-self: center; font-weight: 700; padding: 12px; }

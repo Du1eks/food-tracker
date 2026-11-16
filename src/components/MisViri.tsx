@@ -1,7 +1,8 @@
 // Na ostalim stranicama (ne na danu) miš proviri sa ivice ekrana i gleda te; strana zavisi od stranice, naizmenično po redu ikonica
-// u zaglavlju (kalendar desno, namirnice levo, prijatelji desno, profil levo), pa pri prelasku miš pređe na drugu stranu.
+// u zaglavlju (kalendar desno, kuhinja levo, prijatelji desno, profil levo), pa pri prelasku miš pređe na drugu stranu.
 // Miš se prevlači gore-dole duž ivice (mišem, prstom ili strelicama) i ostaje tu i na drugim stranicama.
 // Klik: miš kaže nasumičnu rečenicu (ne istu dvaput zaredom): o cilju za danas i o stranici na kojoj si.
+// U Kuhinji miš kuva: pita šta ide u jelo i otvara polje za unos (Kuhinja sluša događaj KUVAJ).
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 import { danas } from '../lib/datum'
@@ -14,7 +15,10 @@ const POMAK_ZA_KLIK = 6 // px: manji pomak je klik, veći je prevlačenje
 let zapamcenVrh: number | null = null // gde je miš ostavljen, dok je aplikacija otvorena
 // Vrh miša (px) ne sme ispod zaglavlja (56 px) ni ispod dna ekrana
 const uEkranu = (vrh: number, visina: number) => Math.max(64, Math.min(window.innerHeight - visina - 8, vrh))
-const SA_LEVE = /^\/(namirnice|profil|prijatelji\/.)/ // profil prijatelja levo, njegov spisak desno
+const SA_LEVE = /^\/(kuhinja|namirnice|profil|prijatelji\/.)/ // profil prijatelja levo, njegov spisak desno
+
+export const KUVAJ = 'mis:kuvaj'
+const KUHINJA = ['Šta kuvamo? Reci mi šta ide u jelo.', 'Kuvar miš na dužnosti. Šta pravimo?', 'Ajde da kuvamo! Šta ide u jelo?']
 
 const NIJE_ISPUNJEN = [
   'Jedi nešto, mišu!', 'Stomak mi kruli, a nije moj.', 'Cilj te čeka na početnoj.', 'Mišić se ne gradi na praznom stomaku.',
@@ -33,7 +37,9 @@ const PO_STRANI: Record<string, string[]> = {
 }
 let poslednja = ''
 function recenica(ispunjen: boolean, putanja: string) {
-  const lista = [...(ispunjen ? ISPUNJEN : NIJE_ISPUNJEN), ...(PO_STRANI[putanja.split('/')[1]] ?? [])].filter((r) => r !== poslednja)
+  const strana = putanja.split('/')[1]
+  const lista = (strana === 'kuhinja' ? KUHINJA : [...(ispunjen ? ISPUNJEN : NIJE_ISPUNJEN), ...(PO_STRANI[strana] ?? [])])
+    .filter((r) => r !== poslednja)
   poslednja = lista[Math.floor(Math.random() * lista.length)]
   return poslednja
 }
@@ -45,7 +51,10 @@ export default function MisViri({ cilj }: { cilj: CiljMisa | null }) {
   const vuce = useRef<{ y: number; vrh: number; pomeren: boolean } | null>(null)
   const putanja = useLocation().pathname
   const levo = SA_LEVE.test(putanja)
-  const reci = () => setKaze(recenica(ispunjen, putanja))
+  const reci = () => {
+    setKaze(recenica(ispunjen, putanja))
+    if (putanja === '/kuhinja') window.dispatchEvent(new Event(KUVAJ))
+  }
 
   useEffect(() => {
     let aktivan = true
@@ -70,7 +79,8 @@ export default function MisViri({ cilj }: { cilj: CiljMisa | null }) {
   return (
     <div className={`mis-viri${levo ? ' levo' : ''}`} style={vrh == null ? undefined : { top: vrh }}>
       <p key={kaze} className="mis-viri-oblacic" role="status" hidden={!kaze}>{kaze}</p>
-      <button type="button" className="mis-viri-dugme" aria-label="Miš viri sa ivice. Klikni da ti nešto kaže, prevuci ili strelicama pomeri gore-dole."
+      <button type="button" className="mis-viri-dugme" aria-label={putanja === '/kuhinja' ? 'Miš kuvar. Klikni da napraviš jelo, prevuci ili strelicama pomeri gore-dole.'
+          : 'Miš viri sa ivice. Klikni da ti nešto kaže, prevuci ili strelicama pomeri gore-dole.'}
         onPointerDown={(e) => {
           e.currentTarget.setPointerCapture(e.pointerId)
           vuce.current = { y: e.clientY, vrh: e.currentTarget.getBoundingClientRect().top, pomeren: false }

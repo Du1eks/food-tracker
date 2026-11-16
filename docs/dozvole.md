@@ -9,6 +9,7 @@ Autentifikacija (ko si) = Supabase Auth, JWT token. Autorizacija (šta smeš) = 
 | `profil` | vlasnik | trigger pri registraciji | vlasnik (i kolona `deli_unose`) | — (briše se sa nalogom, cascade) |
 | `proizvod` | svi | svi | svi | samo `ko_je_uneo` |
 | `unos` | vlasnik | vlasnik | vlasnik | vlasnik |
+| `jelo` | vlasnik | vlasnik | vlasnik | vlasnik |
 | `prijateljstvo` | oba (`ko_salje` i `ko_prima`) | samo `ko_salje`, status mora biti `na_cekanju` | samo `ko_prima`, samo kolona `status`, samo `na_cekanju` → `prihvaceno` | oba |
 
 ## Zamke i kako su zatvorene
@@ -141,6 +142,12 @@ revoke execute on function prijatelj_deli_unose, unosi_prijatelja from public, a
 grant  execute on function prijatelj_deli_unose, unosi_prijatelja to authenticated;
 ```
 Ko šta dobija: **vlasnik** svoje unose kroz RLS (kao ranije); **prihvaćeni prijatelj** unose tek kad vlasnik uključi deljenje; **tuđin i `anon`** ništa (tuđin dobija prazan niz, `anon` grešku jer nema `execute`). Ukidanje prijateljstva ili isključivanje prekidača deluje odmah, bez keša.
+
+## Jela iz Kuhinje (`20261116100000_jelo.sql`)
+- Isto kao `unos`: jedna politika `for all` sa `korisnik_id = auth.uid()` u `using` i `with check`, pa niko ne može da upiše jelo na tuđe ime ni da ga "prebaci" drugom. `korisnik_id` ima default `auth.uid()`, a `izmenjeno` puni trigger.
+- **Prijatelji ne vide jela**: nema funkcije koja ih izdaje, a RLS pušta samo vlasnika.
+- `anon` nema nikakav GRANT na tabelu.
+- Provera: PGlite test (vlasnik čita/menja/briše; drugi korisnik dobija 0 redova i odbijen insert na tuđe ime; anon `permission denied`; prazno ime, prazan niz, objekat umesto niza i 21 stavka odbijeni).
 
 ## Unos tekstom (Edge Function `razumi-obrok`)
 - **Ko sme:** samo ulogovan korisnik (funkcija proverava token; sa samim javnim ključem vraća 401).

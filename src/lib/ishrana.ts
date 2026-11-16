@@ -23,7 +23,11 @@ export type Unos = Makrosi & {
   kreirano?: string // vreme upisa (baza ga sama postavlja); po njemu miš zna koliko dugo nisi jeo
 }
 
-export const OBROCI: { id: Obrok; naziv: string; gotov: string }[] = [
+// Moje jelo iz Kuhinje: stavka je isti snimak kao red u unos (vrednosti već preračunate za količinu)
+export type StavkaJela = Makrosi & { ime: string; proizvod_id: string | null; kolicina: number; jedinica: Jedinica }
+export type Jelo = { id: string; ime: string; stavke: StavkaJela[] }
+
+export const OBROCI:{ id: Obrok; naziv: string; gotov: string }[] = [
   { id: 'dorucak', naziv: 'Doručak', gotov: 'Gotov doručak' },
   { id: 'rucak', naziv: 'Ručak', gotov: 'Gotov ručak' },
   { id: 'vecera', naziv: 'Večera', gotov: 'Gotova večera' },

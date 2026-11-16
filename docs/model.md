@@ -5,6 +5,7 @@ erDiagram
   AUTH_USERS ||--|| PROFIL : ima
   AUTH_USERS ||--o{ UNOS : unosi
   AUTH_USERS ||--o{ PROIZVOD : dodaje
+  AUTH_USERS ||--o{ JELO : kuva
   PROIZVOD |o--o{ UNOS : "koristi se u"
   AUTH_USERS {
     uuid id PK
@@ -67,6 +68,14 @@ erDiagram
     numeric masti "snapshot"
     timestamptz kreirano
   }
+  JELO {
+    uuid id PK
+    uuid korisnik_id FK
+    text ime "1-80 znakova"
+    jsonb stavke "niz 1-20 snimaka: ime, proizvod_id, kolicina, jedinica, kcal, proteini, uh, masti"
+    timestamptz kreirano
+    timestamptz izmenjeno "trigger"
+  }
 ```
 
 ## Odluke
@@ -84,4 +93,5 @@ erDiagram
   - Unique indeks na `(least(ko_salje, ko_prima), greatest(ko_salje, ko_prima))`: par A–B postoji samo jednom, bez obzira ko je prvi poslao.
 - **Rang** se ne čuva; računa se pri čitanju iz dnevnog zbira: `min(kcal / cilj_kcal, 1)`, izjednačenja su dozvoljena.
   - Računa se samo ko ima dnevni cilj (`ima_cilj`) i uneo je kalorije. Ostali su uvek poslednji: bez unosa 0%, a bez popunjenog profila red je precrtan sa "nisu uneti podaci".
+- **Jelo** (Kuhinja) je korisnikov šablon obroka; ime `obrok` je već zauzeto za doručak/ručak/večeru. Stavke su **jsonb niz**, ne posebna tabela: jelo se uvek čita i snima celo, nikad se ne sabira niti filtrira po stavci, pa je izmena jedan atomski `update` (nema "obriši stare stavke pa upiši nove" u dva koraka). `unos` ostaje relaciona jer po njemu sabiramo dane. Stavka je isti snimak kao red u `unos`, pa kasnije ubacivanje jela u dan samo kopira stavke. Cena: baza ne proverava oblik svake stavke (samo da je niz 1–20 i ograničene veličine); to radi app, a jelo vidi samo vlasnik.
 - `CHECK` ograničenja u bazi odbijaju besmislene vrednosti.

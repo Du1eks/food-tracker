@@ -28,6 +28,14 @@ Nigde ne šaljemo `korisnik_id = ja` za čitanje: RLS u bazi sam filtrira redove
 
 Ako proizvoda nema u našoj bazi: pretraga na Open Food Facts (direktan `fetch`, bez ključa), korisnik potvrdi vrednosti, pa `insert` u `proizvod`.
 
+## Jelo (privatno, Kuhinja)
+| Akcija | CRUD | HTTP | supabase-js |
+|---|---|---|---|
+| Moja jela (Kuhinja) | Read | GET | `from('jelo').select('id,ime,stavke').order('kreirano', { ascending: false })` |
+| Sačuvaj novo jelo | Create | POST | `from('jelo').insert({ ime, stavke })` |
+| Izmeni jelo (ime i stavke odjednom) | Update | PATCH | `from('jelo').update({ ime, stavke }).eq('id', id)` |
+| Obriši jelo | Delete | DELETE | `from('jelo').delete().eq('id', id)` |
+
 ## Unos (privatan)
 | Akcija | CRUD | HTTP | supabase-js |
 |---|---|---|---|
