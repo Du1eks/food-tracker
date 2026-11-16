@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react'
 import { danas, ispravan, izIso, lepDatum, pomeri } from '../lib/datum'
@@ -11,16 +11,7 @@ import TabelaDana from '../components/TabelaDana'
 import RangPolje from '../components/RangPolje'
 import './dan.css'
 
-// Rang ide u zelenu traku samo na širokom ekranu; uže od 960 px traka nema mesta, pa stoji iznad unosa.
-const uskiUpit = matchMedia('(max-width: 960px)')
-const useUski = () =>
-  useSyncExternalStore(
-    (javi) => { uskiUpit.addEventListener('change', javi); return () => uskiUpit.removeEventListener('change', javi) },
-    () => uskiUpit.matches,
-  )
-
 export default function Dan() {
-  const uski = useUski()
   const param = useParams().datum
   const datum = param ?? danas()
   const { profil } = useProfil()
@@ -53,9 +44,10 @@ export default function Dan() {
       {/* Datum se vidi u redu nedelje; naslov ostaje za čitač ekrana */}
       <h1 className="sr">{lepDatum(datum)}</h1>
       {!jeDanas && <div className="dan-naslov"><Link className="dugme tiho" to="/">Nazad na danas</Link></div>}
-      <Traka uneto={uneto} cilj={profil} rang={jeDanas && !uski && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />} />
+      <Traka uneto={uneto} cilj={profil} />
+      {/* Ispod luka: unos, pored njega rang (na telefonu iznad unosa), pa tabela preko cele širine (dan.css) */}
       <main className="dan">
-        {jeDanas && uski && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />}
+        {jeDanas && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />}
         <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} govor={govor} />
         <section className="dan-tabela" aria-label="Unosi za dan">
           {greska ? <p className="greska" role="alert">{greska}</p> : <TabelaDana unosi={unosi} onPromena={ucitaj} />}
@@ -74,7 +66,7 @@ const pogodio = (kcal: number, cilj: number | null) => plamen({ ima_cilj: !!cilj
 const LUK = 'M15 100 A85 85 0 0 1 185 100'
 
 // Kartica dnevnog napretka: preispiše se posle svakog unosa (ključ na vrednosti pokreće animaciju table).
-function Traka({ uneto, cilj, rang }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | null; rang: React.ReactNode }) {
+function Traka({ uneto, cilj }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | null }) {
   const c = cilj?.cilj_kcal ?? null
   const odnos = c ? uneto.kcal / c : 0
   const p = Math.min(odnos, 1)
@@ -140,9 +132,8 @@ function Traka({ uneto, cilj, rang }: { uneto: ReturnType<typeof zbir>; cilj: Ci
           ))}
         </dl>
       </div>
-      {rang}
       {c ? (
-        // Samo na telefonu (dan.css): miš vodi do polja "Reci mišu šta si jeo" i odmah otvara tastaturu
+        // Samo na telefonu (dan.css): glava miša vodi do polja "Reci mišu šta si jeo" i odmah otvara tastaturu; na hover se isplazi
         <a className="traka-mis" href="#unos" aria-label="Reci mišu šta si jeo" onClick={(e) => {
           const polje = document.getElementById('sta-si-jeo')
           if (!polje) return
@@ -150,7 +141,8 @@ function Traka({ uneto, cilj, rang }: { uneto: ReturnType<typeof zbir>; cilj: Ci
           polje.focus({ preventScroll: true })
           polje.scrollIntoView({ block: 'center' })
         }}>
-          <img src="/maskota/jede.webp" alt="" width={64} height={64} />
+          <img src="/maskota/glava.webp" alt="" width={60} height={60} />
+          <img className="jezik" src="/maskota/glava-jezik.webp" alt="" width={60} height={60} />
         </a>
       ) : (
         <Link className="dugme traka-profil" to="/profil">

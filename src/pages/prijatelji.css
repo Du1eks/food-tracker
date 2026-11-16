@@ -38,9 +38,7 @@ a.rang:hover .rang-poziv, a.rang:focus-visible .rang-poziv { max-width: 200px; o
   100% { transform: none; }
 }
 
-/* U zelenoj kartici napretka (računar): na sredini između luka i strelice */
-.traka .rang-omot { grid-column: auto; }
-/* Iznad unosa (uži ekran): miš je viši od polja, pa mu treba mesta da ne pokrije red sa datumom */
+/* Na glavnom ekranu (pored unosa, na telefonu iznad njega): miš je viši od polja, pa mu treba mesta iznad */
 .dan > .rang-omot { margin-top: 30px; }
 
 /* Miš "živi": diše, povremeno se nagne ili poskoči; kad priča, poskakuje uz reči. Samo bez prefers-reduced-motion. */
