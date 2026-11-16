@@ -1,6 +1,6 @@
 // Svi pozivi baze na jednom mestu (docs/api.md). RLS u bazi sam filtrira na ulogovanog korisnika.
 import { supabase } from './supabase'
-import type { Jedinica, Makrosi, Obrok, Proizvod, Unos } from './ishrana'
+import { zbir, type Jedinica, type Makrosi, type Obrok, type Proizvod, type Unos } from './ishrana'
 import type { Zbir } from './rang'
 
 export type Profil = {
@@ -162,4 +162,17 @@ export async function kcalPoDanima(od: string, doDatuma: string): Promise<Map<st
   const m = new Map<string, number>()
   for (const r of redovi) m.set(r.datum, (m.get(r.datum) ?? 0) + Number(r.kcal))
   return m
+}
+
+// Grafik makroa (kalendar): zbir makroa po danu za opseg datuma; dan bez unosa nema ključ
+export async function makroiPoDanima(od: string, doDatuma: string): Promise<Map<string, Makrosi>> {
+  const redovi = proveri<(Makrosi & { datum: string })[]>(
+    await supabase.from('unos').select('datum,kcal,proteini,uh,masti').gte('datum', od).lte('datum', doDatuma),
+  )
+  const poDanu = new Map<string, Makrosi[]>()
+  for (const r of redovi) {
+    const m = { kcal: Number(r.kcal), proteini: Number(r.proteini), uh: Number(r.uh), masti: Number(r.masti) }
+    poDanu.set(r.datum, [...(poDanu.get(r.datum) ?? []), m])
+  }
+  return new Map([...poDanu].map(([d, unosi]) => [d, zbir(unosi)]))
 }
