@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
-import { ArrowDown, Check, ChevronLeft, ChevronRight, Flame } from 'lucide-react'
+import { ArrowDown, Check, ChevronLeft, ChevronRight } from 'lucide-react'
 import { danas, ispravan, izIso, lepDatum, pomeri } from '../lib/datum'
 import { fmt, zbir, type Unos } from '../lib/ishrana'
 import { kcalPoDanima, unosiZaDan } from '../lib/podaci'
@@ -94,8 +94,27 @@ function Traka({ uneto, cilj, rang }: { uneto: ReturnType<typeof zbir>; cilj: Ci
         <h2 id="napredak-naslov" className="traka-oznaka">Dnevni napredak</h2>
         <div className="luk">
           <svg viewBox="0 0 200 108" aria-hidden>
+            {/* Tečnost: zelena cev (svetlija unutra, tamnija spolja), a preko nje mehurići i odsjaj teku samo kroz ispunjeni deo (maska) */}
+            <defs>
+              <radialGradient id="luk-tecnost" gradientUnits="userSpaceOnUse" cx="100" cy="100" r="92.5">
+                <stop offset="0.84" stopColor="#7bd63a" />
+                <stop offset="0.93" stopColor="#389600" />
+                <stop offset="1" stopColor="#2a7400" />
+              </radialGradient>
+              <mask id="luk-maska" maskUnits="userSpaceOnUse">
+                <path className="luk-ispuna" d={LUK} pathLength={100} stroke="#fff" style={{ strokeDasharray: `${p * 100} 100` }} />
+              </mask>
+            </defs>
             <path className="luk-staza" d={LUK} pathLength={100} />
-            {p > 0 && <path className="luk-ispuna" d={LUK} pathLength={100} style={{ strokeDasharray: `${p * 100} 100` }} />}
+            {p > 0 && (
+              <>
+                <path className="luk-ispuna" d={LUK} pathLength={100} stroke="url(#luk-tecnost)" style={{ strokeDasharray: `${p * 100} 100` }} />
+                <g mask="url(#luk-maska)">
+                  <path className="luk-odsjaj" d={LUK} pathLength={100} />
+                  <path className="luk-mehurici" d={LUK} pathLength={100} />
+                </g>
+              </>
+            )}
           </svg>
           {c && (
             <span className="luk-procenat num" style={{ left: `${(100 + 85 * Math.cos(ugao)) / 2}%`, top: `${((100 - 85 * Math.sin(ugao)) / 108) * 100}%` }}>
@@ -103,7 +122,7 @@ function Traka({ uneto, cilj, rang }: { uneto: ReturnType<typeof zbir>; cilj: Ci
             </span>
           )}
           <div className="luk-sredina">
-            {pogodio(uneto.kcal, c) ? <Sir /> : <Flame className="luk-plamen" size={30} strokeWidth={2.25} aria-hidden />}
+            <Sir key={String(pogodio(uneto.kcal, c))} slavi={pogodio(uneto.kcal, c)} />
             <p className="traka-broj num" data-makro="kcal"><span key={uneto.kcal} className="preklop">{fmt(uneto.kcal)}</span></p>
             <p className="traka-sitno num">{c ? `od ${fmt(c)} kcal` : 'kcal uneto'}</p>
           </div>
@@ -137,16 +156,41 @@ function Traka({ uneto, cilj, rang }: { uneto: ReturnType<typeof zbir>; cilj: Ci
   )
 }
 
-// Komad sira: iskoči u sredini luka kad je cilj kalorija pogođen (pokret je u dan.css).
-function Sir() {
+// Komad sira u sredini luka; kad je cilj kalorija pogođen iskoči i njiše se (pokret je u dan.css).
+function Sir({ slavi }: { slavi: boolean }) {
   return (
-    <svg className="sir" viewBox="0 0 48 40" width={44} height={37} role="img" aria-label="Cilj kalorija pogođen">
-      <path d="M3 17 L36 4 L45 17 Z" fill="#ffd95a" />
-      <path d="M3 17 H45 V35 H3 Z" fill="#ffc21a" />
-      <circle cx="13" cy="25" r="3.5" fill="#e09a00" />
-      <circle cx="30" cy="29" r="2.5" fill="#e09a00" />
-      <circle cx="36" cy="22" r="2" fill="#e09a00" />
-      <path d="M3 17 L36 4 L45 17 V35 H3 Z M3 17 H45" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
+    <svg className={`sir${slavi ? ' slavi' : ''}`} viewBox="0 0 64 48" width={68} height={51} {...(slavi ? { role: 'img', 'aria-label': 'Cilj kalorija pogođen' } : { 'aria-hidden': true })}>
+      <defs>
+        <linearGradient id="sir-lice" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#ffd84d" />
+          <stop offset="1" stopColor="#f6b000" />
+        </linearGradient>
+        <linearGradient id="sir-kora" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#f7a71c" />
+          <stop offset="1" stopColor="#e7860c" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="32" cy="45" rx="25" ry="2.5" fill="rgb(17 19 17 / 0.14)" />
+      <g strokeLinejoin="round" strokeWidth="2">
+        <path d="M4 26 L44 10 L52 6 L12 22 Z" fill="#ffe78f" stroke="#ffe78f" />
+        <path d="M44 10 L52 6 V38 L44 42 Z" fill="url(#sir-kora)" stroke="#ee940f" />
+        <path d="M4 26 L44 10 V42 H4 Z" fill="url(#sir-lice)" stroke="#f9c21a" />
+      </g>
+      <g fill="#e39b00">
+        <ellipse cx="14" cy="34" rx="3" ry="3" />
+        <ellipse cx="27" cy="27" rx="4.5" ry="4.5" />
+        <ellipse cx="37" cy="36" rx="3.4" ry="3.4" />
+        <ellipse cx="38" cy="20" rx="2.2" ry="2.2" />
+        <ellipse cx="21" cy="38.5" rx="1.7" ry="1.7" />
+        <ellipse cx="31" cy="13.6" rx="3" ry="1.2" />
+        <ellipse cx="22" cy="18" rx="1.8" ry="0.8" />
+      </g>
+      {/* svetla ivica na dnu rupa daje dubinu */}
+      <g fill="none" stroke="#ffe27a" strokeWidth="1" strokeLinecap="round">
+        <path d="M11.5 35.5 a3 3 0 0 0 5 0" />
+        <path d="M23.2 29.5 a4.5 4.5 0 0 0 7.6 0" />
+        <path d="M34.3 37.8 a3.4 3.4 0 0 0 5.4 0" />
+      </g>
     </svg>
   )
 }
