@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
-import { ArrowDown, Check, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight } from 'lucide-react'
 import { danas, ispravan, izIso, lepDatum, pomeri } from '../lib/datum'
 import { fmt, zbir, type Unos } from '../lib/ishrana'
 import { kcalPoDanima, unosiZaDan } from '../lib/podaci'
@@ -50,10 +50,9 @@ export default function Dan() {
   return (
     <>
       <Nedelja datum={datum} kcalDana={unosi && uneto.kcal} cilj={profil?.cilj_kcal ?? null} />
-      <div className="dan-naslov">
-        <h1>{lepDatum(datum)}</h1>
-        {!jeDanas && <Link className="dugme tiho" to="/">Nazad na danas</Link>}
-      </div>
+      {/* Datum se vidi u redu nedelje; naslov ostaje za čitač ekrana */}
+      <h1 className="sr">{lepDatum(datum)}</h1>
+      {!jeDanas && <div className="dan-naslov"><Link className="dugme tiho" to="/">Nazad na danas</Link></div>}
       <Traka uneto={uneto} cilj={profil} rang={jeDanas && !uski && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />} />
       <main className="dan">
         {jeDanas && uski && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />}
@@ -143,8 +142,15 @@ function Traka({ uneto, cilj, rang }: { uneto: ReturnType<typeof zbir>; cilj: Ci
       </div>
       {rang}
       {c ? (
-        <a className="plocica traka-strelica" href="#unos" aria-label="Dodaj namirnicu">
-          <ArrowDown size={34} strokeWidth={2.75} aria-hidden />
+        // Samo na telefonu (dan.css): miš vodi do polja "Reci mišu šta si jeo" i odmah otvara tastaturu
+        <a className="traka-mis" href="#unos" aria-label="Reci mišu šta si jeo" onClick={(e) => {
+          const polje = document.getElementById('sta-si-jeo')
+          if (!polje) return
+          e.preventDefault()
+          polje.focus({ preventScroll: true })
+          polje.scrollIntoView({ block: 'center' })
+        }}>
+          <img src="/maskota/jede.webp" alt="" width={64} height={64} />
         </a>
       ) : (
         <Link className="dugme traka-profil" to="/profil">
@@ -196,6 +202,13 @@ function Sir({ slavi }: { slavi: boolean }) {
 }
 
 const DANI = ['Pon', 'Uto', 'Sre', 'Čet', 'Pet', 'Sub', 'Ned']
+const imeMeseca = new Intl.DateTimeFormat('sr-Latn', { month: 'long' })
+// Mesec iznad dana; nedelja na prelazu meseci pokaže oba ("Oktobar – Novembar")
+function mesec(od: string, doDana: string) {
+  const [a, b] = [od, doDana].map((d) => imeMeseca.format(izIso(d)))
+  const m = a === b ? a : `${a} – ${b}`
+  return m.charAt(0).toUpperCase() + m.slice(1)
+}
 const putanja = (d: string) => (d === danas() ? '/' : `/dan/${d}`)
 
 // Nedelja izabranog dana: kvačica = pogođen cilj kalorija, "!" = prošao dan sa unosom a bez cilja, krug = budući ili prazan dan.
@@ -217,6 +230,8 @@ function Nedelja({ datum, kcalDana, cilj }: { datum: string; kcalDana: number | 
       <Link className="plocica svetla" to={putanja(pomeri(datum, -7))} aria-label="Prethodna nedelja">
         <ChevronLeft size={22} aria-hidden />
       </Link>
+      <div className="nedelja-sredina">
+      <p className="nedelja-mesec">{mesec(pon, pomeri(pon, 6))}</p>
       <ol className="nedelja-dani">
         {DANI.map((ime, i) => {
           const d = pomeri(pon, i)
@@ -226,6 +241,7 @@ function Nedelja({ datum, kcalDana, cilj }: { datum: string; kcalDana: number | 
           const sadrzaj = (
             <>
               <span className="nedelja-ime">{ime}</span>
+              <span className="nedelja-broj num">{izIso(d).getDate()}.</span>
               <span className="nedelja-znak">{stanje === 'pogodjen' ? <Check size={20} strokeWidth={3} aria-hidden /> : stanje === 'promasen' ? '!' : null}</span>
             </>
           )
@@ -243,6 +259,7 @@ function Nedelja({ datum, kcalDana, cilj }: { datum: string; kcalDana: number | 
           )
         })}
       </ol>
+      </div>
       {pomeri(pon, 7) <= dan0 ? (
         <Link className="plocica svetla" to={putanja(sledeca < dan0 ? sledeca : dan0)} aria-label="Sledeća nedelja">
           <ChevronRight size={22} aria-hidden />

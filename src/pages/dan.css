@@ -32,9 +32,10 @@
 /* tanka traka napretka makroa, kao traka u polju kalendara */
 .makro-traka { display: block; position: relative; height: 6px; margin-top: 10px; border-radius: 999px; background: var(--pozadina); overflow: hidden; }
 .makro-traka::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--p); background: var(--zelena); }
-.traka-strelica, .traka-profil { grid-column: -2; }
-.traka-strelica { width: 72px; height: 72px; }
-.traka-strelica:hover { background: #2a2e2a; }
+.traka-mis, .traka-profil { grid-column: -2; }
+/* miš umesto strelice postoji samo na telefonu */
+.traka-mis { display: none; }
+.traka-mis img { display: block; width: 64px; height: 64px; object-fit: contain; }
 .traka-profil { background: var(--tekst); color: var(--bela); border-color: var(--tekst); }
 .traka-profil:hover { background: #2a2e2a; }
 .traka-profil .plocica { background: var(--bela); color: var(--tekst); }
@@ -59,14 +60,17 @@
 /* Nedelja: sedam dana sa kvačicom (pogođen cilj), "!" (promašen) ili praznim krugom */
 .nedelja { display: flex; align-items: center; gap: 8px; padding: 14px clamp(16px, 4vw, 32px) 4px; }
 .nedelja > .plocica, .nedelja-prazno { flex: none; width: 36px; height: 36px; }
-.nedelja-dani { flex: 1; list-style: none; margin: 0 auto; padding: 0; max-width: 560px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.nedelja-sredina { flex: 1; min-width: 0; max-width: 560px; margin: 0 auto; display: grid; gap: 6px; }
+.nedelja-mesec { text-align: center; font-weight: 800; font-size: 15px; }
+.nedelja-dani { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
 .nedelja-dan {
-  display: grid; justify-items: center; gap: 6px; padding: 6px 0 8px;
+  display: grid; justify-items: center; gap: 4px; padding: 6px 0 8px;
   border: 2px solid transparent; border-radius: var(--r); color: var(--tekst); text-decoration: none;
 }
 a.nedelja-dan:hover { background: var(--mint); }
 .nedelja-dan[aria-current] { background: var(--bela); border-color: var(--tekst); box-shadow: var(--senka); }
 .nedelja-ime { font-weight: 700; font-size: 13px; line-height: 1; padding: 3px 6px; border-radius: 999px; }
+.nedelja-broj { font-weight: 800; font-size: 15px; line-height: 1; }
 .nedelja-dan[data-danas] .nedelja-ime { background: var(--tekst); color: var(--bela); }
 .nedelja-znak {
   width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%;
@@ -277,7 +281,7 @@ a.nedelja-dan:hover { background: var(--mint); }
   /* Telefon: luk preko cele širine, strelica u gornjem desnom uglu kartice */
   .traka { position: relative; grid-template-columns: 1fr; gap: 14px; padding: 14px 16px 18px; }
   .napredak { width: 100%; }
-  .traka-strelica { position: absolute; top: 12px; right: 16px; width: 44px; height: 44px; }
+  .traka-mis { display: block; position: absolute; top: 4px; right: 12px; }
   .traka-profil { grid-column: auto; }
   .traka-makrosi > div { padding: 8px 8px 10px; }
   .traka-makrosi dt { font-size: 13px; }
