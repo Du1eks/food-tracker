@@ -9,7 +9,7 @@
 /* --ugao postavlja raspored (dan.css), pa svaki otisak stoji malo drugačije */
 .pecat-otisak {
   display: block; width: 100%; height: 100%; overflow: visible; color: var(--pecat-mastilo);
-  opacity: 0.95; mix-blend-mode: multiply; transform: rotate(var(--ugao, -12deg));
+  opacity: 0.9; mix-blend-mode: multiply; rotate: var(--ugao, -12deg);
 }
 .pecat-alat { overflow: visible; }
 .pecat-alat-obris { stroke: var(--tekst); stroke-width: 2.5; stroke-linejoin: round; }
