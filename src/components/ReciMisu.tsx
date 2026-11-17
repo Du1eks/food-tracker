@@ -142,7 +142,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
           {bezPokreta() ? <Maskota key={poza} poza={poza} /> : (
             <Suspense fallback={<div className="maskota ziv" aria-hidden />}>
               <ZiviMis rezerva={<Maskota poza={poza} />} alt="Miš" unosi={unosiTekst} slavi={slaviUpis || misStanje.slavi}
-                ljut={gladan} spava={misStanje.spava} greska={greska} ciljIspunjen={misStanje.slavi} brojUnosa={unosi?.length ?? null} />
+                ljut={gladan} spava={misStanje.spava} greska={greska} brojUnosa={unosi?.length ?? null} />
             </Suspense>
           )}
           <p key={poruka} className={`mis-oblacic${greska ? ' lose' : ''}`} role={greska ? 'alert' : 'status'}>{poruka}</p>

@@ -12,6 +12,8 @@ import RangPolje from '../components/RangPolje'
 import NedeljaMakroa from '../components/NedeljaMakroa'
 import Sir from '../components/Sir'
 import { PecatAlat, PecatDefs, PecatOtisak } from '../components/Pecat'
+import CiljPostignut from '../components/CiljPostignut'
+import { KONFETE_TRAJU, konfete } from '../components/konfete'
 import './dan.css'
 
 export default function Dan() {
@@ -67,9 +69,11 @@ type Cilj = { cilj_kcal: number | null; cilj_proteini: number | null; cilj_uh: n
 const pogodio = (kcal: number, cilj: number | null) => plamen({ ima_cilj: !!cilj, procenat: cilj ? kcal / cilj : 0, pogodio_proteine: false }).kalorije
 // Proteini i masti: isto poređenje kao stanjeMisa (lib/rang.ts): cilj postoji i uneto ga je dostiglo
 const dostigao = (uneto: number, cilj: number | null | undefined) => !!cilj && uneto >= cilj
-// Pečat udara samo za cilj koji je upravo pređen na istom, već učitanom danu; posle učitavanja pečat samo stoji
-const PECATI = ['kcal', 'proteini', 'masti'] as const
-const KONFETE_TRAJU = 3800 // ms; canvas-confetti sa ticks 260 pada oko 4 s
+// Slavlje ide samo za cilj koji je upravo pređen na istom, već učitanom danu; posle učitavanja ostaje samo stanje
+// (luk u boji cilja, otisak pečata). Kalorije: natpis "Goal achieved!", pa konfete. Proteini: konfete. Proteini i masti
+// dobijaju i pečat na svoju karticu, tek kad konfete padnu.
+const CILJEVI = ['kcal', 'proteini', 'masti'] as const
+const KONFETE_POSLE_NATPISA = 1300 // ms: konfete krenu kad natpis stoji na vrhuncu
 const UDAR_TRAJE = 2800 // ms: pečat izađe veliki na sredini ekrana, zadrži se, odleti na polje i udari
 
 // Luk je polukrug poluprečnika 85 oko (100, 100) u viewBox-u 200×108; pathLength=100 pa je dužina ispune = procenat.
@@ -84,20 +88,26 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
     proteini: dostigao(uneto.proteini, cilj?.cilj_proteini),
     masti: dostigao(uneto.masti, cilj?.cilj_masti),
   }
-  const potpis = PECATI.filter((k) => pogodjeni[k]).join(',')
-  const [udar, setUdar] = useState<{ ciljevi: string[]; kasni: number }>({ ciljevi: [], kasni: 0 })
+  const potpis = CILJEVI.filter((k) => pogodjeni[k]).join(',')
+  const [udar, setUdar] = useState<{ pecati: string[]; kasni: number }>({ pecati: [], kasni: 0 })
+  const [natpis, setNatpis] = useState(0) // ključ natpisa "Goal achieved!"; 0 = nema ga
   const prosli = useRef<{ dan: string; potpis: string } | null>(null)
   useEffect(() => {
     if (!dan) return
     const bio = prosli.current?.dan === dan ? prosli.current.potpis.split(',') : null
-    const ciljevi = bio ? potpis.split(',').filter((k) => k && !bio.includes(k)) : []
-    // Konfete (useMouseMascot) pucaju kad se prvi put dostigne cilj kalorija ili proteina (stanjeMisa.slavi) i traju ~4 s;
-    // pečat čeka da se slegnu, a bez konfeta (npr. samo masti) kreće odmah
-    const konfete = !!bio && !bio.includes('kcal') && !bio.includes('proteini') && ciljevi.some((k) => k === 'kcal' || k === 'proteini')
-    setUdar({ ciljevi, kasni: konfete ? KONFETE_TRAJU : 400 }) // eslint-disable-line react-hooks/set-state-in-effect -- prelazak cilja vidimo tek kad stigne novi zbir
     prosli.current = { dan, potpis }
+    const novi = bio ? potpis.split(',').filter((k) => k && !bio.includes(k)) : []
+    const kcal = novi.includes('kcal')
+    const slavlje = kcal || novi.includes('proteini')
+    const konfeteKrecu = kcal ? KONFETE_POSLE_NATPISA : 0
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- prelazak cilja vidimo tek kad stigne novi zbir
+    setUdar({ pecati: novi.filter((k) => k !== 'kcal'), kasni: slavlje ? konfeteKrecu + KONFETE_TRAJU : 400 })
+    if (kcal) setNatpis(Date.now())
+    if (!slavlje) return
+    const t = setTimeout(() => void konfete(), konfeteKrecu)
+    return () => clearTimeout(t)
   }, [dan, potpis])
-  const kasni = (k: string) => (udar.ciljevi.includes(k) ? udar.kasni + udar.ciljevi.indexOf(k) * (UDAR_TRAJE + 300) : null)
+  const kasni = (k: string) => (udar.pecati.includes(k) ? udar.kasni + udar.pecati.indexOf(k) * (UDAR_TRAJE + 300) : null)
 
   const odnos = c ? uneto.kcal / c : 0
   const p = Math.min(odnos, 1)
@@ -113,15 +123,16 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
   return (
     <section className="traka" aria-live="polite" aria-labelledby="napredak-naslov">
       <PecatDefs />
+      {natpis > 0 && <CiljPostignut key={natpis} onKraj={() => setNatpis(0)} />}
       <div className="napredak">
         <h2 id="napredak-naslov" className="traka-oznaka">Dnevni napredak</h2>
-        <div className="luk">
+        <div className={`luk${pogodjeni.kcal ? ' ispunjen' : ''}`}>
           <svg viewBox="0 0 200 108" aria-hidden>
             {/* Tečnost: zelena cev (svetlija unutra, tamnija spolja), a preko nje mehurići i odsjaj teku samo kroz ispunjeni deo (maska) */}
             <defs>
               <radialGradient id="luk-tecnost" gradientUnits="userSpaceOnUse" cx="100" cy="100" r="92.5">
                 <stop offset="0.84" style={{ stopColor: 'var(--luk-svetla)' }} />
-                <stop offset="0.93" style={{ stopColor: 'var(--zelena)' }} />
+                <stop offset="0.93" style={{ stopColor: 'var(--luk-sredina)' }} />
                 <stop offset="1" style={{ stopColor: 'var(--luk-tamna)' }} />
               </radialGradient>
               <mask id="luk-maska" maskUnits="userSpaceOnUse">
@@ -149,7 +160,6 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
             <p className="traka-broj num" data-makro="kcal"><span key={uneto.kcal} className="preklop">{fmt(uneto.kcal)}</span></p>
             <p className="traka-sitno num">{c ? `od ${fmt(c)} kcal` : 'kcal uneto'}</p>
           </div>
-          {pogodjeni.kcal && <Pecat naziv="Kalorije" kasni={kasni('kcal')} />}
         </div>
         {c && <p className="traka-ostatak num">{razlika < 0 ? `Preko cilja ${fmt(-razlika)} kcal` : `Ostalo ${fmt(razlika)} kcal`}</p>}
         <dl className="traka-makrosi">
@@ -188,7 +198,7 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
   )
 }
 
-// Pečat "cilj pogođen": crtež je u components/Pecat, otisak pokriva celo polje (kartica makroa ili sredina luka).
+// Pečat "cilj pogođen": crtež je u components/Pecat, otisak pokriva celu karticu makroa.
 // kasni != null: pečat upravo udara. Alat izađe veliki na sredini ekrana, zadrži se, odleti na svoje polje i udari,
 // a otisak ostane. Bez toga (učitana strana) stoji samo otisak; uz prefers-reduced-motion se samo pojavi.
 // Put od sredine ekrana do polja zavisi od mesta na strani, pa je pokret u kodu (Web Animations), ne u CSS-u.
@@ -204,21 +214,20 @@ function Pecat({ naziv, kasni }: { naziv: string; kasni: number | null }) {
     const vreme = { duration: UDAR_TRAJE, delay: kasni, fill: 'both' } as const
     const pokreti = [
       alat.animate([
-        { transform: `${centar} scale(${s * 0.2})`, opacity: 0 },
-        { transform: `${centar} scale(${s * 1.08})`, opacity: 1, offset: 0.1, easing: 'ease-out' },
-        { transform: `${centar} scale(${s})`, offset: 0.16 },
-        { transform: `${centar} scale(${s}) rotate(-5deg)`, offset: 0.27 },
-        { transform: `${centar} scale(${s}) rotate(4deg)`, offset: 0.36 },
-        { transform: `${centar} scale(${s})`, offset: 0.44, easing: 'cubic-bezier(0.5, 0, 0.75, 0)' },
-        { transform: 'translateY(-70%)', offset: 0.64, easing: 'cubic-bezier(0.55, 0, 1, 0.45)' },
+        { transform: `${centar} scale(${s * 0.2}) perspective(600px) rotateY(-70deg)`, opacity: 0 },
+        { transform: `${centar} scale(${s * 1.08}) perspective(600px) rotateY(12deg)`, opacity: 1, offset: 0.12, easing: 'ease-out' },
+        { transform: `${centar} scale(${s}) perspective(600px) rotateY(-22deg) rotate(-4deg)`, offset: 0.25 },
+        { transform: `${centar} scale(${s}) perspective(600px) rotateY(20deg) rotate(3deg)`, offset: 0.36 },
+        { transform: `${centar} scale(${s}) perspective(600px) rotateX(18deg)`, offset: 0.44, easing: 'cubic-bezier(0.5, 0, 0.75, 0)' },
+        { transform: 'translateY(-70%) perspective(600px) rotateX(10deg)', offset: 0.64, easing: 'cubic-bezier(0.55, 0, 1, 0.45)' },
         { transform: 'none', offset: 0.7 },
         { transform: 'translateY(5%) scaleY(0.86)', offset: 0.73 },
         { transform: 'translateY(-45%)', opacity: 1, offset: 0.86 },
         { transform: 'translateY(-110%)', opacity: 0 },
       ], vreme),
       otisak.animate([
-        { transform: 'scale(1.3)', opacity: 0 },
-        { transform: 'scale(1.3)', opacity: 0, offset: 0.7 },
+        { transform: 'scale(1.1)', opacity: 0 },
+        { transform: 'scale(1.1)', opacity: 0, offset: 0.7 },
         { transform: 'scale(0.94)', opacity: 0.95, offset: 0.74 },
         { transform: 'none', opacity: 0.9, offset: 0.84 },
         { transform: 'none', opacity: 0.9 },
