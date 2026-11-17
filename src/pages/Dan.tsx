@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react'
 import { danas, ispravan, izIso, lepDatum, pomeri } from '../lib/datum'
@@ -45,7 +45,7 @@ export default function Dan() {
       {/* Datum se vidi u redu nedelje; naslov ostaje za čitač ekrana */}
       <h1 className="sr">{lepDatum(datum)}</h1>
       {!jeDanas && <div className="dan-naslov"><Link className="dugme tiho" to="/">Nazad na danas</Link></div>}
-      <Traka uneto={uneto} cilj={profil} />
+      <Traka uneto={uneto} cilj={profil} dan={unosi && datum} />
       {/* Ispod luka: računar = unos levo, grafik makroa i rang desno, tabela preko cele širine; telefon = rang, unos, tabela (dan.css) */}
       <main className="dan">
         {jeDanas && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />}
@@ -63,13 +63,33 @@ type Cilj = { cilj_kcal: number | null; cilj_proteini: number | null; cilj_uh: n
 
 // "Pogođen cilj kalorija" je isto pravilo kao plamen na rang listi (lib/plamen.ts).
 const pogodio = (kcal: number, cilj: number | null) => plamen({ ima_cilj: !!cilj, procenat: cilj ? kcal / cilj : 0, pogodio_proteine: false }).kalorije
+// Proteini i masti: isto poređenje kao stanjeMisa (lib/rang.ts): cilj postoji i uneto ga je dostiglo
+const dostigao = (uneto: number, cilj: number | null | undefined) => !!cilj && uneto >= cilj
+// Pečat udara samo za cilj koji je upravo pređen na istom, već učitanom danu; posle učitavanja pečat samo stoji
+const PECATI = ['kcal', 'proteini', 'masti'] as const
 
 // Luk je polukrug poluprečnika 85 oko (100, 100) u viewBox-u 200×108; pathLength=100 pa je dužina ispune = procenat.
 const LUK = 'M15 100 A85 85 0 0 1 185 100'
 
 // Kartica dnevnog napretka: preispiše se posle svakog unosa (ključ na vrednosti pokreće animaciju table).
-function Traka({ uneto, cilj }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | null }) {
+// dan: datum čiji su unosi učitani (null dok se učitavaju), da učitavanje ne izgleda kao prelazak cilja
+function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | null; dan: string | null }) {
   const c = cilj?.cilj_kcal ?? null
+  const pogodjeni = {
+    kcal: pogodio(uneto.kcal, c),
+    proteini: dostigao(uneto.proteini, cilj?.cilj_proteini),
+    masti: dostigao(uneto.masti, cilj?.cilj_masti),
+  }
+  const potpis = PECATI.filter((k) => pogodjeni[k]).join(',')
+  const [udari, setUdari] = useState<string[]>([])
+  const prosli = useRef<{ dan: string; potpis: string } | null>(null)
+  useEffect(() => {
+    if (!dan) return
+    const bio = prosli.current?.dan === dan ? prosli.current.potpis.split(',') : null
+    setUdari(bio ? potpis.split(',').filter((k) => k && !bio.includes(k)) : []) // eslint-disable-line react-hooks/set-state-in-effect -- prelazak cilja vidimo tek kad stigne novi zbir
+    prosli.current = { dan, potpis }
+  }, [dan, potpis])
+
   const odnos = c ? uneto.kcal / c : 0
   const p = Math.min(odnos, 1)
   const ugao = Math.PI * (1 - p)
@@ -83,6 +103,19 @@ function Traka({ uneto, cilj }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | n
 
   return (
     <section className="traka" aria-live="polite" aria-labelledby="napredak-naslov">
+      {/* zajedničko za sve pečate: mastilo (iskrzana ivica i tačkice) i krug po kome ide tekst */}
+      <svg className="pecat-defs" aria-hidden>
+        <defs>
+          <filter id="pecat-mastilo" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="7" result="sum" />
+            <feDisplacementMap in="SourceGraphic" in2="sum" scale="2.6" result="iskrzano" />
+            <feTurbulence type="fractalNoise" baseFrequency="0.22" seed="3" result="mrlje" />
+            <feColorMatrix in="mrlje" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 2.4" result="rupe" />
+            <feComposite in="iskrzano" in2="rupe" operator="in" />
+          </filter>
+          <path id="pecat-krug" d="M50 50 m-35 0 a35 35 0 1 1 70 0 a35 35 0 1 1 -70 0" />
+        </defs>
+      </svg>
       <div className="napredak">
         <h2 id="napredak-naslov" className="traka-oznaka">Dnevni napredak</h2>
         <div className="luk">
@@ -119,6 +152,7 @@ function Traka({ uneto, cilj }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | n
             <p className="traka-broj num" data-makro="kcal"><span key={uneto.kcal} className="preklop">{fmt(uneto.kcal)}</span></p>
             <p className="traka-sitno num">{c ? `od ${fmt(c)} kcal` : 'kcal uneto'}</p>
           </div>
+          {pogodjeni.kcal && <Pecat naziv="Kalorije" udara={udari.includes('kcal')} red={0} />}
         </div>
         {c && <p className="traka-ostatak num">{razlika < 0 ? `Preko cilja ${fmt(-razlika)} kcal` : `Ostalo ${fmt(razlika)} kcal`}</p>}
         <dl className="traka-makrosi">
@@ -130,6 +164,7 @@ function Traka({ uneto, cilj }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | n
                 <small>{m.c ? ` / ${fmt(m.c)} g` : ' g'}</small>
                 {!!m.c && <span className="makro-traka" style={{ '--p': `${Math.min(m.u / m.c, 1) * 100}%` } as React.CSSProperties} aria-hidden />}
               </dd>
+              {(m.k === 'proteini' || m.k === 'masti') && pogodjeni[m.k] && <Pecat naziv={m.naziv} udara={udari.includes(m.k)} red={udari.indexOf(m.k)} />}
             </div>
           ))}
         </dl>
@@ -156,40 +191,52 @@ function Traka({ uneto, cilj }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | n
   )
 }
 
-// Komad sira u sredini luka; kad je cilj kalorija pogođen iskoči i njiše se (pokret je u dan.css).
+// Zeleni pečat "cilj pogođen". udara: alat (drvena drška + guma) se spusti, udari i odskoči, a otisak ostane;
+// bez toga (učitana strana) stoji samo otisak. red: pečati udaraju jedan za drugim. Pokret je u dan.css.
+function Pecat({ naziv, udara, red }: { naziv: string; udara: boolean; red: number }) {
+  return (
+    <span className={`pecat${udara ? ' udara' : ''}`} style={{ '--red': red } as React.CSSProperties}>
+      <svg className="pecat-otisak" viewBox="0 0 100 100" role="img" aria-label={`${naziv}: cilj pogođen`}>
+        <g filter="url(#pecat-mastilo)" fill="none" stroke="currentColor">
+          <circle cx="50" cy="50" r="46" strokeWidth="4.5" />
+          <circle cx="50" cy="50" r="40.5" strokeWidth="1.6" />
+          <circle cx="50" cy="50" r="26" strokeWidth="1.6" />
+          <text fill="currentColor" stroke="none" fontSize="10.5" fontWeight="900" letterSpacing="0.4">
+            <textPath href="#pecat-krug" textLength="214" lengthAdjust="spacing">CILJ POGOĐEN · {naziv.toUpperCase()} ·</textPath>
+          </text>
+          <path d="M38 52 L47 61 L64 41" strokeWidth="6.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path fill="currentColor" stroke="none" d="M50 28.5l1.2 2.6 2.8.3-2.1 1.9.6 2.8-2.5-1.4-2.5 1.4.6-2.8-2.1-1.9 2.8-.3z M39 31.5l.9 1.9 2.1.2-1.6 1.4.5 2-1.9-1-1.9 1 .5-2-1.6-1.4 2.1-.2z M61 31.5l.9 1.9 2.1.2-1.6 1.4.5 2-1.9-1-1.9 1 .5-2-1.6-1.4 2.1-.2z" />
+        </g>
+      </svg>
+      {udara && (
+        <svg className="pecat-alat" viewBox="0 0 60 92" aria-hidden>
+          <g stroke="#111311" strokeWidth="2.5" strokeLinejoin="round">
+            <circle cx="30" cy="13" r="10" fill="#c98642" />
+            <path d="M25 22 h10 l2 24 h-14 z" fill="#b06d32" />
+            <rect x="9" y="46" width="42" height="18" rx="3" fill="#c98642" />
+            <rect x="6" y="64" width="48" height="12" rx="2" fill="#2a7400" />
+          </g>
+          <path d="M14 51 h20" stroke="#e9b27a" strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
+      )}
+    </span>
+  )
+}
+
+// Piktogram sira kao znak na tabli: ravne boje, debeo crn obris, rupe. Kad je cilj kalorija pogođen iskoči i njiše se (dan.css).
 function Sir({ slavi }: { slavi: boolean }) {
   return (
-    <svg className={`sir${slavi ? ' slavi' : ''}`} viewBox="0 0 64 48" width={68} height={51} {...(slavi ? { role: 'img', 'aria-label': 'Cilj kalorija pogođen' } : { 'aria-hidden': true })}>
-      <defs>
-        <linearGradient id="sir-lice" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#ffd84d" />
-          <stop offset="1" stopColor="#f6b000" />
-        </linearGradient>
-        <linearGradient id="sir-kora" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#f7a71c" />
-          <stop offset="1" stopColor="#e7860c" />
-        </linearGradient>
-      </defs>
-      <ellipse cx="32" cy="45" rx="25" ry="2.5" fill="rgb(17 19 17 / 0.14)" />
-      <g strokeLinejoin="round" strokeWidth="2">
-        <path d="M4 26 L44 10 L52 6 L12 22 Z" fill="#ffe78f" stroke="#ffe78f" />
-        <path d="M44 10 L52 6 V38 L44 42 Z" fill="url(#sir-kora)" stroke="#ee940f" />
-        <path d="M4 26 L44 10 V42 H4 Z" fill="url(#sir-lice)" stroke="#f9c21a" />
+    <svg className={`sir${slavi ? ' slavi' : ''}`} viewBox="0 0 64 50" width={66} height={52} {...(slavi ? { role: 'img', 'aria-label': 'Cilj kalorija pogođen' } : { 'aria-hidden': true })}>
+      <g stroke="#111311" strokeWidth="3" strokeLinejoin="round">
+        <path d="M4 25 L44 9 L58 16 L18 31 Z" fill="#ffd95a" />
+        <path d="M44 9 L58 16 V40 L44 46 Z" fill="#f0a500" />
+        <path d="M4 25 L44 9 V46 H4 Z" fill="#ffc21a" />
       </g>
-      <g fill="#e39b00">
-        <ellipse cx="14" cy="34" rx="3" ry="3" />
-        <ellipse cx="27" cy="27" rx="4.5" ry="4.5" />
-        <ellipse cx="37" cy="36" rx="3.4" ry="3.4" />
-        <ellipse cx="38" cy="20" rx="2.2" ry="2.2" />
-        <ellipse cx="21" cy="38.5" rx="1.7" ry="1.7" />
-        <ellipse cx="31" cy="13.6" rx="3" ry="1.2" />
-        <ellipse cx="22" cy="18" rx="1.8" ry="0.8" />
-      </g>
-      {/* svetla ivica na dnu rupa daje dubinu */}
-      <g fill="none" stroke="#ffe27a" strokeWidth="1" strokeLinecap="round">
-        <path d="M11.5 35.5 a3 3 0 0 0 5 0" />
-        <path d="M23.2 29.5 a4.5 4.5 0 0 0 7.6 0" />
-        <path d="M34.3 37.8 a3.4 3.4 0 0 0 5.4 0" />
+      <g fill="#fff3c4" stroke="#111311" strokeWidth="2.2">
+        <circle cx="15" cy="35" r="4" />
+        <circle cx="30" cy="26" r="5" />
+        <circle cx="34" cy="39" r="3" />
+        <ellipse cx="38" cy="16.5" rx="3.6" ry="1.6" />
       </g>
     </svg>
   )
