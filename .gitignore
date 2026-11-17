@@ -27,11 +27,11 @@ Thumbs.db
 # Claude Code lokalna podešavanja
 .claude/settings.local.json
 
-# Impeccable: skice za izbor pravca i referentne slike
-.impeccable/mocks/
-.impeccable/ref/
-.impeccable/review/
+# Impeccable: ceo folder (skice, predlozi, design.json) je samo lokalni
+.impeccable/
 
 # Lokalne beleške (ne idu na GitHub)
 CLAUDE.md
 SPEC.md
+DESIGN.md
+PRODUCT.md

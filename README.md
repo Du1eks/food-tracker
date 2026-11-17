@@ -180,4 +180,4 @@ src-tauri/        desktop aplikacija (Tauri)
 docs/             dokumentacija odluka i slike za ovaj README
 ```
 
-Odluke i objašnjenja (na srpskom) su u `docs/`: [arhitektura](docs/arhitektura.md), [model podataka](docs/model.md), [dozvole i privatnost](docs/dozvole.md), [API](docs/api.md), [ekrani](docs/ekrani.md), [skaliranje](docs/skaliranje.md). Dizajn je opisan u [DESIGN.md](DESIGN.md), a proizvod u [PRODUCT.md](PRODUCT.md). Projekat je ujedno i vežba za učenje system design-a, pa je svaka veća odluka kratko objašnjena.
+Odluke i objašnjenja (na srpskom) su u `docs/`: [arhitektura](docs/arhitektura.md), [model podataka](docs/model.md), [dozvole i privatnost](docs/dozvole.md), [API](docs/api.md), [ekrani](docs/ekrani.md), [skaliranje](docs/skaliranje.md). Projekat je ujedno i vežba za učenje system design-a, pa je svaka veća odluka kratko objašnjena.

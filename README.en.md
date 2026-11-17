@@ -182,4 +182,4 @@ src-tauri/        desktop app (Tauri)
 docs/             design-decision docs and the images for this README
 ```
 
-Decisions and explanations (in Serbian) are in `docs/`: [architecture](docs/arhitektura.md), [data model](docs/model.md), [permissions and privacy](docs/dozvole.md), [API](docs/api.md), [screens](docs/ekrani.md), [scaling](docs/skaliranje.md). The design is described in [DESIGN.md](DESIGN.md) and the product in [PRODUCT.md](PRODUCT.md). The project is also a learning exercise in system design, so every larger decision is briefly explained.
+Decisions and explanations (in Serbian) are in `docs/`: [architecture](docs/arhitektura.md), [data model](docs/model.md), [permissions and privacy](docs/dozvole.md), [API](docs/api.md), [screens](docs/ekrani.md), [scaling](docs/skaliranje.md). The project is also a learning exercise in system design, so every larger decision is briefly explained.
