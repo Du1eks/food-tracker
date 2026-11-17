@@ -18,7 +18,7 @@
   font-family: var(--font-d); font-weight: 400; font-size: clamp(48px, 11vw, 120px); line-height: 0.95;
   /* puna zlatna slova sa crnim obrisom i tvrdom senkom, kao natpis na tabli */
   color: var(--cp-zlato); -webkit-text-stroke: 3px var(--crna); paint-order: stroke fill;
-  filter: drop-shadow(0 6px 0 var(--crna)) drop-shadow(0 0 30px rgb(255 194 26 / 0.55));
+  filter: drop-shadow(0 10px 18px rgb(0 0 0 / 0.7)) drop-shadow(0 0 30px rgb(255 194 26 / 0.55));
 }
 .cp-zraci {
   width: min(160vmax, 1600px); aspect-ratio: 1; border-radius: 50%;

@@ -6,7 +6,7 @@
   padding: 18px clamp(16px, 4vw, 32px) 22px;
 }
 .napredak { width: min(100%, 440px); display: grid; gap: 6px; }
-.traka-oznaka { font-weight: 800; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sivi-tekst); justify-self: start; }
+.traka-oznaka { font-weight: 800; font-size: 18px; color: var(--sivi-tekst); justify-self: start; }
 /* Broj kalorija: monumentalno neon, cilj sitno pored */
 .traka-kcal { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; justify-self: start; }
 .traka-broj { font-family: var(--font-d); font-size: clamp(52px, 6vw, 84px); line-height: 0.95; color: var(--zelena); text-shadow: 0 0 30px rgb(140 255 90 / 0.5); }

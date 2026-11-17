@@ -12,7 +12,7 @@
   background: var(--bela); text-decoration: none; overflow: hidden;
   border: 2px solid var(--spolja);
 }
-a.kal-polje:hover { border-color: #35503f; }
+a.kal-polje:hover { border-color: var(--ivica); }
 .kal-polje.ima { box-shadow: var(--senka); }
 .kal-polje.danas { border-color: var(--zelena); box-shadow: 0 0 22px -8px rgb(140 255 90 / 0.6); }
 .kal-polje.danas .kal-broj { background: var(--zelena); color: var(--na-neonu); border-radius: 4px; padding: 0 6px; }

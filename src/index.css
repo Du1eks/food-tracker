@@ -27,7 +27,8 @@
   --font: 'Chivo Variable', 'Chivo', system-ui, sans-serif;
   --font-d: 'Bungee', 'Chivo Variable', system-ui, sans-serif;
   --r: 12px;
-  --okvir: 1.5px solid #35503f;
+  --ivica: #35503f;
+  --okvir: 1.5px solid var(--ivica);
   --senka: inset 0 1px 0 rgb(255 255 255 / 0.04), 0 20px 40px -24px rgb(0 0 0 / 0.8);
   --sjaj: 0 4px 24px -6px rgb(140 255 90 / 0.6);
 
@@ -38,7 +39,7 @@
   background: var(--crna);
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
-  scrollbar-color: #35503f var(--pozadina);
+  scrollbar-color: var(--ivica) var(--pozadina);
 }
 
 *, *::before, *::after { box-sizing: border-box; }

@@ -6,9 +6,9 @@
   box-shadow: var(--senka);
 }
 a.rang:hover { background: var(--mint); }
-.rang-mesto { font-weight: 900; font-size: 80px; line-height: 0.9; letter-spacing: -0.04em; color: var(--zelena); margin-right: 14px; }
+.rang-mesto { font-family: var(--font-d); font-weight: 400; font-size: 72px; line-height: 0.9; text-shadow: 0 0 26px rgb(140 255 90 / 0.5); color: var(--zelena); margin-right: 14px; }
 .rang-mesto sup { font-size: 0.36em; letter-spacing: 0; vertical-align: 1.15em; margin-left: 2px; }
-.rang > .rang-mesto.plocica { width: 56px; height: 56px; background: var(--zelena); color: var(--tekst); }
+.rang > .rang-mesto.plocica { width: 56px; height: 56px; background: var(--zelena); color: var(--na-neonu); }
 /* Natpis je sakriven; polje se na prelaz mišem (ili fokus tastaturom) proširi i otkrije ga */
 .rang-poziv {
   font-weight: 800; font-size: 17px; line-height: 1.2; white-space: nowrap;
