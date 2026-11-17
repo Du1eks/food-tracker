@@ -70,7 +70,7 @@ const pogodio = (kcal: number, cilj: number | null) => plamen({ ima_cilj: !!cilj
 // Proteini i masti: isto poređenje kao stanjeMisa (lib/rang.ts): cilj postoji i uneto ga je dostiglo
 const dostigao = (uneto: number, cilj: number | null | undefined) => !!cilj && uneto >= cilj
 // Slavlje ide samo za cilj koji je upravo pređen na istom, već učitanom danu; posle učitavanja ostaje samo stanje
-// (ljubičasta epruveta, oštećena kartica). Redosled: 3D natpis "Goal achieved!" sa imenima ciljeva, pa ekran skroluje do
+// (zlatna epruveta, oštećena kartica). Redosled: 3D natpis "Goal achieved!" sa imenima ciljeva, pa ekran skroluje do
 // polja tog cilja i zatamni se oko njega (fokus), pa konfete i efekat na polju: epruveta udari i zasija, kartice
 // proteina i masti puknu kao napitak (i ostanu oštećene), jedna za drugom.
 const CILJEVI = ['kcal', 'proteini', 'masti'] as const
