@@ -1,4 +1,6 @@
 /* Kuhinja: panel za kuvanje (isti kao "Reci mišu" na početnoj) iznad spiska mojih jela */
+/* Boje van palete samo za varnice i konfete (kao plamen na rang listi); sve ostalo iz tokena u index.css */
+:root { --varnica: #ffe066; --varnica-sjaj: #ffb300; }
 .kuhinja .panel-glava { justify-content: space-between; }
 .kuhinja .zatvori { color: var(--tekst); }
 .kuhinja-ukupno { font-weight: 600; color: var(--sivi-tekst); padding-top: 12px; border-top: 2px solid var(--tekst); }
@@ -38,22 +40,22 @@
   padding: 6px 12px; border: var(--okvir); border-radius: 999px; background: var(--bela); color: var(--tekst);
   font-weight: 800; font-size: 16px; white-space: nowrap; box-shadow: 0 0 0 3px var(--svetlozelena), var(--senka);
 }
-.kuvaj-varnica { width: 7px; height: 7px; border-radius: 50%; background: #ffe066; box-shadow: 0 0 6px 2px #ffb300; }
+.kuvaj-varnica { width: 7px; height: 7px; border-radius: 50%; background: var(--varnica); box-shadow: 0 0 6px 2px var(--varnica-sjaj); }
 
 /* Kartica jela posle "Napravi obrok" (components/KarticaJela) */
 .jelo-pozadina {
   position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px;
-  background: rgb(17 19 17 / 0.55); cursor: pointer; overflow: hidden;
+  background: color-mix(in srgb, var(--tekst) 55%, transparent); cursor: pointer; overflow: hidden;
 }
 /* zraci iza kartice */
 .jelo-zraci {
   position: absolute; left: 50%; top: 50%; width: 160vmax; height: 160vmax; translate: -50% -50%; pointer-events: none;
-  background: repeating-conic-gradient(rgb(194 220 184 / 0.28) 0deg 9deg, transparent 9deg 22deg);
-  mask-image: radial-gradient(circle, #000 0 18%, transparent 46%);
+  background: repeating-conic-gradient(color-mix(in srgb, var(--svetlozelena) 28%, transparent) 0deg 9deg, transparent 9deg 22deg);
+  mask-image: radial-gradient(circle, var(--tekst) 0 18%, transparent 46%);
 }
 .jelo-kartica {
   position: relative; overflow: hidden; width: min(440px, 100%); padding: 24px 24px 18px; display: grid; gap: 14px; justify-items: center;
-  text-align: center; background: var(--bela); border: var(--okvir); border-radius: var(--r); box-shadow: 0 24px 60px -20px rgb(17 19 17 / 0.7);
+  text-align: center; background: var(--bela); border: var(--okvir); border-radius: var(--r); box-shadow: 0 24px 60px -20px color-mix(in srgb, var(--tekst) 70%, transparent);
 }
 .jelo-nadnaslov { background: var(--zelena); color: var(--tekst); font-weight: 800; font-size: 15px; padding: 4px 14px; border-radius: 999px; }
 .jelo-ime { font-size: clamp(26px, 6vw, 36px); font-weight: 900; line-height: 1.05; letter-spacing: -0.02em; overflow-wrap: anywhere; text-wrap: balance; }
@@ -77,7 +79,7 @@
   /* odsjaj preleti preko kartice */
   .jelo-kartica::after {
     content: ''; position: absolute; inset: -20% auto -20% -60%; width: 40%; pointer-events: none;
-    background: linear-gradient(100deg, transparent, rgb(255 255 255 / 0.85), transparent); transform: skewX(-18deg);
+    background: linear-gradient(100deg, transparent, color-mix(in srgb, var(--bela) 85%, transparent), transparent); transform: skewX(-18deg);
     animation: jelo-odsjaj 900ms ease-in-out 520ms both;
   }
   .jelo-nadnaslov { animation: jelo-udar 420ms cubic-bezier(0.2, 1.5, 0.4, 1) 300ms both; }
@@ -90,7 +92,7 @@
   /* oznake lupe kao pečat */
   .jelo-oznake li { animation: jelo-pecat 380ms cubic-bezier(0.2, 1.4, 0.4, 1) both; animation-delay: calc(950ms + var(--i, 0) * 140ms); }
 }
-@keyframes jelo-zatamni { from { background: rgb(17 19 17 / 0); } }
+@keyframes jelo-zatamni { from { background: transparent; } }
 @keyframes jelo-zraci-ulaz { from { scale: 0; opacity: 0; } }
 @keyframes jelo-vrti { to { rotate: 1turn; } }
 @keyframes jelo-iskoci {

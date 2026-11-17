@@ -7,7 +7,10 @@ const STOJI = 5500 // ms
 
 async function konfete() {
   const { default: confetti } = await import('canvas-confetti')
-  const zajedno = { disableForReducedMotion: true, zIndex: 60, ticks: 240, gravity: 0.95, scalar: 1.05, colors: ['#389600', '#c2dcb8', '#111311', '#ffffff', '#ffd21f'] }
+  // boje iz CSS tokena (canvas ne čita var(), pa se pročitaju jednom)
+  const css = getComputedStyle(document.documentElement)
+  const colors = ['--zelena', '--svetlozelena', '--tekst', '--bela', '--varnica'].map((t) => css.getPropertyValue(t).trim()).filter(Boolean)
+  const zajedno = { disableForReducedMotion: true, zIndex: 60, ticks: 240, gravity: 0.95, scalar: 1.05, colors }
   void confetti({ ...zajedno, particleCount: 120, spread: 110, startVelocity: 46, origin: { x: 0.5, y: 0.55 } })
   void confetti({ ...zajedno, particleCount: 70, angle: 60, spread: 55, startVelocity: 60, origin: { x: 0, y: 0.85 } })
   void confetti({ ...zajedno, particleCount: 70, angle: 120, spread: 55, startVelocity: 60, origin: { x: 1, y: 0.85 } })

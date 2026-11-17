@@ -40,8 +40,9 @@ function varnice(x: number, y: number) {
 export function letNamirnica(namirnice: { ime: string; el: Element }[], mis: Element | null): Promise<void> {
   if (!mis || matchMedia('(prefers-reduced-motion: reduce)').matches) return Promise.resolve()
   mis.scrollIntoView({ block: 'nearest' }) // miš mora da se vidi; red ispod ekrana kreće sa ivice ekrana
-  const r = mis.getBoundingClientRect()
-  const kapa = { x: r.left + r.width * 0.6, y: r.top + r.height * 0.12 }
+  // sleću u deo miša označen sa data-cilj (kapa); bez njega u sredinu miša
+  const r = (mis.querySelector('[data-cilj]') ?? mis).getBoundingClientRect()
+  const kapa = { x: r.left + r.width / 2, y: r.top + r.height / 2 }
   const sletanja = namirnice.map(({ ime, el }, i) => {
     const o = el.getBoundingClientRect()
     const start = { x: o.left + Math.min(o.width / 3, 120), y: Math.min(Math.max(o.top + o.height / 2, 40), innerHeight - 40) }
