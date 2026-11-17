@@ -1,6 +1,6 @@
 // Svi pozivi baze na jednom mestu (docs/api.md). RLS u bazi sam filtrira na ulogovanog korisnika.
 import { supabase } from './supabase'
-import { zbir, type Jedinica, type Makrosi, type Obrok, type Proizvod, type Unos } from './ishrana'
+import { zbir, type Jedinica, type Jelo, type Makrosi, type Obrok, type Proizvod, type Unos } from './ishrana'
 import type { Zbir } from './rang'
 
 export type Profil = {
@@ -44,6 +44,20 @@ export async function izmeniUnos(id: string, izmena: (Makrosi & { kolicina: numb
 
 export async function obrisiUnos(id: string) {
   proveri(await supabase.from('unos').delete().eq('id', id))
+}
+
+// Kuhinja: moja jela. Jelo se uvek čita i snima celo (stavke su jsonb), pa je izmena jedan update.
+export async function mojaJela(): Promise<Jelo[]> {
+  return proveri(await supabase.from('jelo').select('id,ime,stavke').order('kreirano', { ascending: false }))
+}
+
+export async function sacuvajJelo(j: Omit<Jelo, 'id'> & { id?: string }) {
+  const { id, ime, stavke } = j
+  proveri(await (id ? supabase.from('jelo').update({ ime, stavke }).eq('id', id) : supabase.from('jelo').insert({ ime, stavke })))
+}
+
+export async function obrisiJelo(id: string) {
+  proveri(await supabase.from('jelo').delete().eq('id', id))
 }
 
 // % i _ su džokeri u ilike; korisnikov tekst ih ne sme menjati

@@ -1,6 +1,6 @@
 // Pokretanje: node src/lib/ishrana.test.ts
 import assert from 'node:assert/strict'
-import { zaKolicinu, poJedinici, skaliraj, zbir, obrokPoSatu, dnevniCilj, godineOd } from './ishrana.ts'
+import { zaKolicinu, poJedinici, skaliraj, zbir, obrokPoSatu, dnevniCilj, godineOd, oznakeJela } from './ishrana.ts'
 
 const sir = { kcal: 79, proteini: 13.3, uh: 4, masti: 1, jedinica: '100g' as const }
 assert.deepEqual(zaKolicinu(sir, 150), { kcal: 119, proteini: 20, uh: 6, masti: 1.5 })
@@ -31,5 +31,13 @@ assert.ok(dnevniCilj({ pol: 'z', godine: 30, visina_cm: 165, tezina_kg: 60, tren
 
 assert.equal(godineOd('2000-11-02', new Date(2026, 10, 2)), 26)
 assert.equal(godineOd('2000-11-03', new Date(2026, 10, 2)), 25)
+
+
+// oznake jela: granice uključuju samu vrednost
+assert.deepEqual(oznakeJela({ kcal: 709, proteini: 67.4, uh: 56, masti: 21.3 }), ['HIGH PROTEIN', 'HIGH CALORIE', 'BALANSIRANO']) // 38/32/27%
+assert.deepEqual(oznakeJela({ kcal: 200, proteini: 29, uh: 20, masti: 10 }), ['HIGH PROTEIN', 'LOW FAT', 'LOW CARB']) // 58% kcal iz P
+assert.deepEqual(oznakeJela({ kcal: 500, proteini: 10, uh: 90, masti: 11 }), []) // P 8%, UH 72%
+assert.deepEqual(oznakeJela({ kcal: 600, proteini: 45, uh: 45, masti: 26.6 }), ['HIGH PROTEIN', 'BALANSIRANO']) // 30/30/40%
+assert.deepEqual(oznakeJela({ kcal: 0, proteini: 0, uh: 0, masti: 0 }), ['LOW FAT', 'LOW CARB']) // bez kcal nema udela
 
 console.log('ishrana: svi testovi prošli')

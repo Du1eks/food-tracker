@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router'
-import { Apple, CalendarDays, House, UserRound, Users } from 'lucide-react'
+import { CalendarDays, ChefHat, House, UserRound, Users } from 'lucide-react'
 import { ucitajProfil, type Profil } from '../lib/podaci'
 import type { OkvirKontekst } from './useProfil'
 import MisViri from './MisViri'
@@ -23,6 +23,7 @@ export default function Okvir() {
   const nepopunjen = ucitan && !profil?.cilj_kcal
   const { pathname } = useLocation()
   const naDanu = pathname === '/' || pathname.startsWith('/dan/') // tamo je živi miš u panelu
+  const svojMis = naDanu || pathname === '/kuhinja' // Kuhinja ima miša kuvara na stranici
   return (
     <>
       <header className="gornja">
@@ -37,8 +38,8 @@ export default function Okvir() {
           <Link to="/kalendar" className="plocica svetla" aria-label="Kalendar">
             <CalendarDays size={22} strokeWidth={2.25} aria-hidden />
           </Link>
-          <Link to="/namirnice" className="plocica svetla" aria-label="Namirnice">
-            <Apple size={22} strokeWidth={2.25} aria-hidden />
+          <Link to="/kuhinja" className="plocica svetla" aria-label="Kuhinja, moja jela">
+            <ChefHat size={22} strokeWidth={2.25} aria-hidden />
           </Link>
           <Link to="/prijatelji" className="plocica svetla" aria-label="Prijatelji">
             <Users size={22} strokeWidth={2.25} aria-hidden />
@@ -51,7 +52,7 @@ export default function Okvir() {
       </header>
       <Outlet context={{ profil, osveziProfil } satisfies OkvirKontekst} />
       {/* ključ na stranici: pri svakom prelasku miš ponovo proviri */}
-      {!naDanu && ucitan && <MisViri key={pathname} cilj={profil} />}
+      {!svojMis && ucitan && <MisViri key={pathname} cilj={profil} />}
     </>
   )
 }
