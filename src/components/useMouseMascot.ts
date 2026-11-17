@@ -11,7 +11,6 @@ export type StanjeMisa = {
   ljut: boolean // dugo nisi jeo (gladan)
   spava: boolean // noć
   greska: string // greška pri unosu: miš se kratko naljuti
-  ciljIspunjen: boolean // za konfete, samo kad se ispuni dok je stranica otvorena
   brojUnosa: number | null // null dok se unosi učitavaju; novi unos = miš grickne
 }
 
@@ -28,7 +27,7 @@ export function useSad() {
   return sad
 }
 
-export function useMouseMascot(mis: MaskoHandle | null, { unosi, slavi, ljut, spava, greska, ciljIspunjen, brojUnosa }: StanjeMisa) {
+export function useMouseMascot(mis: MaskoHandle | null, { unosi, slavi, ljut, spava, greska, brojUnosa }: StanjeMisa) {
   const [ljutNaGresku, setLjutNaGresku] = useState(false)
   useEffect(() => {
     if (!greska) return
@@ -54,14 +53,6 @@ export function useMouseMascot(mis: MaskoHandle | null, { unosi, slavi, ljut, sp
     return () => window.clearInterval(t)
   }, [mis, unosi])
 
-// Konfete samo kad se cilj ispuni dok je stranica otvorena (ne pri svakom učitavanju dana koji je već ispunjen)
-  const prosloIspunjen = useRef<boolean | null>(null)
-  useEffect(() => {
-    if (brojUnosa == null) return
-    if (prosloIspunjen.current === false && ciljIspunjen) void konfete()
-    prosloIspunjen.current = ciljIspunjen
-  }, [ciljIspunjen, brojUnosa])
-
   // Novi unos ručno preko + (upis iz poruke mišu ide u slavlje): miš grickne, pa se vraća na stanje koje traje
   const prosliBroj = useRef<number | null>(null)
   useEffect(() => {
@@ -69,13 +60,4 @@ export function useMouseMascot(mis: MaskoHandle | null, { unosi, slavi, ljut, sp
     if (mis && !slavi && prosliBroj.current != null && brojUnosa > prosliBroj.current) mis.fire('action::eat', { instant: true })
     prosliBroj.current = brojUnosa
   }, [mis, brojUnosa, slavi])
-}
-
-// Realističan burst preko cele aplikacije: dva topa sa strana i prasak iz sredine. Bez pokreta (prefers-reduced-motion) ništa.
-async function konfete() {
-  const { default: confetti } = await import('canvas-confetti')
-  const zajedno = { disableForReducedMotion: true, zIndex: 40, ticks: 260, gravity: 0.9, scalar: 1.05 }
-  void confetti({ ...zajedno, particleCount: 140, spread: 100, startVelocity: 48, origin: { x: 0.5, y: 0.65 } })
-  void confetti({ ...zajedno, particleCount: 90, angle: 60, spread: 60, startVelocity: 62, origin: { x: 0, y: 0.8 } })
-  void confetti({ ...zajedno, particleCount: 90, angle: 120, spread: 60, startVelocity: 62, origin: { x: 1, y: 0.8 } })
 }

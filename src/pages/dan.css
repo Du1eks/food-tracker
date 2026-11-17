@@ -7,7 +7,11 @@
 }
 .napredak { width: min(100%, 440px); display: grid; justify-items: center; gap: 6px; }
 .traka-oznaka { font-weight: 700; font-size: 18px; justify-self: start; }
-.luk { position: relative; width: min(100%, 300px); }
+/* boje tečnosti u luku (svetlija unutra, tamnija spolja), sredina je --zelena */
+.luk { --luk-svetla: #7bd63a; --luk-sredina: var(--zelena); --luk-tamna: #2a7400; position: relative; width: min(100%, 300px); }
+/* pogođen cilj kalorija: tečnost u luku postane zlatna, boje sira */
+.luk.ispunjen { --luk-svetla: var(--sir-vrh); --luk-sredina: var(--sir-lice); --luk-tamna: var(--sir-bok); }
+.luk stop { transition: stop-color 900ms ease; }
 .luk > svg { display: block; width: 100%; overflow: visible; }
 .luk > svg path { fill: none; stroke-width: 15; stroke-linecap: round; }
 .luk-staza { stroke: rgb(17 19 17 / 0.1); }
@@ -53,12 +57,22 @@
 .traka-profil:hover { background: #2a2e2a; }
 .traka-profil .plocica { background: var(--bela); color: var(--tekst); }
 
-/* Sir iskoči kad je cilj kalorija pogođen, pa se blago njiše */
-.sir { margin-bottom: 2px; overflow: visible; }
+/* Pečat "cilj pogođen" (crtež i boje: components/pecat.css): otisak pokriva celo polje, preko kartice makroa
+   (proteini, masti); pokret udarca je u Dan.tsx (Pecat). Cilj kalorija nema pečat, luk promeni boju. */
+.traka-makrosi > div { position: relative; }
+.pecat {
+  --ugao: -12deg; position: absolute; z-index: 3; top: 50%; left: 50%; height: 125%; aspect-ratio: 1;
+  translate: -50% -50%; pointer-events: none;
+}
+.traka-makrosi > div:last-child .pecat { --ugao: 9deg; }
+/* dok udara, alat leti preko svega ostalog na strani (konfete su već pale) */
+.pecat.udara { z-index: 30; }
+.pecat .pecat-alat { position: absolute; left: 50%; margin-left: -31%; bottom: 41%; width: 62%; opacity: 0; }
 @media (prefers-reduced-motion: no-preference) {
   .luk-ispuna { transition: stroke-dasharray 700ms cubic-bezier(0.16, 1, 0.3, 1); }
   .luk-mehurici { animation: tece 1.4s linear infinite; }
   .luk-odsjaj { animation: tece 3.2s linear infinite; }
+  /* sir (crtež: components/Sir) iskoči kad je cilj kalorija pogođen, pa se blago njiše */
   .sir.slavi { transform-origin: 50% 90%; animation: sir-iskoci 700ms cubic-bezier(0.34, 1.56, 0.64, 1), sir-njise 2.6s ease-in-out 700ms infinite; }
 }
 /* tečnost teče od početka luka ka kraju ispune */

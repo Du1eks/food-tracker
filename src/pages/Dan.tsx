@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react'
 import { danas, ispravan, izIso, lepDatum, pomeri } from '../lib/datum'
@@ -10,6 +10,10 @@ import DodajNamirnicu from '../components/DodajNamirnicu'
 import TabelaDana from '../components/TabelaDana'
 import RangPolje from '../components/RangPolje'
 import NedeljaMakroa from '../components/NedeljaMakroa'
+import Sir from '../components/Sir'
+import { PecatAlat, PecatDefs, PecatOtisak } from '../components/Pecat'
+import CiljPostignut from '../components/CiljPostignut'
+import { KONFETE_TRAJU, konfete } from '../components/konfete'
 import './dan.css'
 
 export default function Dan() {
@@ -45,7 +49,7 @@ export default function Dan() {
       {/* Datum se vidi u redu nedelje; naslov ostaje za čitač ekrana */}
       <h1 className="sr">{lepDatum(datum)}</h1>
       {!jeDanas && <div className="dan-naslov"><Link className="dugme tiho" to="/">Nazad na danas</Link></div>}
-      <Traka uneto={uneto} cilj={profil} />
+      <Traka uneto={uneto} cilj={profil} dan={unosi && datum} />
       {/* Ispod luka: računar = unos levo, grafik makroa i rang desno, tabela preko cele širine; telefon = rang, unos, tabela (dan.css) */}
       <main className="dan">
         {jeDanas && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />}
@@ -63,13 +67,48 @@ type Cilj = { cilj_kcal: number | null; cilj_proteini: number | null; cilj_uh: n
 
 // "Pogođen cilj kalorija" je isto pravilo kao plamen na rang listi (lib/plamen.ts).
 const pogodio = (kcal: number, cilj: number | null) => plamen({ ima_cilj: !!cilj, procenat: cilj ? kcal / cilj : 0, pogodio_proteine: false }).kalorije
+// Proteini i masti: isto poređenje kao stanjeMisa (lib/rang.ts): cilj postoji i uneto ga je dostiglo
+const dostigao = (uneto: number, cilj: number | null | undefined) => !!cilj && uneto >= cilj
+// Slavlje ide samo za cilj koji je upravo pređen na istom, već učitanom danu; posle učitavanja ostaje samo stanje
+// (luk u boji cilja, otisak pečata). Kalorije: natpis "Goal achieved!", pa konfete. Proteini: konfete. Proteini i masti
+// dobijaju i pečat na svoju karticu, tek kad konfete padnu.
+const CILJEVI = ['kcal', 'proteini', 'masti'] as const
+const KONFETE_POSLE_NATPISA = 1300 // ms: konfete krenu kad natpis stoji na vrhuncu
+const UDAR_TRAJE = 2800 // ms: pečat izađe veliki na sredini ekrana, zadrži se, odleti na polje i udari
 
 // Luk je polukrug poluprečnika 85 oko (100, 100) u viewBox-u 200×108; pathLength=100 pa je dužina ispune = procenat.
 const LUK = 'M15 100 A85 85 0 0 1 185 100'
 
 // Kartica dnevnog napretka: preispiše se posle svakog unosa (ključ na vrednosti pokreće animaciju table).
-function Traka({ uneto, cilj }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | null }) {
+// dan: datum čiji su unosi učitani (null dok se učitavaju), da učitavanje ne izgleda kao prelazak cilja
+function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | null; dan: string | null }) {
   const c = cilj?.cilj_kcal ?? null
+  const pogodjeni = {
+    kcal: pogodio(uneto.kcal, c),
+    proteini: dostigao(uneto.proteini, cilj?.cilj_proteini),
+    masti: dostigao(uneto.masti, cilj?.cilj_masti),
+  }
+  const potpis = CILJEVI.filter((k) => pogodjeni[k]).join(',')
+  const [udar, setUdar] = useState<{ pecati: string[]; kasni: number }>({ pecati: [], kasni: 0 })
+  const [natpis, setNatpis] = useState(0) // ključ natpisa "Goal achieved!"; 0 = nema ga
+  const prosli = useRef<{ dan: string; potpis: string } | null>(null)
+  useEffect(() => {
+    if (!dan) return
+    const bio = prosli.current?.dan === dan ? prosli.current.potpis.split(',') : null
+    prosli.current = { dan, potpis }
+    const novi = bio ? potpis.split(',').filter((k) => k && !bio.includes(k)) : []
+    const kcal = novi.includes('kcal')
+    const slavlje = kcal || novi.includes('proteini')
+    const konfeteKrecu = kcal ? KONFETE_POSLE_NATPISA : 0
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- prelazak cilja vidimo tek kad stigne novi zbir
+    setUdar({ pecati: novi.filter((k) => k !== 'kcal'), kasni: slavlje ? konfeteKrecu + KONFETE_TRAJU : 400 })
+    if (kcal) setNatpis(Date.now())
+    if (!slavlje) return
+    const t = setTimeout(() => void konfete(), konfeteKrecu)
+    return () => clearTimeout(t)
+  }, [dan, potpis])
+  const kasni = (k: string) => (udar.pecati.includes(k) ? udar.kasni + udar.pecati.indexOf(k) * (UDAR_TRAJE + 300) : null)
+
   const odnos = c ? uneto.kcal / c : 0
   const p = Math.min(odnos, 1)
   const ugao = Math.PI * (1 - p)
@@ -83,16 +122,18 @@ function Traka({ uneto, cilj }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | n
 
   return (
     <section className="traka" aria-live="polite" aria-labelledby="napredak-naslov">
+      <PecatDefs />
+      {natpis > 0 && <CiljPostignut key={natpis} onKraj={() => setNatpis(0)} />}
       <div className="napredak">
         <h2 id="napredak-naslov" className="traka-oznaka">Dnevni napredak</h2>
-        <div className="luk">
+        <div className={`luk${pogodjeni.kcal ? ' ispunjen' : ''}`}>
           <svg viewBox="0 0 200 108" aria-hidden>
             {/* Tečnost: zelena cev (svetlija unutra, tamnija spolja), a preko nje mehurići i odsjaj teku samo kroz ispunjeni deo (maska) */}
             <defs>
               <radialGradient id="luk-tecnost" gradientUnits="userSpaceOnUse" cx="100" cy="100" r="92.5">
-                <stop offset="0.84" stopColor="#7bd63a" />
-                <stop offset="0.93" stopColor="#389600" />
-                <stop offset="1" stopColor="#2a7400" />
+                <stop offset="0.84" style={{ stopColor: 'var(--luk-svetla)' }} />
+                <stop offset="0.93" style={{ stopColor: 'var(--luk-sredina)' }} />
+                <stop offset="1" style={{ stopColor: 'var(--luk-tamna)' }} />
               </radialGradient>
               <mask id="luk-maska" maskUnits="userSpaceOnUse">
                 <path className="luk-ispuna" d={LUK} pathLength={100} stroke="#fff" style={{ strokeDasharray: `${p * 100} 100` }} />
@@ -130,6 +171,7 @@ function Traka({ uneto, cilj }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | n
                 <small>{m.c ? ` / ${fmt(m.c)} g` : ' g'}</small>
                 {!!m.c && <span className="makro-traka" style={{ '--p': `${Math.min(m.u / m.c, 1) * 100}%` } as React.CSSProperties} aria-hidden />}
               </dd>
+              {(m.k === 'proteini' || m.k === 'masti') && pogodjeni[m.k] && <Pecat naziv={m.naziv} kasni={kasni(m.k)} />}
             </div>
           ))}
         </dl>
@@ -156,42 +198,48 @@ function Traka({ uneto, cilj }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | n
   )
 }
 
-// Komad sira u sredini luka; kad je cilj kalorija pogođen iskoči i njiše se (pokret je u dan.css).
-function Sir({ slavi }: { slavi: boolean }) {
+// Pečat "cilj pogođen": crtež je u components/Pecat, otisak pokriva celu karticu makroa.
+// kasni != null: pečat upravo udara. Alat izađe veliki na sredini ekrana, zadrži se, odleti na svoje polje i udari,
+// a otisak ostane. Bez toga (učitana strana) stoji samo otisak; uz prefers-reduced-motion se samo pojavi.
+// Put od sredine ekrana do polja zavisi od mesta na strani, pa je pokret u kodu (Web Animations), ne u CSS-u.
+function Pecat({ naziv, kasni }: { naziv: string; kasni: number | null }) {
+  const omot = useRef<HTMLSpanElement>(null)
+  useLayoutEffect(() => {
+    const alat = omot.current?.querySelector('.pecat-alat')
+    const otisak = omot.current?.querySelector('.pecat-otisak')
+    if (kasni == null || !alat || !otisak || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const a = alat.getBoundingClientRect()
+    const centar = `translate(${innerWidth / 2 - (a.left + a.width / 2)}px, ${innerHeight / 2 - (a.top + a.height / 2)}px)`
+    const s = (Math.min(innerWidth, innerHeight) * 0.5) / a.height // na sredini ekrana alat je visok pola ekrana
+    const vreme = { duration: UDAR_TRAJE, delay: kasni, fill: 'both' } as const
+    const pokreti = [
+      alat.animate([
+        { transform: `${centar} scale(${s * 0.2}) perspective(600px) rotateY(-70deg)`, opacity: 0 },
+        { transform: `${centar} scale(${s * 1.08}) perspective(600px) rotateY(12deg)`, opacity: 1, offset: 0.12, easing: 'ease-out' },
+        { transform: `${centar} scale(${s}) perspective(600px) rotateY(-22deg) rotate(-4deg)`, offset: 0.25 },
+        { transform: `${centar} scale(${s}) perspective(600px) rotateY(20deg) rotate(3deg)`, offset: 0.36 },
+        { transform: `${centar} scale(${s}) perspective(600px) rotateX(18deg)`, offset: 0.44, easing: 'cubic-bezier(0.5, 0, 0.75, 0)' },
+        { transform: 'translateY(-70%) perspective(600px) rotateX(10deg)', offset: 0.64, easing: 'cubic-bezier(0.55, 0, 1, 0.45)' },
+        { transform: 'none', offset: 0.7 },
+        { transform: 'translateY(5%) scaleY(0.86)', offset: 0.73 },
+        { transform: 'translateY(-45%)', opacity: 1, offset: 0.86 },
+        { transform: 'translateY(-110%)', opacity: 0 },
+      ], vreme),
+      otisak.animate([
+        { transform: 'scale(1.1)', opacity: 0 },
+        { transform: 'scale(1.1)', opacity: 0, offset: 0.7 },
+        { transform: 'scale(0.94)', opacity: 0.95, offset: 0.74 },
+        { transform: 'none', opacity: 0.9, offset: 0.84 },
+        { transform: 'none', opacity: 0.9 },
+      ], vreme),
+    ]
+    return () => pokreti.forEach((x) => x.cancel())
+  }, [kasni])
   return (
-    <svg className={`sir${slavi ? ' slavi' : ''}`} viewBox="0 0 64 48" width={68} height={51} {...(slavi ? { role: 'img', 'aria-label': 'Cilj kalorija pogođen' } : { 'aria-hidden': true })}>
-      <defs>
-        <linearGradient id="sir-lice" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#ffd84d" />
-          <stop offset="1" stopColor="#f6b000" />
-        </linearGradient>
-        <linearGradient id="sir-kora" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#f7a71c" />
-          <stop offset="1" stopColor="#e7860c" />
-        </linearGradient>
-      </defs>
-      <ellipse cx="32" cy="45" rx="25" ry="2.5" fill="rgb(17 19 17 / 0.14)" />
-      <g strokeLinejoin="round" strokeWidth="2">
-        <path d="M4 26 L44 10 L52 6 L12 22 Z" fill="#ffe78f" stroke="#ffe78f" />
-        <path d="M44 10 L52 6 V38 L44 42 Z" fill="url(#sir-kora)" stroke="#ee940f" />
-        <path d="M4 26 L44 10 V42 H4 Z" fill="url(#sir-lice)" stroke="#f9c21a" />
-      </g>
-      <g fill="#e39b00">
-        <ellipse cx="14" cy="34" rx="3" ry="3" />
-        <ellipse cx="27" cy="27" rx="4.5" ry="4.5" />
-        <ellipse cx="37" cy="36" rx="3.4" ry="3.4" />
-        <ellipse cx="38" cy="20" rx="2.2" ry="2.2" />
-        <ellipse cx="21" cy="38.5" rx="1.7" ry="1.7" />
-        <ellipse cx="31" cy="13.6" rx="3" ry="1.2" />
-        <ellipse cx="22" cy="18" rx="1.8" ry="0.8" />
-      </g>
-      {/* svetla ivica na dnu rupa daje dubinu */}
-      <g fill="none" stroke="#ffe27a" strokeWidth="1" strokeLinecap="round">
-        <path d="M11.5 35.5 a3 3 0 0 0 5 0" />
-        <path d="M23.2 29.5 a4.5 4.5 0 0 0 7.6 0" />
-        <path d="M34.3 37.8 a3.4 3.4 0 0 0 5.4 0" />
-      </g>
-    </svg>
+    <span ref={omot} className={`pecat${kasni != null ? ' udara' : ''}`}>
+      <PecatOtisak naziv={naziv} />
+      {kasni != null && <PecatAlat />}
+    </span>
   )
 }
 
