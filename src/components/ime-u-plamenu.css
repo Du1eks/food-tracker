@@ -6,7 +6,7 @@
    Prebojavanje: menjaju se samo promenljive ispod; podrazumevane su na :root, pa ih pregazi tema
    ili bilo koji roditelj (npr. red rang liste). */
 :root {
-  --plamen-tabla: var(--tekst, #111311);
+  --plamen-tabla: var(--crna, #050807);
   /* spoljna vatra, od dna (uz tablu) do vrhova jezika; žar i sjaj table */
   --vatra-spolja-1: #ffd54a; --vatra-spolja-2: #ffc02e; --vatra-spolja-3: #ff8f16; --vatra-spolja-4: #f2560c; --vatra-spolja-5: #c41c04;
   --zar-spolja: rgb(255 122 18 / 0.75); --sjaj-spolja: rgb(226 56 11 / 0.55);

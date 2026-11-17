@@ -15,10 +15,10 @@
 
 .cp-tekst {
   margin: 0; padding: 0 16px; text-align: center; text-wrap: balance;
-  font-weight: 900; font-size: clamp(52px, 12vw, 128px); line-height: 0.95; letter-spacing: -0.03em;
+  font-family: var(--font-d); font-weight: 400; font-size: clamp(48px, 11vw, 120px); line-height: 0.95;
   /* puna zlatna slova sa crnim obrisom i tvrdom senkom, kao natpis na tabli */
-  color: var(--cp-zlato); -webkit-text-stroke: 3px var(--tekst); paint-order: stroke fill;
-  filter: drop-shadow(0 6px 0 var(--tekst)) drop-shadow(0 14px 24px rgb(17 19 17 / 0.35));
+  color: var(--cp-zlato); -webkit-text-stroke: 3px var(--crna); paint-order: stroke fill;
+  filter: drop-shadow(0 10px 18px rgb(0 0 0 / 0.7)) drop-shadow(0 0 30px rgb(255 194 26 / 0.55));
 }
 .cp-zraci {
   width: min(160vmax, 1600px); aspect-ratio: 1; border-radius: 50%;

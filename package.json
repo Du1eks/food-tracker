@@ -12,7 +12,9 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@fontsource-variable/chivo": "^5.3.0",
     "@fontsource-variable/source-sans-3": "^5.3.1",
+    "@fontsource/bungee": "^5.3.0",
     "@masko/player": "^0.1.17",
     "@supabase/supabase-js": "^2.118.0",
     "canvas-confetti": "^1.9.4",

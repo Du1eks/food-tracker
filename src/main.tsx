@@ -1,7 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
-import '@fontsource-variable/source-sans-3'
+import '@fontsource/bungee'
+import '@fontsource-variable/chivo'
 import './index.css'
 import App from './App.tsx'
 

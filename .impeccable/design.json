@@ -1,187 +1,322 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-03T00:00:00Z",
+  "generatedAt": "2026-11-17T11:58:53.569Z",
   "title": "Design System: Mouse's tracker",
   "extensions": {
     "colorMeta": {
       "zelena": {
         "role": "primary",
-        "displayName": "Signalna zelena",
-        "canonical": "oklch(59.3% 0.185 139)",
+        "displayName": "Neon tečnost",
+        "canonical": "oklch(90.0% 0.226 138)",
         "tonalRamp": [
-          "oklch(15% 0.160 139)",
-          "oklch(26% 0.160 139)",
-          "oklch(38% 0.160 139)",
-          "oklch(49% 0.160 139)",
-          "oklch(61% 0.160 139)",
-          "oklch(72% 0.160 139)",
-          "oklch(84% 0.160 139)",
-          "oklch(95% 0.160 139)"
+          "oklch(15% 0.160 138)",
+          "oklch(26% 0.160 138)",
+          "oklch(38% 0.160 138)",
+          "oklch(49% 0.160 138)",
+          "oklch(61% 0.160 138)",
+          "oklch(72% 0.160 138)",
+          "oklch(84% 0.160 138)",
+          "oklch(95% 0.160 138)"
+        ]
+      },
+      "zelena-jaca": {
+        "role": "primary",
+        "displayName": "Neon hover",
+        "canonical": "oklch(91.7% 0.180 137)",
+        "tonalRamp": [
+          "oklch(15% 0.160 137)",
+          "oklch(26% 0.160 137)",
+          "oklch(38% 0.160 137)",
+          "oklch(49% 0.160 137)",
+          "oklch(61% 0.160 137)",
+          "oklch(72% 0.160 137)",
+          "oklch(84% 0.160 137)",
+          "oklch(95% 0.160 137)"
+        ]
+      },
+      "zelena-duboka": {
+        "role": "primary",
+        "displayName": "Dno tečnosti",
+        "canonical": "oklch(75.9% 0.228 140)",
+        "tonalRamp": [
+          "oklch(15% 0.160 140)",
+          "oklch(26% 0.160 140)",
+          "oklch(38% 0.160 140)",
+          "oklch(49% 0.160 140)",
+          "oklch(61% 0.160 140)",
+          "oklch(72% 0.160 140)",
+          "oklch(84% 0.160 140)",
+          "oklch(95% 0.160 140)"
+        ]
+      },
+      "na-neonu": {
+        "role": "primary",
+        "displayName": "Tamno na neonu",
+        "canonical": "oklch(16.6% 0.031 144)",
+        "tonalRamp": [
+          "oklch(15% 0.031 144)",
+          "oklch(26% 0.031 144)",
+          "oklch(38% 0.031 144)",
+          "oklch(49% 0.031 144)",
+          "oklch(61% 0.031 144)",
+          "oklch(72% 0.031 144)",
+          "oklch(84% 0.031 144)",
+          "oklch(95% 0.031 144)"
         ]
       },
       "svetlozelena": {
         "role": "neutral",
         "displayName": "Svetlozelena",
-        "canonical": "oklch(86.6% 0.056 137)",
+        "canonical": "oklch(47.0% 0.129 139)",
         "tonalRamp": [
-          "oklch(15% 0.056 137)",
-          "oklch(26% 0.056 137)",
-          "oklch(38% 0.056 137)",
-          "oklch(49% 0.056 137)",
-          "oklch(61% 0.056 137)",
-          "oklch(72% 0.056 137)",
-          "oklch(84% 0.056 137)",
-          "oklch(95% 0.056 137)"
+          "oklch(15% 0.129 139)",
+          "oklch(26% 0.129 139)",
+          "oklch(38% 0.129 139)",
+          "oklch(49% 0.129 139)",
+          "oklch(61% 0.129 139)",
+          "oklch(72% 0.129 139)",
+          "oklch(84% 0.129 139)",
+          "oklch(95% 0.129 139)"
         ]
       },
       "mint": {
         "role": "neutral",
         "displayName": "Mint",
-        "canonical": "oklch(95.4% 0.027 170)",
+        "canonical": "oklch(26.8% 0.026 162)",
         "tonalRamp": [
-          "oklch(15% 0.027 170)",
-          "oklch(26% 0.027 170)",
-          "oklch(38% 0.027 170)",
-          "oklch(49% 0.027 170)",
-          "oklch(61% 0.027 170)",
-          "oklch(72% 0.027 170)",
-          "oklch(84% 0.027 170)",
-          "oklch(95% 0.027 170)"
+          "oklch(15% 0.026 162)",
+          "oklch(26% 0.026 162)",
+          "oklch(38% 0.026 162)",
+          "oklch(49% 0.026 162)",
+          "oklch(61% 0.026 162)",
+          "oklch(72% 0.026 162)",
+          "oklch(84% 0.026 162)",
+          "oklch(95% 0.026 162)"
         ]
       },
       "pozadina": {
         "role": "neutral",
-        "displayName": "Podloga",
-        "canonical": "oklch(93.9% 0.016 154)",
+        "displayName": "Laboratorijski sto",
+        "canonical": "oklch(16.7% 0.009 169)",
         "tonalRamp": [
-          "oklch(15% 0.016 154)",
-          "oklch(26% 0.016 154)",
-          "oklch(38% 0.016 154)",
-          "oklch(49% 0.016 154)",
-          "oklch(61% 0.016 154)",
-          "oklch(72% 0.016 154)",
-          "oklch(84% 0.016 154)",
-          "oklch(95% 0.016 154)"
+          "oklch(15% 0.009 169)",
+          "oklch(26% 0.009 169)",
+          "oklch(38% 0.009 169)",
+          "oklch(49% 0.009 169)",
+          "oklch(61% 0.009 169)",
+          "oklch(72% 0.009 169)",
+          "oklch(84% 0.009 169)",
+          "oklch(95% 0.009 169)"
         ]
       },
       "spolja": {
         "role": "neutral",
-        "displayName": "Spoljna siva",
-        "canonical": "oklch(88.8% 0.010 155)",
+        "displayName": "Spoljna",
+        "canonical": "oklch(29.8% 0.023 168)",
         "tonalRamp": [
-          "oklch(15% 0.010 155)",
-          "oklch(26% 0.010 155)",
-          "oklch(38% 0.010 155)",
-          "oklch(49% 0.010 155)",
-          "oklch(61% 0.010 155)",
-          "oklch(72% 0.010 155)",
-          "oklch(84% 0.010 155)",
-          "oklch(95% 0.010 155)"
+          "oklch(15% 0.023 168)",
+          "oklch(26% 0.023 168)",
+          "oklch(38% 0.023 168)",
+          "oklch(49% 0.023 168)",
+          "oklch(61% 0.023 168)",
+          "oklch(72% 0.023 168)",
+          "oklch(84% 0.023 168)",
+          "oklch(95% 0.023 168)"
+        ]
+      },
+      "ivica": {
+        "role": "neutral",
+        "displayName": "Staklena ivica",
+        "canonical": "oklch(40.4% 0.044 156)",
+        "tonalRamp": [
+          "oklch(15% 0.044 156)",
+          "oklch(26% 0.044 156)",
+          "oklch(38% 0.044 156)",
+          "oklch(49% 0.044 156)",
+          "oklch(61% 0.044 156)",
+          "oklch(72% 0.044 156)",
+          "oklch(84% 0.044 156)",
+          "oklch(95% 0.044 156)"
         ]
       },
       "bela": {
         "role": "neutral",
-        "displayName": "Bela",
-        "canonical": "oklch(100.0% 0.000 90)",
+        "displayName": "Ploča",
+        "canonical": "oklch(20.9% 0.013 170)",
         "tonalRamp": [
-          "oklch(15% 0.000 90)",
-          "oklch(26% 0.000 90)",
-          "oklch(38% 0.000 90)",
-          "oklch(49% 0.000 90)",
-          "oklch(61% 0.000 90)",
-          "oklch(72% 0.000 90)",
-          "oklch(84% 0.000 90)",
-          "oklch(95% 0.000 90)"
+          "oklch(15% 0.013 170)",
+          "oklch(26% 0.013 170)",
+          "oklch(38% 0.013 170)",
+          "oklch(49% 0.013 170)",
+          "oklch(61% 0.013 170)",
+          "oklch(72% 0.013 170)",
+          "oklch(84% 0.013 170)",
+          "oklch(95% 0.013 170)"
+        ]
+      },
+      "ploca-2": {
+        "role": "neutral",
+        "displayName": "Druga ploča",
+        "canonical": "oklch(24.1% 0.016 169)",
+        "tonalRamp": [
+          "oklch(15% 0.016 169)",
+          "oklch(26% 0.016 169)",
+          "oklch(38% 0.016 169)",
+          "oklch(49% 0.016 169)",
+          "oklch(61% 0.016 169)",
+          "oklch(72% 0.016 169)",
+          "oklch(84% 0.016 169)",
+          "oklch(95% 0.016 169)"
+        ]
+      },
+      "crna": {
+        "role": "neutral",
+        "displayName": "Najdublja tama",
+        "canonical": "oklch(12.9% 0.007 175)",
+        "tonalRamp": [
+          "oklch(15% 0.007 175)",
+          "oklch(26% 0.007 175)",
+          "oklch(38% 0.007 175)",
+          "oklch(49% 0.007 175)",
+          "oklch(61% 0.007 175)",
+          "oklch(72% 0.007 175)",
+          "oklch(84% 0.007 175)",
+          "oklch(95% 0.007 175)"
         ]
       },
       "tekst": {
         "role": "neutral",
-        "displayName": "Crna table",
-        "canonical": "oklch(18.4% 0.005 145)",
+        "displayName": "Svetao tekst",
+        "canonical": "oklch(95.4% 0.014 162)",
         "tonalRamp": [
-          "oklch(15% 0.005 145)",
-          "oklch(26% 0.005 145)",
-          "oklch(38% 0.005 145)",
-          "oklch(49% 0.005 145)",
-          "oklch(61% 0.005 145)",
-          "oklch(72% 0.005 145)",
-          "oklch(84% 0.005 145)",
-          "oklch(95% 0.005 145)"
+          "oklch(15% 0.014 162)",
+          "oklch(26% 0.014 162)",
+          "oklch(38% 0.014 162)",
+          "oklch(49% 0.014 162)",
+          "oklch(61% 0.014 162)",
+          "oklch(72% 0.014 162)",
+          "oklch(84% 0.014 162)",
+          "oklch(95% 0.014 162)"
         ]
       },
       "sivi": {
         "role": "neutral",
-        "displayName": "Siva iz palete",
-        "canonical": "oklch(61.2% 0.008 145)",
+        "displayName": "Siva",
+        "canonical": "oklch(59.6% 0.030 166)",
         "tonalRamp": [
-          "oklch(15% 0.008 145)",
-          "oklch(26% 0.008 145)",
-          "oklch(38% 0.008 145)",
-          "oklch(49% 0.008 145)",
-          "oklch(61% 0.008 145)",
-          "oklch(72% 0.008 145)",
-          "oklch(84% 0.008 145)",
-          "oklch(95% 0.008 145)"
+          "oklch(15% 0.030 166)",
+          "oklch(26% 0.030 166)",
+          "oklch(38% 0.030 166)",
+          "oklch(49% 0.030 166)",
+          "oklch(61% 0.030 166)",
+          "oklch(72% 0.030 166)",
+          "oklch(84% 0.030 166)",
+          "oklch(95% 0.030 166)"
         ]
       },
       "sivi-tekst": {
         "role": "neutral",
-        "displayName": "Tamnija siva za tekst",
-        "canonical": "oklch(48.4% 0.008 145)",
+        "displayName": "Siva za tekst",
+        "canonical": "oklch(71.5% 0.028 166)",
         "tonalRamp": [
-          "oklch(15% 0.008 145)",
-          "oklch(26% 0.008 145)",
-          "oklch(38% 0.008 145)",
-          "oklch(49% 0.008 145)",
-          "oklch(61% 0.008 145)",
-          "oklch(72% 0.008 145)",
-          "oklch(84% 0.008 145)",
-          "oklch(95% 0.008 145)"
+          "oklch(15% 0.028 166)",
+          "oklch(26% 0.028 166)",
+          "oklch(38% 0.028 166)",
+          "oklch(49% 0.028 166)",
+          "oklch(61% 0.028 166)",
+          "oklch(72% 0.028 166)",
+          "oklch(84% 0.028 166)",
+          "oklch(95% 0.028 166)"
         ]
       },
       "greska": {
         "role": "error",
         "displayName": "Greška",
-        "canonical": "oklch(50.1% 0.178 29)",
+        "canonical": "oklch(71.2% 0.181 23)",
         "tonalRamp": [
-          "oklch(15% 0.160 29)",
-          "oklch(26% 0.160 29)",
-          "oklch(38% 0.160 29)",
-          "oklch(49% 0.160 29)",
-          "oklch(61% 0.160 29)",
-          "oklch(72% 0.160 29)",
-          "oklch(84% 0.160 29)",
-          "oklch(95% 0.160 29)"
+          "oklch(15% 0.160 23)",
+          "oklch(26% 0.160 23)",
+          "oklch(38% 0.160 23)",
+          "oklch(49% 0.160 23)",
+          "oklch(61% 0.160 23)",
+          "oklch(72% 0.160 23)",
+          "oklch(84% 0.160 23)",
+          "oklch(95% 0.160 23)"
         ]
       },
       "greska-bg": {
         "role": "error",
         "displayName": "Pozadina greške",
-        "canonical": "oklch(95.6% 0.019 22)",
+        "canonical": "oklch(25.1% 0.061 22)",
         "tonalRamp": [
-          "oklch(15% 0.019 22)",
-          "oklch(26% 0.019 22)",
-          "oklch(38% 0.019 22)",
-          "oklch(49% 0.019 22)",
-          "oklch(61% 0.019 22)",
-          "oklch(72% 0.019 22)",
-          "oklch(84% 0.019 22)",
-          "oklch(95% 0.019 22)"
+          "oklch(15% 0.061 22)",
+          "oklch(26% 0.061 22)",
+          "oklch(38% 0.061 22)",
+          "oklch(49% 0.061 22)",
+          "oklch(61% 0.061 22)",
+          "oklch(72% 0.061 22)",
+          "oklch(84% 0.061 22)",
+          "oklch(95% 0.061 22)"
+        ]
+      },
+      "proteini-boja": {
+        "role": "secondary",
+        "displayName": "Tečnost proteina",
+        "canonical": "oklch(78.1% 0.135 232)",
+        "tonalRamp": [
+          "oklch(15% 0.135 232)",
+          "oklch(26% 0.135 232)",
+          "oklch(38% 0.135 232)",
+          "oklch(49% 0.135 232)",
+          "oklch(61% 0.135 232)",
+          "oklch(72% 0.135 232)",
+          "oklch(84% 0.135 232)",
+          "oklch(95% 0.135 232)"
+        ]
+      },
+      "uh-boja": {
+        "role": "secondary",
+        "displayName": "Tečnost ugljenih hidrata",
+        "canonical": "oklch(89.1% 0.159 93)",
+        "tonalRamp": [
+          "oklch(15% 0.159 93)",
+          "oklch(26% 0.159 93)",
+          "oklch(38% 0.159 93)",
+          "oklch(49% 0.159 93)",
+          "oklch(61% 0.159 93)",
+          "oklch(72% 0.159 93)",
+          "oklch(84% 0.159 93)",
+          "oklch(95% 0.159 93)"
+        ]
+      },
+      "masti-boja": {
+        "role": "secondary",
+        "displayName": "Tečnost masti",
+        "canonical": "oklch(75.8% 0.163 53)",
+        "tonalRamp": [
+          "oklch(15% 0.160 53)",
+          "oklch(26% 0.160 53)",
+          "oklch(38% 0.160 53)",
+          "oklch(49% 0.160 53)",
+          "oklch(61% 0.160 53)",
+          "oklch(72% 0.160 53)",
+          "oklch(84% 0.160 53)",
+          "oklch(95% 0.160 53)"
         ]
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Ostatak kcal u traci; naslov ekrana prijave i broj na profilu prijatelja u široj skali."
-      },
-      "figure": {
-        "displayName": "Figure",
-        "purpose": "Makrosi u traci i zbirovi; broj mesta u rangu."
+        "purpose": "Uneti kcal na početnoj (neon, sjaj); šire na prijavi, u kartici jela i natpisu cilja."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Datum ili naslov ekrana u redu ispod trake."
+        "purpose": "Naslov strane; Bungee nose i ime u traci, mesec, broj dana, kcal u kalendaru i zbir dana."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Vrednost u kartici makroa, tabularno."
       },
       "title": {
         "displayName": "Title",
@@ -189,7 +324,7 @@
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Tekst i vrednosti u tabeli."
+        "purpose": "Tekst; polja i tabela 17px."
       },
       "label": {
         "displayName": "Label",
@@ -197,49 +332,83 @@
       },
       "column-head": {
         "displayName": "Column head",
-        "purpose": "Samo zaglavlja kolona tabele i dana u kalendaru, verzal."
+        "purpose": "Zaglavlja kolona tabele, dani u kalendaru i grafiku, verzal."
       }
     },
     "shadows": [
       {
         "name": "senka",
-        "value": "0 6px 18px -8px rgb(17 19 17 / 0.28)",
-        "purpose": "Paneli, tabela dana, forma prijave, polje ranga, dani kalendara sa unosom."
+        "value": "inset 0 1px 0 rgb(255 255 255 / 0.04), 0 20px 40px -24px rgb(0 0 0 / 0.8)",
+        "purpose": "Ploče: paneli, tabela, kartice makroa, polja kalendara, forma prijave, rang."
       },
       {
-        "name": "senka-trake",
-        "value": "0 8px 20px -14px rgb(17 19 17 / 0.6)",
-        "purpose": "Samo lepljiva traka ostatka."
+        "name": "sjaj",
+        "value": "0 4px 24px -6px rgb(140 255 90 / 0.6)",
+        "purpose": "Glavno dugme, Popuni profil, etiketa loga, poziv Laboratorije na hover."
+      },
+      {
+        "name": "sjaj-tecnosti",
+        "value": "0 0 40px rgb(140 255 90 / 0.7), inset -6px 0 12px rgb(255 255 255 / 0.35)",
+        "purpose": "Tečnost u epruveti (zlatna: rgb(255 194 26 / 0.7))."
+      },
+      {
+        "name": "sjaj-broja",
+        "value": "text-shadow: 0 0 30px rgb(140 255 90 / 0.5)",
+        "purpose": "Neon kcal, naslov prijave, zbir dana, kcal jela."
       },
       {
         "name": "fokus",
-        "value": "outline: 3px solid #111311; outline-offset: 2px",
-        "purpose": "Globalni fokus; na crnim površinama obris je svetlozelen."
+        "value": "outline: 2px solid #8cff5a; outline-offset: 2px",
+        "purpose": "Globalni fokus."
       },
       {
         "name": "fokus-polja",
-        "value": "0 0 0 3px #c2dcb8",
-        "purpose": "Fokus polja unosa (bez obrisa)."
+        "value": "0 0 0 3px rgb(140 255 90 / 0.22)",
+        "purpose": "Fokus polja unosa, uz neon ivicu."
       }
     ],
     "motion": [
       {
-        "name": "ease-tabla",
+        "name": "ease-lab",
         "value": "cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "Preispis brojke (520ms), otkrivanje natpisa ranga (450ms), puls tačke profila (1.6s)."
+        "purpose": "Preklop brojke, rast tečnosti, ulaz miša sa ivice, oblačić, puls tačke."
       },
       {
         "name": "preklop",
         "value": "520ms",
-        "purpose": "Brojka u traci se preispiše kao tabla: clip-path odozgo, -0.18em, blur 2px."
+        "purpose": "Brojka se preispiše: clip-path odozgo, -0.18em, blur 2px."
       },
       {
-        "name": "disanje",
-        "value": "3.4s ease-in-out infinite",
-        "purpose": "Blago disanje maskote (scaleY 1.025)."
+        "name": "rast-tecnosti",
+        "value": "1.4s",
+        "purpose": "Širina tečnosti i položaj procenta posle unosa."
+      },
+      {
+        "name": "mehur",
+        "value": "linear infinite, translateY(-120px)",
+        "purpose": "Mehurići u epruveti; u boci 1.6s."
+      },
+      {
+        "name": "viri",
+        "value": "700ms posle 600ms; glava 5s ease-in-out infinite",
+        "purpose": "Miš sa ivice ulazi i nakrivi glavu."
+      },
+      {
+        "name": "iskok",
+        "value": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "purpose": "Sir, pojava Masko miša (650ms), plaženje jezika."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "@media (prefers-reduced-motion: no-preference)",
+        "purpose": "Svaki pokret je samo ovde; uz reduce sve stoji, živi miš je slika."
       }
     ],
     "breakpoints": [
+      {
+        "name": "usko",
+        "value": "520px"
+      },
       {
         "name": "telefon",
         "value": "640px"
@@ -247,43 +416,14 @@
       {
         "name": "jedna-kolona",
         "value": "960px"
-      }
-    ],
-    "assets": [
-      {
-        "path": "public/maskota/jede.webp",
-        "kind": "raster",
-        "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
       },
       {
-        "path": "public/maskota/hoda.webp",
-        "kind": "raster",
-        "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
+        "name": "racunar",
+        "value": "961px"
       },
       {
-        "path": "public/maskota/slavi.webp",
-        "kind": "raster",
-        "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
-      },
-      {
-        "path": "public/maskota/cilj.webp",
-        "kind": "raster",
-        "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
-      },
-      {
-        "path": "public/maskota/logo.png",
-        "kind": "raster",
-        "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
-      },
-      {
-        "path": "public/maskota/logo-ikona.png",
-        "kind": "raster",
-        "provenance": "supplied by the project owner, commit 8a33656, 2026-11-02, generator and licence not recorded"
-      },
-      {
-        "path": "public/favicon.svg",
-        "kind": "vector",
-        "provenance": "napravljen u projektu (commit a4dbc2b): crna pločica, zeleni pano, crna strelica"
+        "name": "prijava-siroko",
+        "value": "1100px"
       }
     ]
   },
@@ -292,139 +432,140 @@
       "name": "Glavno dugme",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Jedina glavna akcija ekrana (Dodaj, Sačuvaj, Prijavi se): zelena, crni tekst, strelica zaključana desno.",
-      "html": "<button class=\"ds-dugme ds-glavno\">Dodaj<span class=\"ds-plocica\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></span></button>",
-      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-plocica{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:4px;background:var(--tekst);color:var(--bela)}.ds-dugme{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:0 6px 0 16px;border-radius:var(--r);border:var(--okvir);background:var(--bela);color:var(--tekst);cursor:pointer;font:inherit;font-weight:700;font-size:17px}.ds-dugme .ds-plocica{width:36px;height:36px}.ds-dugme:hover{background:var(--mint)}.ds-dugme:focus-visible{outline:3px solid var(--tekst);outline-offset:2px}.ds-glavno{background:var(--zelena);font-size:20px;font-weight:800;min-height:56px;min-width:280px}.ds-glavno:hover{background:#3fa800}.ds-dugme:disabled{opacity:.5;cursor:not-allowed}"
+      "description": "Jedina glavna akcija ekrana: neon, tamni tekst, neon sjaj, tamna pločica sa strelicom zaključana desno.",
+      "html": "<button class=\"ds-dugme ds-glavno\">Pročitaj<span class=\"ds-plocica\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></span></button>",
+      "css": ":host{color-scheme:dark;--zelena:#8cff5a;--zelena-jaca:#a8ff82;--na-neonu:#061206;--mint:#1a2a22;--pozadina:#0b100e;--spolja:#22312b;--bela:#121a17;--crna:#050807;--tekst:#e8f3ed;--sivi:#6f857b;--sivi-tekst:#93a99f;--r:12px;--okvir:1.5px solid #35503f;--senka:inset 0 1px 0 rgb(255 255 255 / .04),0 20px 40px -24px rgb(0 0 0 / .8);--sjaj:0 4px 24px -6px rgb(140 255 90 / .6);font-family:'Chivo Variable','Chivo',system-ui,sans-serif;color:var(--tekst)}.ds-plocica{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:8px;background:var(--zelena);color:var(--na-neonu)}.ds-dugme{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:0 6px 0 16px;border-radius:var(--r);border:var(--okvir);background:var(--bela);color:var(--tekst);cursor:pointer;font:inherit;font-weight:700;font-size:17px}.ds-dugme .ds-plocica{width:36px;height:36px}.ds-dugme:hover{background:var(--mint)}.ds-dugme:focus-visible{outline:2px solid var(--zelena);outline-offset:2px}.ds-dugme:disabled{opacity:.5;cursor:not-allowed}.ds-glavno{background:var(--zelena);color:var(--na-neonu);border-color:var(--zelena);font-size:20px;font-weight:800;min-height:56px;min-width:280px;box-shadow:var(--sjaj)}.ds-glavno .ds-plocica{background:var(--na-neonu);color:var(--zelena)}.ds-glavno:hover{background:var(--zelena-jaca)}"
     },
     {
       "name": "Sekundarno dugme",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Bela kontrola sa crnim okvirom 2px za sporedne akcije.",
-      "html": "<button class=\"ds-dugme\">Uzmi izračunato</button>",
-      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-plocica{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:4px;background:var(--tekst);color:var(--bela)}.ds-dugme{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:0 6px 0 16px;border-radius:var(--r);border:var(--okvir);background:var(--bela);color:var(--tekst);cursor:pointer;font:inherit;font-weight:700;font-size:17px}.ds-dugme .ds-plocica{width:36px;height:36px}.ds-dugme:hover{background:var(--mint)}.ds-dugme:focus-visible{outline:3px solid var(--tekst);outline-offset:2px}"
+      "description": "Ploča sa staklenom ivicom za sporedne akcije; hover mint.",
+      "html": "<button class=\"ds-dugme\">Dodaj u jelo</button>",
+      "css": ":host{color-scheme:dark;--zelena:#8cff5a;--zelena-jaca:#a8ff82;--na-neonu:#061206;--mint:#1a2a22;--pozadina:#0b100e;--spolja:#22312b;--bela:#121a17;--crna:#050807;--tekst:#e8f3ed;--sivi:#6f857b;--sivi-tekst:#93a99f;--r:12px;--okvir:1.5px solid #35503f;--senka:inset 0 1px 0 rgb(255 255 255 / .04),0 20px 40px -24px rgb(0 0 0 / .8);--sjaj:0 4px 24px -6px rgb(140 255 90 / .6);font-family:'Chivo Variable','Chivo',system-ui,sans-serif;color:var(--tekst)}.ds-dugme{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:0 6px 0 16px;border-radius:var(--r);border:var(--okvir);background:var(--bela);color:var(--tekst);cursor:pointer;font:inherit;font-weight:700;font-size:17px}.ds-dugme .ds-plocica{width:36px;height:36px}.ds-dugme:hover{background:var(--mint)}.ds-dugme:focus-visible{outline:2px solid var(--zelena);outline-offset:2px}.ds-dugme:disabled{opacity:.5;cursor:not-allowed}"
     },
     {
       "name": "Tiho dugme",
       "kind": "button",
       "refersTo": "button-quiet",
-      "description": "Bez okvira i pozadine: povratak, zaboravljena lozinka, odjava.",
+      "description": "Bez ivice i pozadine: povratak, zaboravljena lozinka, odjava.",
       "html": "<button class=\"ds-tiho\">Nazad na danas</button>",
-      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-tiho{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 12px;border:2px solid transparent;border-radius:var(--r);background:transparent;color:var(--tekst);font:inherit;font-weight:700;font-size:17px;cursor:pointer}.ds-tiho:hover{background:var(--spolja)}.ds-tiho:focus-visible{outline:3px solid var(--tekst);outline-offset:2px}"
+      "css": ":host{color-scheme:dark;--zelena:#8cff5a;--zelena-jaca:#a8ff82;--na-neonu:#061206;--mint:#1a2a22;--pozadina:#0b100e;--spolja:#22312b;--bela:#121a17;--crna:#050807;--tekst:#e8f3ed;--sivi:#6f857b;--sivi-tekst:#93a99f;--r:12px;--okvir:1.5px solid #35503f;--senka:inset 0 1px 0 rgb(255 255 255 / .04),0 20px 40px -24px rgb(0 0 0 / .8);--sjaj:0 4px 24px -6px rgb(140 255 90 / .6);font-family:'Chivo Variable','Chivo',system-ui,sans-serif;color:var(--tekst)}.ds-tiho{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 12px;border:0;border-radius:var(--r);background:transparent;color:var(--tekst);font:inherit;font-weight:700;font-size:17px;cursor:pointer}.ds-tiho:hover{background:var(--spolja)}.ds-tiho:focus-visible{outline:2px solid var(--zelena);outline-offset:2px}"
     },
     {
       "name": "Polje unosa",
       "kind": "input",
       "refersTo": "input",
-      "description": "Oznaka iznad, bela kontrola sa okvirom 2px, fokus svetlozeleni prsten.",
+      "description": "Oznaka iznad, najtamnija površina, fokus neon ivica i prsten.",
       "html": "<label class=\"ds-polje\"><span>Količina (g)</span><input class=\"ds-unos\" placeholder=\"npr. 150\"></label>",
-      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-polje{display:grid;gap:6px;max-width:320px}.ds-polje>span{font-size:14px;font-weight:600;color:var(--sivi-tekst)}.ds-unos{height:48px;width:100%;padding:0 14px;border:var(--okvir);border-radius:var(--r);background:var(--bela);font:inherit;font-size:17px;color:var(--tekst);caret-color:var(--zelena);box-sizing:border-box}.ds-unos::placeholder{color:var(--sivi-tekst)}.ds-unos:focus-visible{outline:none;box-shadow:0 0 0 3px var(--svetlozelena)}"
+      "css": ":host{color-scheme:dark;--zelena:#8cff5a;--zelena-jaca:#a8ff82;--na-neonu:#061206;--mint:#1a2a22;--pozadina:#0b100e;--spolja:#22312b;--bela:#121a17;--crna:#050807;--tekst:#e8f3ed;--sivi:#6f857b;--sivi-tekst:#93a99f;--r:12px;--okvir:1.5px solid #35503f;--senka:inset 0 1px 0 rgb(255 255 255 / .04),0 20px 40px -24px rgb(0 0 0 / .8);--sjaj:0 4px 24px -6px rgb(140 255 90 / .6);font-family:'Chivo Variable','Chivo',system-ui,sans-serif;color:var(--tekst)}.ds-polje{display:grid;gap:6px;max-width:320px}.ds-polje>span{font-size:14px;font-weight:600;color:var(--sivi-tekst)}.ds-unos{height:48px;width:100%;padding:0 14px;border:var(--okvir);border-radius:var(--r);background:#0a0f0d;font:inherit;font-size:17px;color:var(--tekst);caret-color:var(--zelena);box-sizing:border-box}.ds-unos::placeholder{color:var(--sivi)}.ds-unos:focus-visible{outline:none;border-color:var(--zelena);box-shadow:0 0 0 3px rgb(140 255 90 / .22)}"
     },
     {
       "name": "Segment",
       "kind": "chip",
       "refersTo": "segment-active",
-      "description": "Izbor jedne opcije; izabrana je crna.",
+      "description": "Izbor jedne opcije; izabrana je neon sa tamnim tekstom.",
       "html": "<div class=\"ds-segment\"><label><input type=\"radio\" name=\"c\"><span>Smršati</span></label><label><input type=\"radio\" name=\"c\"><span>Održavati</span></label><label><input type=\"radio\" name=\"c\" checked><span>Bulk</span></label></div>",
-      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-segment{display:flex;border:var(--okvir);border-radius:var(--r);overflow:hidden;max-width:360px}.ds-segment label{flex:1;cursor:pointer}.ds-segment input{position:absolute;opacity:0;pointer-events:none}.ds-segment span{display:block;padding:10px 8px;text-align:center;font-weight:600;border-right:var(--okvir)}.ds-segment label:last-child span{border-right:0}.ds-segment input:checked+span{background:var(--tekst);color:var(--bela)}.ds-segment input:focus-visible+span{box-shadow:inset 0 0 0 3px var(--svetlozelena)}"
+      "css": ":host{color-scheme:dark;--zelena:#8cff5a;--zelena-jaca:#a8ff82;--na-neonu:#061206;--mint:#1a2a22;--pozadina:#0b100e;--spolja:#22312b;--bela:#121a17;--crna:#050807;--tekst:#e8f3ed;--sivi:#6f857b;--sivi-tekst:#93a99f;--r:12px;--okvir:1.5px solid #35503f;--senka:inset 0 1px 0 rgb(255 255 255 / .04),0 20px 40px -24px rgb(0 0 0 / .8);--sjaj:0 4px 24px -6px rgb(140 255 90 / .6);font-family:'Chivo Variable','Chivo',system-ui,sans-serif;color:var(--tekst)}.ds-segment{display:flex;border:var(--okvir);border-radius:var(--r);overflow:hidden;max-width:360px}.ds-segment label{flex:1;cursor:pointer}.ds-segment input{position:absolute;opacity:0;pointer-events:none}.ds-segment span{display:block;padding:10px 8px;text-align:center;font-weight:600;border-right:var(--okvir)}.ds-segment label:last-child span{border-right:0}.ds-segment input:checked+span{background:var(--zelena);color:var(--na-neonu)}.ds-segment input:focus-visible+span{box-shadow:inset 0 0 0 3px var(--zelena)}"
     },
     {
       "name": "Gornja traka",
       "kind": "nav",
       "refersTo": "top-bar",
-      "description": "Crna traka 56px: ime levo, svetle pločice; crvena tačka dok profil nije popunjen.",
-      "html": "<header class=\"ds-gornja\"><a href=\"#\" class=\"ds-ime\">Mouse's tracker</a><a href=\"#\" class=\"ds-plocica ds-svetla\" aria-label=\"Kalendar\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M16 2v4M8 2v4M3 10h18\"/></svg></a><a href=\"#\" class=\"ds-plocica ds-svetla ds-profil\" aria-label=\"Profil, nije popunjen\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"5\"/><path d=\"M20 21a8 8 0 0 0-16 0\"/></svg><span class=\"ds-tacka\"></span></a></header>",
-      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-plocica{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:4px;background:var(--tekst);color:var(--bela)}.ds-gornja{height:56px;background:var(--tekst);color:var(--bela);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 24px}.ds-ime{color:inherit;font-weight:800;font-size:18px;text-decoration:none}.ds-gornja .ds-plocica{width:38px;height:38px}.ds-svetla{background:var(--bela);color:var(--tekst)}.ds-svetla:hover{background:var(--svetlozelena)}.ds-gornja :focus-visible{outline:3px solid var(--svetlozelena);outline-offset:2px}.ds-profil{position:relative;justify-self:end}.ds-tacka{position:absolute;top:-4px;right:-4px;width:14px;height:14px;border-radius:50%;background:#b3261e;border:2px solid var(--tekst)}"
+      "description": "Najdublja tama 60px: ime u Bungee-ju, tihe pločice; aktivna stranica svetli neonom.",
+      "html": "<header class=\"ds-gornja\"><a href=\"#\" class=\"ds-ime\">Mouse's tracker</a><nav class=\"ds-desno\"><a href=\"#\" class=\"ds-pl\" aria-current=\"page\" aria-label=\"Kalendar\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M16 2v4M8 2v4M3 10h18\"/></svg></a><a href=\"#\" class=\"ds-pl\" aria-label=\"Profil\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"5\"/><path d=\"M20 21a8 8 0 0 0-16 0\"/></svg></a></nav></header>",
+      "css": ":host{color-scheme:dark;--zelena:#8cff5a;--zelena-jaca:#a8ff82;--na-neonu:#061206;--mint:#1a2a22;--pozadina:#0b100e;--spolja:#22312b;--bela:#121a17;--crna:#050807;--tekst:#e8f3ed;--sivi:#6f857b;--sivi-tekst:#93a99f;--r:12px;--okvir:1.5px solid #35503f;--senka:inset 0 1px 0 rgb(255 255 255 / .04),0 20px 40px -24px rgb(0 0 0 / .8);--sjaj:0 4px 24px -6px rgb(140 255 90 / .6);font-family:'Chivo Variable','Chivo',system-ui,sans-serif;color:var(--tekst)}.ds-gornja{height:60px;background:var(--crna);border-bottom:1px solid var(--spolja);display:flex;align-items:center;justify-content:space-between;padding:0 24px}.ds-ime{color:inherit;font-family:'Bungee','Chivo Variable',system-ui,sans-serif;font-size:17px;letter-spacing:.02em;text-decoration:none}.ds-desno{display:flex;gap:8px}.ds-pl{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:8px;color:var(--sivi-tekst)}.ds-pl:hover{background:var(--mint);color:var(--tekst)}.ds-pl[aria-current]{background:rgb(140 255 90 / .1);color:var(--zelena)}.ds-pl[aria-current] svg{filter:drop-shadow(0 0 6px rgb(140 255 90 / .8))}.ds-pl:focus-visible{outline:2px solid var(--zelena);outline-offset:2px}"
     },
     {
-      "name": "Traka ostatka",
+      "name": "Epruveta",
       "kind": "custom",
-      "refersTo": "traka-ostatka",
-      "description": "Potpis sveta: lepljiva zelena traka sa ostatkom kcal i makrosima; brojka se preispiše kao tabla.",
-      "html": "<section class=\"ds-traka\"><div><p class=\"ds-oznaka\">Ostalo do cilja</p><p class=\"ds-broj\"><span class=\"ds-preklop\">1 915</span><small>kcal</small></p></div><dl class=\"ds-mak\"><div><dt>Proteini</dt><dd>86 g</dd></div><div><dt>Ugljeni hidrati</dt><dd>240 g</dd></div><div><dt>Masti</dt><dd>52 g</dd></div></dl><a href=\"#\" class=\"ds-plocica ds-strelica\" aria-label=\"Dodaj namirnicu\"><svg width=\"34\" height=\"34\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 5v14\"/><path d=\"m19 12-7 7-7-7\"/></svg></a></section>",
-      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-plocica{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:4px;background:var(--tekst);color:var(--bela)}.ds-traka{background:var(--zelena);color:var(--tekst);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:32px;padding:18px 24px;box-shadow:0 8px 20px -14px rgb(17 19 17 / .6)}.ds-traka p{margin:0}.ds-oznaka{font-weight:700;font-size:18px}.ds-broj{font-weight:900;font-size:clamp(56px,7vw,96px);line-height:.95;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.ds-broj small{font-size:.36em;font-weight:700;letter-spacing:0;margin-left:8px}.ds-mak{display:flex;gap:32px;margin:0}.ds-mak dt{font-weight:700;font-size:15px;white-space:nowrap}.ds-mak dd{margin:4px 0 0;font-weight:800;font-size:clamp(26px,3vw,40px);line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}.ds-strelica{width:72px;height:72px}.ds-strelica:hover{background:#2a2e2a}.ds-strelica:focus-visible{outline:3px solid var(--tekst);outline-offset:2px}@media (prefers-reduced-motion:no-preference){.ds-preklop{display:inline-block;animation:ds-preklop 520ms cubic-bezier(.16,1,.3,1)}}@keyframes ds-preklop{from{clip-path:inset(0 0 100% 0);transform:translateY(-.18em);filter:blur(2px)}to{clip-path:inset(0);transform:none;filter:none}}"
+      "refersTo": "epruveta",
+      "description": "Potpis dana: neon tečnost sa mehurićima raste do isprekidane crte cilja; bez pokreta samo stoji.",
+      "html": "<div class=\"ds-wrap\"><p class=\"ds-broj\">1 915 <small>/ 2 600 kcal</small></p><div class=\"ds-cev\"><div class=\"ds-staklo\"><div class=\"ds-tecnost\" style=\"width:64%\"><i style=\"--x:20%;--s:8px;--d:3s;--k:0s\"></i><i style=\"--x:55%;--s:6px;--d:2.4s;--k:.8s\"></i><i style=\"--x:80%;--s:10px;--d:3.4s;--k:1.4s\"></i></div></div><span class=\"ds-cilj\"><span><b>CILJ</b> 2 600</span></span></div></div>",
+      "css": ":host{color-scheme:dark;--zelena:#8cff5a;--zelena-jaca:#a8ff82;--na-neonu:#061206;--mint:#1a2a22;--pozadina:#0b100e;--spolja:#22312b;--bela:#121a17;--crna:#050807;--tekst:#e8f3ed;--sivi:#6f857b;--sivi-tekst:#93a99f;--r:12px;--okvir:1.5px solid #35503f;--senka:inset 0 1px 0 rgb(255 255 255 / .04),0 20px 40px -24px rgb(0 0 0 / .8);--sjaj:0 4px 24px -6px rgb(140 255 90 / .6);font-family:'Chivo Variable','Chivo',system-ui,sans-serif;color:var(--tekst)}.ds-wrap{padding:24px;background:var(--pozadina)}.ds-broj{margin:0;font-family:'Bungee','Chivo Variable',system-ui,sans-serif;font-size:56px;line-height:.95;color:var(--zelena);text-shadow:0 0 30px rgb(140 255 90 / .5);font-variant-numeric:tabular-nums}.ds-broj small{font-family:'Chivo Variable',system-ui,sans-serif;font-size:20px;font-weight:600;color:var(--sivi-tekst);text-shadow:none}.ds-cev{position:relative;height:96px;margin:30px 0 10px}.ds-staklo{position:absolute;inset:0;overflow:hidden;border-radius:12px 48px 48px 12px;border:2px solid rgb(200 255 220 / .45);border-left-width:8px;background:linear-gradient(180deg,rgb(255 255 255 / .06),rgb(255 255 255 / .01) 40%,rgb(255 255 255 / .04));box-shadow:inset 0 10px 18px -12px rgb(255 255 255 / .35)}.ds-tecnost{position:absolute;left:0;top:0;bottom:0;overflow:hidden;border-radius:0 6px 6px 0;background:linear-gradient(180deg,#b8ff95,#8cff5a 35%,#4fd12a);box-shadow:0 0 40px rgb(140 255 90 / .7),inset -6px 0 12px rgb(255 255 255 / .35)}.ds-tecnost i{position:absolute;bottom:-10px;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;background:rgb(240 255 235 / .85);opacity:0}.ds-cilj{position:absolute;left:calc(100% / 1.15);top:-28px;bottom:-6px;border-left:2px dashed var(--tekst)}.ds-cilj>span{position:absolute;left:8px;top:0;font-size:13px;font-weight:700;white-space:nowrap}.ds-cilj b{color:var(--zelena);letter-spacing:.06em}@media (prefers-reduced-motion:no-preference){.ds-tecnost i{animation:ds-mehur var(--d) linear var(--k) infinite}}@keyframes ds-mehur{0%{transform:translateY(0);opacity:0}12%{opacity:.95}100%{transform:translateY(-120px) translateX(-3px);opacity:0}}"
     },
     {
-      "name": "Panel sa crnom glavom",
+      "name": "Kartica makroa",
+      "kind": "card",
+      "refersTo": "kartica-makroa",
+      "description": "Ploča sa vrednošću makroa i tankom trakom u boji njegove tečnosti.",
+      "html": "<dl class=\"ds-mak\"><div style=\"--boja:#49c6ff\"><dt>Proteini</dt><dd>86 <small>/ 150 g</small><span class=\"ds-tr\" style=\"--p:57%\"></span></dd></div><div style=\"--boja:#ffd84a\"><dt>Ugljeni hidrati</dt><dd>240 <small>/ 300 g</small><span class=\"ds-tr\" style=\"--p:80%\"></span></dd></div><div style=\"--boja:#ff8f3f\"><dt>Masti</dt><dd>52 <small>/ 70 g</small><span class=\"ds-tr\" style=\"--p:74%\"></span></dd></div></dl>",
+      "css": ":host{color-scheme:dark;--zelena:#8cff5a;--zelena-jaca:#a8ff82;--na-neonu:#061206;--mint:#1a2a22;--pozadina:#0b100e;--spolja:#22312b;--bela:#121a17;--crna:#050807;--tekst:#e8f3ed;--sivi:#6f857b;--sivi-tekst:#93a99f;--r:12px;--okvir:1.5px solid #35503f;--senka:inset 0 1px 0 rgb(255 255 255 / .04),0 20px 40px -24px rgb(0 0 0 / .8);--sjaj:0 4px 24px -6px rgb(140 255 90 / .6);font-family:'Chivo Variable','Chivo',system-ui,sans-serif;color:var(--tekst)}.ds-mak{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0;padding:16px;background:var(--pozadina)}.ds-mak>div{background:var(--bela);border:1px solid var(--spolja);border-radius:var(--r);padding:18px 20px 20px;box-shadow:var(--senka)}.ds-mak dt{font-weight:700;font-size:16px;color:var(--sivi-tekst)}.ds-mak dd{margin:4px 0 0;font-weight:800;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}.ds-mak dd small{font-size:18px;font-weight:700;color:var(--sivi-tekst)}.ds-tr{display:block;position:relative;height:8px;margin-top:14px;border-radius:999px;background:var(--pozadina);box-shadow:inset 0 0 0 1px var(--spolja);overflow:hidden}.ds-tr::after{content:'';position:absolute;inset:0 auto 0 0;width:var(--p);border-radius:inherit;background:var(--boja);box-shadow:0 0 10px var(--boja)}"
+    },
+    {
+      "name": "Panel sa tamnom glavom",
       "kind": "card",
       "refersTo": "panel",
-      "description": "Bela površina sa crnom glavom (Title i svetla pločica), telo 18px; poruka i greška unutra.",
-      "html": "<section class=\"ds-panel\"><h2 class=\"ds-glava\"><span class=\"ds-plocica ds-svetla\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"5\"/><path d=\"M20 21a8 8 0 0 0-16 0\"/></svg></span>Tvoji podaci</h2><div class=\"ds-telo\"><p class=\"ds-poruka\">Sačuvano.</p><p class=\"ds-greska\">Ne mogu da učitam unose.</p></div></section>",
-      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-plocica{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:4px;background:var(--tekst);color:var(--bela)}.ds-panel{background:var(--bela);border-radius:var(--r);overflow:hidden;box-shadow:var(--senka);max-width:440px}.ds-glava{display:flex;align-items:center;gap:14px;padding:14px 18px;margin:0;background:var(--tekst);color:var(--bela);font-size:20px;font-weight:700}.ds-glava .ds-plocica{width:32px;height:32px}.ds-svetla{background:var(--bela);color:var(--tekst)}.ds-telo{padding:18px;display:grid;gap:16px}.ds-poruka,.ds-greska{margin:0;padding:12px 14px;border-radius:var(--r);font-weight:600}.ds-poruka{background:var(--mint)}.ds-greska{background:#fdeceb;color:#b3261e}"
-    },
-    {
-      "name": "Polje kalendara",
-      "kind": "custom",
-      "description": "Dan u mesecu: kcal i zelena traka napretka na dnu; danas sa crnim okvirom; budući dani isprekidani.",
-      "html": "<div class=\"ds-kal\"><a href=\"#\" class=\"ds-pk\"><span class=\"ds-br\">12</span><span class=\"ds-kcal\">2 840<small> kcal</small></span><span class=\"ds-tr\" style=\"--p:88%\"></span></a><a href=\"#\" class=\"ds-pk ds-danas\"><span class=\"ds-br\">13</span><span class=\"ds-kcal\">1 285<small> kcal</small></span><span class=\"ds-tr\" style=\"--p:40%\"></span></a><span class=\"ds-pk ds-buduci\"><span class=\"ds-br\">14</span></span></div>",
-      "css": ":host{--zelena:#389600;--svetlozelena:#c2dcb8;--mint:#dff6ed;--pozadina:#e3eee6;--spolja:#d5dcd7;--bela:#fff;--tekst:#111311;--sivi-tekst:#5c605c;--r:6px;--okvir:2px solid #111311;--senka:0 6px 18px -8px rgb(17 19 17 / .28);font-family:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif;color:#111311}.ds-kal{display:grid;grid-template-columns:repeat(3,120px);gap:8px;background:var(--pozadina);padding:12px}.ds-pk{position:relative;display:flex;flex-direction:column;justify-content:space-between;aspect-ratio:1/.82;padding:10px 12px 14px;border-radius:var(--r);background:var(--bela);color:var(--tekst);text-decoration:none;overflow:hidden;border:2px solid transparent;box-shadow:var(--senka)}a.ds-pk:hover{border-color:var(--tekst)}a.ds-pk:focus-visible{outline:3px solid var(--tekst);outline-offset:2px}.ds-danas{border-color:var(--tekst)}.ds-danas .ds-br{background:var(--tekst);color:var(--bela);border-radius:4px;padding:0 6px}.ds-buduci{background:transparent;border:2px dashed var(--spolja);color:var(--sivi-tekst);box-shadow:none}.ds-br{font-weight:800;font-size:18px;align-self:flex-start}.ds-kcal{font-weight:900;font-size:24px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}.ds-kcal small{font-size:.5em;font-weight:700;letter-spacing:0}.ds-tr{position:absolute;left:0;bottom:0;height:6px;width:100%;background:var(--pozadina)}.ds-tr::after{content:'';position:absolute;inset:0 auto 0 0;width:var(--p);background:var(--zelena)}"
+      "description": "Ploča sa glavom najdublje tame i neon linijom ispod; poruka i greška unutra.",
+      "html": "<section class=\"ds-panel\"><h2 class=\"ds-glava\"><span class=\"ds-plocica\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></span>Reci mišu šta si jeo</h2><div class=\"ds-telo\"><p class=\"ds-poruka\">Sačuvano.</p><p class=\"ds-greska\">Ne mogu da učitam unose.</p></div></section>",
+      "css": ":host{color-scheme:dark;--zelena:#8cff5a;--zelena-jaca:#a8ff82;--na-neonu:#061206;--mint:#1a2a22;--pozadina:#0b100e;--spolja:#22312b;--bela:#121a17;--crna:#050807;--tekst:#e8f3ed;--sivi:#6f857b;--sivi-tekst:#93a99f;--r:12px;--okvir:1.5px solid #35503f;--senka:inset 0 1px 0 rgb(255 255 255 / .04),0 20px 40px -24px rgb(0 0 0 / .8);--sjaj:0 4px 24px -6px rgb(140 255 90 / .6);font-family:'Chivo Variable','Chivo',system-ui,sans-serif;color:var(--tekst)}.ds-plocica{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:8px;background:var(--zelena);color:var(--na-neonu)}.ds-panel{background:var(--bela);border:1px solid var(--spolja);border-radius:var(--r);overflow:hidden;box-shadow:var(--senka);max-width:440px}.ds-glava{display:flex;align-items:center;gap:14px;padding:14px 18px;margin:0;background:var(--crna);font-size:20px;font-weight:700;border-bottom:1px solid rgb(140 255 90 / .35)}.ds-glava .ds-plocica{width:32px;height:32px}.ds-telo{padding:18px;display:grid;gap:16px}.ds-poruka,.ds-greska{margin:0;padding:12px 14px;border-radius:var(--r);font-weight:600}.ds-poruka{background:var(--mint);color:var(--zelena)}.ds-greska{background:#3a1414;color:#ff6b6b}"
     }
   ],
   "narrative": {
-    "northStar": "Tabla do izlaza",
-    "overview": "Svaki ekran se čita kao aerodromska signalizacija: jedna zelena traka kaže koliko je ostalo do cilja, crne kvadratne pločice nose strelice i piktograme, a sve ostalo je mirna svetlozelena podloga sa belim panelima. Brojevi su glavni sadržaj i stoje monumentalno, tabularno, težine 900; tekst oko njih je kratak i funkcionalan.\n\nGustina je radna, ne dekorativna: paneli, tabela i forma stoje jedno do drugog na računaru, a na telefonu se slažu u kolonu ispod lepljive trake. Kontrole imaju crni okvir od 2 px, kao table sa natpisima, a strelica uvek stoji uz ivicu na koju pokazuje.\n\nSvet odbija standard kategorije: bele kartice sa krugom napretka. Napredak je traka (pano, merač, linija na dnu polja kalendara), nikad krug.",
+    "northStar": "Ludi naučnik",
+    "overview": "Aplikacija je noćna laboratorija: tamni sto sa tankom mrežom, ploče sa staklenom ivicom, a jedina prava svetlost na ekranu je neon tečnost. Dan je epruveta položena preko cele širine koja se puni posle svakog unosa do isprekidane crte CILJ i postane zlatna kad je cilj kalorija pogođen. Sve što svetli je živo (tečnost, glavna akcija, stranica na kojoj si, današnji dan); sve ostalo je mirna tama.\n\nPravac je izabrao korisnik 2026-11-17 iz tri makete (`.impeccable/predlozi/laboratorija-1-tamno.html`) i on zamenjuje prethodni svet \"Aerodromska tabla\". Brand Commitments u PRODUCT.md još navode staru svetlu paletu (#389600 i svetlozelene tonove): ona je povučena iz interfejsa i preživljava samo kao zelena etiketa (#389600) ispod loga na ekranu prijave, jer je `logo-zeleno.webp` crtan za tu podlogu. Imena tokena su ostala iz stare palete da komponente ne moraju da se menjaju; vrednosti su nove (bela je sada površina ploče, tekst je svetao).\n\nMasko miš ostaje bez kostima (bez naočara i mantila): na početnoj živi u panelu za unos, na stranici Laboratorija stoji pored neon boce, a na ostalim stranicama viri sa ivice ekrana. Svet odbija standard kategorije (bele kartice sa krugom napretka); napredak je tečnost u epruveti i trakama.",
     "keyCharacteristics": [
-      "Zadata paleta (PRODUCT.md), zelena rezervisana za signal i glavnu akciju.",
-      "Crni tekst na zelenoj, kao na aerodromskim tablama.",
-      "Monumentalne tabularne brojke (Source Sans 3, 800–900).",
-      "Crne i bele kvadratne pločice sa piktogramom (lucide, SVG).",
-      "Kontrole sa 2 px crnim okvirom, blago zaobljene (6px).",
-      "Jedna meka senka za bele površine; bez tvrdih senki."
+      "Tamni laboratorijski sto (pozadina sa mrežom 32px i slabim zelenim odsjajem odozgo), ploče sa staklenom ivicom.",
+      "Jedan neon akcent (zelena) sa tamnim tekstom na njemu; makroi imaju svoje tečnosti (plava, žuta, narandžasta).",
+      "Bungee za naslove i monumentalne brojke, Chivo za interfejs.",
+      "Sjaj samo na onome što je živo.",
+      "Epruveta preko cele širine kao potpis dana.",
+      "Svaka animacija postoji samo bez prefers-reduced-motion."
     ],
     "rules": [
       {
-        "name": "The Ink on Green Rule",
-        "body": "Na zelenoj ide crni tekst (tekst), nikad beli: belo na #389600 ne prolazi kontrast za sitan tekst.",
+        "name": "The Dark on Neon Rule",
+        "body": "Na zelenoj ide samo na-neonu; svetao tekst na neonu ne prolazi kontrast.",
         "section": "colors"
       },
       {
-        "name": "The Signal Rule",
-        "body": "Zelena znači ostatak, napredak ili glavnu akciju. Nije pozadina panela i nije ukras.",
+        "name": "The Only Light Rule",
+        "body": "Neon je svetlost laboratorije: znači tečnost, glavnu akciju ili aktivno stanje. Nije pozadina panela i nije ukras.",
         "section": "colors"
       },
       {
-        "name": "The Darker Grey Rule",
-        "body": "Sav sivi tekst je sivi-tekst; sivi iz palete ostaje za netekstualne elemente.",
+        "name": "The Own Liquid Rule",
+        "body": "Svaki makro ima svoju tečnost i ona važi samo za njega (traka, stubić, legenda); kalorije su uvek neon zelena, a pogođen cilj kalorija zlatan (boje sira).",
         "section": "colors"
       },
       {
         "name": "The Tabular Rule",
-        "body": "Svaki broj koji se menja ima tabularne cifre (klasa num), da se tabla ne trese pri preispisu.",
+        "body": "Svaki broj koji se menja ima tabularne cifre (klasa num) i preispiše se pokretom preklopa.",
         "section": "typography"
       },
       {
-        "name": "The Monumental Figure Rule",
-        "body": "Najvažniji broj na ekranu je najveći i najteži element; oznaka iznad njega je kratka (700, 15–18px) i opisuje broj, nije naslov odeljka.",
+        "name": "The Label Font Rule",
+        "body": "Bungee je samo za naslove i brojke; nikad za rečenice, oznake polja ni dugmad.",
         "section": "typography"
       },
       {
-        "name": "The Soft Lift Rule",
-        "body": "Postoji jedna senka za površine i jedna za traku. Bez tvrdih pomerenih senki i bez novih nivoa.",
+        "name": "The Live Glow Rule",
+        "body": "Sjaj dobija samo ono što je živo: tečnost, glavna akcija, aktivna stranica, današnji i pogođen dan, miš i boca. Mirne ploče nikad ne svetle.",
         "section": "elevation"
       },
       {
         "name": "The Locked Arrow Rule",
-        "body": "U dugmetu je pločica sa strelicom zaključana uz desnu ivicu (padding 0 6px 0 16px, space-between), jer strelica pokazuje kuda dugme vodi.",
+        "body": "U dugmetu je pločica sa strelicom zaključana uz desnu ivicu (padding 0 6px 0 16px, space-between).",
         "section": "shapes"
       }
     ],
     "dos": [
-      "**Do** stavljaj crni tekst (tekst) na zelenu.",
-      "**Do** daj svakom promenljivom broju tabularne cifre i najveću težinu na ekranu (900).",
-      "**Do** koristi pločicu (crnu ili svetlu, 4px) za svaku strelicu i piktogram, i zaključaj strelicu uz ivicu na koju pokazuje.",
-      "**Do** daj kontrolama okvir 2px tekst i radijus 6px.",
-      "**Do** koristi sivi-tekst za sav sitan sivi tekst.",
-      "**Do** pokazuj napredak trakom (zelena ispuna na podlozi).",
-      "**Do** poštuj prefers-reduced-motion za svaku animaciju."
+      "**Do** stavljaj na-neonu na svaku neon površinu.",
+      "**Do** pokazuj napredak tečnošću: epruveta za kalorije, trake i stubići u boji makroa.",
+      "**Do** daj sjaj samo živim elementima (tečnost, glavna akcija, aktivna stranica, današnji dan).",
+      "**Do** koristi Bungee samo za naslove i brojke, Chivo za sve ostalo.",
+      "**Do** daj svakom promenljivom broju tabularne cifre.",
+      "**Do** ostavi Masko miša bez kostima; na stranicama bez sopstvenog miša neka viri sa ivice.",
+      "**Do** stavi svaki pokret pod prefers-reduced-motion: no-preference."
     ],
     "donts": [
-      "**Don't** stavljaj beli tekst na zelenu.",
-      "**Don't** koristi zelenu kao pozadinu panela, kartica ili ukrasa; ona je signal.",
-      "**Don't** pravi bele kartice sa krugom napretka.",
-      "**Don't** koristi sivi (#818581) za tekst.",
-      "**Don't** dodaj tvrde pomerene senke ni nove nivoe senki.",
-      "**Don't** dodaj nalepnice u verzalu iznad naslova; verzal sa razmakom je samo za zaglavlja kolona.",
-      "**Don't** uvodi drugi akcent ili drugu porodicu fontova."
+      "**Don't** stavljaj svetao tekst na neon zelenu.",
+      "**Don't** koristi neon kao pozadinu ploča ili ukras.",
+      "**Don't** daj sjaj mirnim pločama, karticama ili tekstu.",
+      "**Don't** pravi kartice sa krugom napretka.",
+      "**Don't** vraćaj svetlu paletu sa #389600 u interfejs; ostaje samo etiketa loga na prijavi.",
+      "**Don't** oblači miša (naočare, mantil, majica).",
+      "**Don't** koristi boje makroa za tekst ili površine."
     ]
   }
 }
