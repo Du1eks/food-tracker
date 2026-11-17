@@ -22,10 +22,30 @@ a.rang:hover .rang-poziv, a.rang:focus-visible .rang-poziv { max-width: 200px; o
 }
 .rang-strelica { width: 36px; height: 36px; }
 .rang-prazno { color: var(--sivi-tekst); font-weight: 600; }
-.pehar-zlato { --varnica: #ffc21a; } .pehar-srebro { --varnica: #dfe6f2; } .pehar-bronza { --varnica: #f0874a; } .pehar-drvo { --varnica: #c98642; }
+.pehar-zlato { --varnica: #ffc21a; } .pehar-srebro { --varnica: #dfe6f2; } .pehar-bronza { --varnica: #f0874a; } .pehar-drvo { --varnica: #9aa64a; }
 .rang-omot .pehar {
   position: absolute; left: 0; bottom: 0;
   height: 84px; width: auto; pointer-events: none; z-index: 1;
+}
+/* Stakleni pehar (components/Pehar): providno staklo, napitak u boji mesta (--varnica) koji svetli */
+.pehar-svg { aspect-ratio: 64 / 84; overflow: visible; filter: drop-shadow(0 0 14px color-mix(in srgb, var(--varnica) 45%, transparent)); }
+.pehar-staklo { fill: rgb(220 255 235 / 0.07); stroke: rgb(220 255 235 / 0.6); stroke-width: 1.6; stroke-linejoin: round; }
+.pehar-casa { fill: none; stroke-width: 2; }
+.pehar-drska { fill: none; stroke: rgb(220 255 235 / 0.6); stroke-width: 2.6; stroke-linecap: round; }
+.pehar-obod { fill: rgb(220 255 235 / 0.12); stroke: rgb(220 255 235 / 0.75); stroke-width: 1.4; }
+.pehar-odsjaj { fill: none; stroke: rgb(255 255 255 / 0.55); stroke-width: 2.4; stroke-linecap: round; }
+.pehar-tecnost { fill: var(--varnica); }
+.pehar-mehur { fill: rgb(255 255 255 / 0.7); opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .pehar-talas { animation: pehar-talas 2.4s linear infinite; }
+  .pehar-mehur { animation: pehar-mehur var(--d) ease-in var(--k) infinite; }
+}
+@keyframes pehar-talas { to { transform: translateX(-24px); } }
+@keyframes pehar-mehur {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 0.9; }
+  90% { opacity: 0.7; }
+  100% { transform: translateY(-27px); opacity: 0; }
 }
 /* Broj iskoči kad se rang učita ili promeni */
 @media (prefers-reduced-motion: no-preference) {

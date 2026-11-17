@@ -5,12 +5,13 @@ import { danas } from '../lib/datum'
 import { zbirZaDan } from '../lib/podaci'
 import { rang, staKaze, sufiksMesta, type Zbir } from '../lib/rang'
 import { useProfil } from './useProfil'
+import Pehar from './Pehar'
 import '../pages/prijatelji.css'
 
 // Polje ranga na glavnom ekranu; pehar mesta stoji na njegovoj levoj ivici (pada pri svakom dolasku na stranu).
 // Ćaskanje o rangu bira ovde, a izgovara ga miš u svom oblačiću (onGovor).
 // `kljuc` se menja posle svakog unosa (uneto kcal), pa se rang preračuna.
-// 1. zlatni, 2. srebrni, 3. bronzani, dalje (i bez drugara) drveni
+// 1. zlatni, 2. srebrni, 3. bronzani, dalje (i bez drugara) "drvo": mutan maslinast napitak (stakleni pehar: components/Pehar)
 const pehar = (mesto: number, sam: boolean) => (sam ? 'drvo' : (['zlato', 'srebro', 'bronza'][mesto - 1] ?? 'drvo'))
 const UDAR = 645 // ms od pojave do dodira sa zemljom (kašnjenje 150 ms + 55% od 900 ms u pehar-pad)
 // Varnice pri udaru: lepeza naviše i u stranu iz dna pehara; nasumično jednom, da crtanje ostane čisto
@@ -76,7 +77,7 @@ export default function RangPolje({ kljuc, onGovor }: { kljuc: number; onGovor: 
   return (
     <div className={`rang-omot pehar-${vrsta ?? 'nema'}${udar ? ' udar' : ''}`}>
       {/* ukras, mesto je u opisu polja; bez ključa, pa novo mesto samo promeni sliku, bez novog pada */}
-      {vrsta && <img className="pehar" src={`/maskota/pehar-${vrsta}.webp`} alt="" />}
+      {vrsta && <Pehar vrsta={vrsta} />}
       {udar && VARNICE.map((v, i) => (
         <span key={i} className="varnica" aria-hidden
           style={{ '--ugao': `${v.ugao}deg`, '--dalj': `${v.dalj}px`, height: v.duz, animationDelay: `${v.kasni}ms` } as React.CSSProperties} />
