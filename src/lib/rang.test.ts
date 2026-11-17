@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict'
 import { rang, poRangu, staKaze, sufiksMesta, type Zbir } from './rang.ts'
 
-import { mesto, pohvale, stanjeMisa } from './rang.ts'
+import { mesto, stanjeMisa } from './rang.ts'
 
 // procenat 0 znači da nije uneo ništa (kcal 0); inače je kcal srazmeran cilju od 3200
 const z = (id: string, procenat: number): Zbir => ({ id, nadimak: id, kcal: procenat * 3200, proteini: 0, uh: 0, masti: 0, procenat, ima_cilj: true })
@@ -73,13 +73,6 @@ assert.deepEqual([1, 2, 3, 4, 11, 12, 13, 21, 22, 23, 101, 111, 112].map((n) => 
   for (const [red, id] of [[ekipa, 'c'], [svi0, 'a'], [[bez('a')], 'a']] as const)
     assert.ok(kaze([...red], id).length >= 4 && kaze([...red], id).every((s) => s.length > 0 && s.length <= 60))
 }
-// pohvale posle unosa: >= 50 g proteina, >= 800 kcal
-assert.deepEqual(pohvale({ kcal: 799, proteini: 49.9 }, 'Duško'), [])
-assert.deepEqual(pohvale({ kcal: 300, proteini: 50 }, 'Duško'), ['Duško getting stronger'])
-assert.deepEqual(pohvale({ kcal: 800, proteini: 10 }, ' Duško '), ['Duško is not mouse'])
-assert.deepEqual(pohvale({ kcal: 800, proteini: 50 }, 'Duško'), ['Duško getting stronger', 'Duško is not mouse'])
-assert.deepEqual(pohvale({ kcal: 1200, proteini: 80 }, null), ['You are getting stronger', 'You are not mouse'])
-assert.deepEqual(pohvale({ kcal: 900, proteini: 0 }, '  '), ['You are not mouse'])
 // stanje živog miša: noć 00–07, cilj (proteini ili kcal), gladan posle 5 h bez unosa (od 07:00 ako danas nema unosa)
 const ciljM = { cilj_kcal: 3000, cilj_proteini: 150 }
 const u = (sat: number, min = 0) => new Date(2026, 10, 16, sat, min)

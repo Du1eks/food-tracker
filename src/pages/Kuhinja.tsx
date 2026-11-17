@@ -6,6 +6,7 @@ import { Link } from 'react-router'
 import { ArrowRight, Pencil, Trash2, X } from 'lucide-react'
 import { fmt, poJedinici, zbir, type Jelo, type Makrosi, type StavkaJela } from '../lib/ishrana'
 import { mojaJela, obrisiJelo, sacuvajJelo } from '../lib/podaci'
+import Potvrdi from '../components/Potvrdi'
 import { razumiObrok } from '../lib/razumi'
 import PregledStavki, { ispravna, kolicina, makrosiReda, uRed, type RedPregleda } from '../components/PregledStavki'
 import MisKuvar from '../components/MisKuvar'
@@ -100,7 +101,6 @@ export default function Kuhinja() {
   }
 
   async function obrisi(j: Jelo) {
-    if (!confirm(`Obrisati jelo „${j.ime}“? Ovo ne može da se vrati.`)) return
     try {
       await obrisiJelo(j.id)
       if (urednik?.id === j.id) setUrednik(null)
@@ -212,7 +212,9 @@ export default function Kuhinja() {
                           onClick={() => otvori({ id: j.id, ime: j.ime, redovi: j.stavke.map(izStavke) })}>
                           <Pencil size={18} aria-hidden />
                         </button>
-                        <button className="ikona" aria-label={`Obriši ${j.ime}`} onClick={() => obrisi(j)}><Trash2 size={18} aria-hidden /></button>
+                        <Potvrdi className="ikona" aria-label={`Obriši ${j.ime}`} pitanje="Obrisati zauvek?" da="Obriši" onDa={() => obrisi(j)}>
+                          <Trash2 size={18} aria-hidden />
+                        </Potvrdi>
                       </span>
                     </div>
                     <p className="nam-mak num">P {fmt(z.proteini)} g · UH {fmt(z.uh)} g · M {fmt(z.masti)} g</p>

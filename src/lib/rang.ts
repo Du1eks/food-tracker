@@ -76,16 +76,8 @@ export const poRangu = (redovi: Zbir[]) =>
       (a.nadimak ?? '').localeCompare(b.nadimak ?? ''),
   )
 
-// Natpis na sredini ekrana posle jakog unosa (ono što je upravo upisano): 50 g proteina ili više, 800 kcal ili više; oba = oba reda.
-// Bez imena i nadimka u profilu umesto imena stoji "You".
+// Jak unos (ono što je upravo upisano): pločica tog makroa duže stoji i jače udari u traku (components/letMakrosa)
 export const PROTEINI_JAKO = 50, KCAL_JAKO = 800
-export function pohvale(m: { kcal: number; proteini: number }, ime: string | null | undefined): string[] {
-  const ko = ime?.trim() || 'You'
-  return [
-    ...(m.proteini >= PROTEINI_JAKO ? [`${ko} ${ko === 'You' ? 'are getting stronger' : 'getting stronger'}`] : []),
-    ...(m.kcal >= KCAL_JAKO ? [`${ko} ${ko === 'You' ? 'are not mouse' : 'is not mouse'}`] : []),
-  ]
-}
 
 // Stanje živog miša (mis.riv): noću (00–07 po lokalnom satu) spava; cilj ispunjen (proteini ili kalorije) = slavi;
 // gladan (ljut, "nisi dugo jeo") = cilj nije ispunjen i od poslednjeg unosa danas prošlo je više od 5 sati

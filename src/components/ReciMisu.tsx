@@ -73,7 +73,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
       await dodajUnos(stavke)
       setRedovi(null); setTekst(''); setUpisano(true); setSlaviUpis(true); setProcena(redovi.some((r) => r.izvor === 'procena'))
       // makrosi polete u traku; brojevi (i tabela) se preračunaju kad udare
-      void letMakrosa(zbir(stavke), document.getElementById('unos'), profil?.ime?.trim().split(' ')[0] || profil?.nadimak).finally(onDodato)
+      void letMakrosa(zbir(stavke), document.getElementById('unos')).finally(onDodato)
     } catch {
       setGreska('Nije upisano. Proveri internet pa probaj ponovo.')
     } finally {

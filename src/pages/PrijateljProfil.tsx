@@ -6,6 +6,7 @@ import { fmt } from '../lib/ishrana'
 import { prijateljDeliUnose, ukloniPrijateljstvo, unosiPrijatelja, zbirZaDan, type PrijateljUnos } from '../lib/podaci'
 import { mesto, type Zbir } from '../lib/rang'
 import TabelaPrijatelja from '../components/TabelaPrijatelja'
+import Potvrdi from '../components/Potvrdi'
 import './dan.css'
 import './prijatelji.css'
 
@@ -26,8 +27,7 @@ export default function PrijateljProfil() {
       .catch(nema)
   }, [id])
 
-  async function ukloni(ime: string | null) {
-    if (!confirm(`Ukloniti ${ime} iz prijatelja?`)) return
+  async function ukloni() {
     try {
       await ukloniPrijateljstvo(id!)
       idi('/prijatelji', { replace: true })
@@ -69,9 +69,9 @@ export default function PrijateljProfil() {
                   <div key={naziv}><dt>{naziv}</dt><dd className="num">{fmt(v)} g</dd></div>
                 ))}
               </dl>
-              <button className="dugme tiho odjava" onClick={() => ukloni(r.nadimak)}>
+              <Potvrdi className="dugme tiho odjava" pitanje={`Ukloniti ${r.nadimak ?? 'prijatelja'}?`} da="Ukloni" onDa={ukloni}>
                 <UserMinus size={18} aria-hidden /> Ukloni iz prijatelja
-              </button>
+              </Potvrdi>
             </div>
           </section>
         )}

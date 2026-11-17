@@ -13,6 +13,9 @@
 .nam-kcal { display: grid; text-align: right; }
 .nam-kcal b { font-size: 18px; font-weight: 800; white-space: nowrap; }
 .nam-akcije { display: flex; min-width: 72px; justify-content: flex-end; }
+/* Dok se pita "Obrisati?", potvrda ide u svoj red ispod, da ne suzi ime */
+.nam-glavno:has(.potvrdi) { flex-wrap: wrap; }
+.nam-akcije:has(.potvrdi) { flex-basis: 100%; }
 .nam-mak { color: var(--sivi-tekst); font-size: 14px; font-weight: 600; margin-top: 2px; }
 .nam-forma { display: grid; gap: 12px; background: var(--mint); border-radius: var(--r); padding: 14px; margin-top: 10px; }
 .nam-cetiri { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }

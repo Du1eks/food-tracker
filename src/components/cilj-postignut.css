@@ -78,5 +78,3 @@
   100% { transform: rotate(var(--u)) translateY(min(-42vmin, -260px)) scale(1.2) rotate(180deg); opacity: 0; }
 }
 
-/* Natpis za jak unos (letMakrosa) bi pao preko ovog; cilj je važniji */
-body:has(.cilj-postignut) .let-pohvala { display: none; }

@@ -3,6 +3,7 @@ import { Check, Pencil, Search, Trash2, X } from 'lucide-react'
 import { fmt } from '../lib/ishrana'
 import { izmeniProizvod, obrisiProizvod, spisakProizvoda, type ProizvodRed } from '../lib/podaci'
 import { useProfil } from '../components/useProfil'
+import Potvrdi from '../components/Potvrdi'
 import './dan.css'
 import './namirnice.css'
 
@@ -101,7 +102,6 @@ function Red({ p, moj, onPromena }: { p: ProizvodRed; moj: boolean; onPromena: (
   }
 
   function obrisi() {
-    if (!confirm(`Obrisati "${p.ime}" iz zajedničke baze? Stari unosi obroka ostaju.`)) return
     radi(() => obrisiProizvod(p.id), 'Brisanje nije uspelo. Proveri internet pa pokušaj ponovo.')
   }
 
@@ -121,7 +121,11 @@ function Red({ p, moj, onPromena }: { p: ProizvodRed; moj: boolean; onPromena: (
         <span className="nam-kcal num"><b>{fmt(p.kcal)} kcal</b><small>{p.jedinica === '100g' ? 'na 100 g' : 'po komadu'}</small></span>
         <span className="nam-akcije">
           <button className="ikona" aria-label={`Izmeni ${p.ime}`} onClick={otvori}><Pencil size={18} aria-hidden /></button>
-          {moj && <button className="ikona" aria-label={`Obriši ${p.ime}`} onClick={obrisi}><Trash2 size={18} aria-hidden /></button>}
+          {moj && (
+            <Potvrdi className="ikona" aria-label={`Obriši ${p.ime}`} pitanje="Obrisati iz baze? Stari unosi ostaju." da="Obriši" onDa={obrisi}>
+              <Trash2 size={18} aria-hidden />
+            </Potvrdi>
+          )}
         </span>
       </div>
       <p className="nam-mak num">P {fmt(p.proteini)} g · UH {fmt(p.uh)} g · M {fmt(p.masti)} g</p>

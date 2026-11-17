@@ -456,23 +456,4 @@ a.nedelja-dan:hover { background: var(--mint); }
 .let-zar { z-index: 19; width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle, #fff3a8, #ffb300 40%, #ff4d00 70%, transparent 76%); filter: blur(1px); }
 .let-iskra { z-index: 26; width: 6px; height: 6px; border-radius: 50%; background: #fff3a8; box-shadow: 0 0 6px 2px #ff8a00; }
 .let-blesak { z-index: 25; width: 60px; height: 60px; border-radius: 50%; background: radial-gradient(circle, rgb(255 243 168 / 0.95), rgb(255 138 0 / 0.6) 50%, transparent 70%); }
-.let-pohvala {
-  position: fixed; z-index: 30; left: 50%; top: 40%; width: max-content; max-width: 92vw; margin: 0; pointer-events: none;
-  display: grid; gap: 16px; text-align: center; text-wrap: balance;
-  font-weight: 900; font-size: clamp(40px, 11vw, 104px); line-height: 1; letter-spacing: -0.03em;
-  /* tamnozelen tekst sa belim obrubom (četiri senke) i senkom: ističe se i na zelenoj traci i na svetloj pozadini */
-  font-family: var(--font-d); font-weight: 400; color: var(--zelena);
-  filter: drop-shadow(0 3px 0 var(--crna)) drop-shadow(0 -3px 0 var(--crna)) drop-shadow(3px 0 0 var(--crna)) drop-shadow(-3px 0 0 var(--crna)) drop-shadow(0 0 24px rgb(140 255 90 / 0.65));
-  animation: pohvala 3200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-@keyframes pohvala {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-  10% { opacity: 1; transform: translate(-50%, -50%) scale(1.14); }
-  18%, 82% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -75%) scale(1.04); }
-}
-@keyframes pohvala-mirno { 0%, 100% { opacity: 0; } 12%, 85% { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) {
-  .let-pohvala { transform: translate(-50%, -50%); animation: pohvala-mirno 3200ms linear forwards; }
-}
 [data-makro] { transform-origin: 0 50%; }

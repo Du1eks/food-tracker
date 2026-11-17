@@ -1,8 +1,7 @@
 // Posle upisa: makrosi unosa se zapale kao pločice, u luku polete u zelenu traku (za njima žar) i udare u svoj broj (iskre).
-// Jak unos dobija i natpis preko ekrana (pohvale u lib/rang.ts).
 // Čist DOM (Web Animations API): traka i unos su odvojene komponente, a spaja ih atribut data-makro na brojevima trake.
 import { fmt, type Makrosi } from '../lib/ishrana'
-import { KCAL_JAKO, PROTEINI_JAKO, pohvale } from '../lib/rang'
+import { KCAL_JAKO, PROTEINI_JAKO } from '../lib/rang'
 
 const NATPIS: [keyof Makrosi, (v: number) => string][] = [
   ['kcal', (v) => `${fmt(v)} kcal`],
@@ -11,7 +10,7 @@ const NATPIS: [keyof Makrosi, (v: number) => string][] = [
   ['masti', (v) => `M ${fmt(v)} g`],
 ]
 const POJAVA = 300, STOJI = 380, LET = 520, RAZMAK = 80 // ms
-const DUZE = 1100 // toliko duže stoji pločica koja je prešla granicu (pohvale u lib/rang.ts)
+const DUZE = 1100 // toliko duže stoji pločica koja je prešla granicu (KCAL_JAKO, PROTEINI_JAKO u lib/rang.ts)
 const sredina = (e: Element) => { const r = e.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 } }
 const tu = 'translate(-50%, -50%)'
 
@@ -65,21 +64,10 @@ function udar(meta: Element | null, x: number, y: number, jako: boolean) {
   )
 }
 
-function natpis(redovi: string[]) {
-  if (!redovi.length) return
-  const e = document.createElement('p')
-  e.className = 'let-pohvala'
-  e.setAttribute('role', 'status')
-  for (const r of redovi) e.append(Object.assign(document.createElement('span'), { textContent: r }))
-  document.body.append(e)
-  e.addEventListener('animationend', () => e.remove()) // pokret (ili samo pretapanje bez pokreta) je u dan.css
-}
-
 // Obećanje se ispuni kad prva pločica udari u traku: tad se brojevi preračunaju.
-// Bez pokreta (prefers-reduced-motion) ili bez trake ispuni se odmah; natpis se i tada pokaže.
-export function letMakrosa(m: Makrosi, odakle: Element | null, ime?: string | null): Promise<void> {
-  const reci = pohvale(m, ime)
-  if (!odakle || matchMedia('(prefers-reduced-motion: reduce)').matches) { natpis(reci); return Promise.resolve() }
+// Bez pokreta (prefers-reduced-motion) ili bez trake ispuni se odmah.
+export function letMakrosa(m: Makrosi, odakle: Element | null): Promise<void> {
+  if (!odakle || matchMedia('(prefers-reduced-motion: reduce)').matches) return Promise.resolve()
   // početak: sredina vidljivog dela panela (panel je često viši od ekrana), tako da sve četiri pločice stanu na ekran
   const r = odakle.getBoundingClientRect()
   const vidljivo = (Math.max(r.top, 0) + Math.min(r.bottom, innerHeight)) / 2
@@ -113,8 +101,6 @@ export function letMakrosa(m: Makrosi, odakle: Element | null, ime?: string | nu
     return [pusti(p, putanja(jako ? 0.7 : 0.45), { duration: LET, delay: polazak, easing: 'cubic-bezier(0.5, 0, 0.9, 0.5)', fill: 'forwards' })
       .then(() => udar(meta, cilj.x, cilj.y, jako))]
   })
-  // brojevi se preračunaju na prvi udar; natpis tek kad sleti i poslednja pločica (jaka stoji najduže), da je ne prekrije
-  // ako animacija pukne ili nema trake, brojevi se ipak preračunaju i natpis se pokaže
-  void Promise.allSettled(udari).then(() => natpis(reci))
+  // brojevi se preračunaju na prvi udar; ako animacija pukne ili nema trake, brojevi se ipak preračunaju
   return udari.length ? Promise.race(udari).catch(() => {}) : Promise.resolve()
 }
