@@ -49,7 +49,9 @@ export default function Dan() {
       {/* Datum se vidi u redu nedelje; naslov ostaje za čitač ekrana */}
       <h1 className="sr">{lepDatum(datum)}</h1>
       {!jeDanas && <div className="dan-naslov"><Link className="dugme tiho" to="/">Nazad na danas</Link></div>}
-      <Traka uneto={uneto} cilj={profil} dan={unosi && datum} />
+      {/* dan je "učitan" tek kad stignu i unosi i profil: bez profila nema ciljeva, pa bi profil koji stigne kasnije
+          izgledao kao da su svi već pogođeni ciljevi upravo pređeni (slavlje pri učitavanju) */}
+      <Traka uneto={uneto} cilj={profil} dan={unosi && profil ? datum : null} />
       {/* Ispod epruvete: računar = unos levo, grafik makroa i rang desno, tabela preko cele širine; telefon = rang, unos, tabela (dan.css) */}
       <main className="dan">
         {jeDanas && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />}
@@ -86,7 +88,7 @@ const MEHURICI = Array.from({ length: 14 }, (_, i) => ({
 }) as React.CSSProperties)
 
 // Kartica dnevnog napretka: preispiše se posle svakog unosa (ključ na vrednosti pokreće animaciju table).
-// dan: datum čiji su unosi učitani (null dok se učitavaju), da učitavanje ne izgleda kao prelazak cilja
+// dan: datum čiji su unosi i profil učitani (null dok se učitavaju), da učitavanje ne izgleda kao prelazak cilja
 function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cilj | null; dan: string | null }) {
   const c = cilj?.cilj_kcal ?? null
   const pogodjeni = {
