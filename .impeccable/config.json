@@ -13,6 +13,15 @@
         ],
         "createdAt": "2026-11-17T11:10:25.822Z",
         "reason": "zadatak (sesija koja je pokrenula ovu): ime koje gori plavim plamenom, gradijent je boja plamena u slovima"
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/pages/Prijatelji.css"
+        ],
+        "createdAt": "2026-11-17T11:11:56.645Z",
+        "reason": "isto kao za src/pages/prijatelji.css: hook prijavljuje fajl i pod imenom sa velikim P (Windows), gradijent je traženo plavo ime u plamenu"
       }
     ]
   }
