@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react'
 import { danas, ispravan, izIso, lepDatum, pomeri } from '../lib/datum'
@@ -12,8 +12,8 @@ import RangPolje from '../components/RangPolje'
 import NedeljaMakroa from '../components/NedeljaMakroa'
 import Sir from '../components/Sir'
 import Eksplozija from '../components/Eksplozija'
-import CiljPostignut from '../components/CiljPostignut'
-import { KONFETE_TRAJU, konfete } from '../components/konfete'
+import CiljPostignut, { NATPIS_TRAJE } from '../components/CiljPostignut'
+import { konfete } from '../components/konfete'
 import './dan.css'
 
 export default function Dan() {
@@ -70,11 +70,14 @@ const pogodio = (kcal: number, cilj: number | null) => plamen({ ima_cilj: !!cilj
 // Proteini i masti: isto poređenje kao stanjeMisa (lib/rang.ts): cilj postoji i uneto ga je dostiglo
 const dostigao = (uneto: number, cilj: number | null | undefined) => !!cilj && uneto >= cilj
 // Slavlje ide samo za cilj koji je upravo pređen na istom, već učitanom danu; posle učitavanja ostaje samo stanje
-// (zlatna epruveta, oštećena kartica). Kalorije: natpis "Goal achieved!", pa konfete. Proteini: konfete. Kartice proteina
-// i masti puknu kao napitak (i ostanu oštećene), tek kad konfete padnu.
+// (zlatna epruveta, oštećena kartica). Redosled: 3D natpis "Goal achieved!" sa imenima ciljeva, pa ekran skroluje do
+// polja tog cilja i zatamni se oko njega (fokus), pa konfete i efekat na polju: epruveta udari i zasija, kartice
+// proteina i masti puknu kao napitak (i ostanu oštećene), jedna za drugom.
 const CILJEVI = ['kcal', 'proteini', 'masti'] as const
-const KONFETE_POSLE_NATPISA = 1300 // ms: konfete krenu kad natpis stoji na vrhuncu
+const FOKUS_POSLE = NATPIS_TRAJE - 700 // ms: natpis odleće ka polju, ekran kreće da skroluje
+const EFEKAT_POSLE = FOKUS_POSLE + 700 // ms: skrol je stigao; konfete i efekat na polju
 const EKSPLOZIJA_TRAJE = 1600 // ms: kartica se nadme, pukne i pređe u oštećeno (isto trajanje je u dan.css)
+const bezPokreta = () => matchMedia('(prefers-reduced-motion: reduce)').matches
 
 // Epruveta prima do 115% cilja; crta cilja je na 1/1,15 dužine. Mehurići: položaj, brzina, kašnjenje i veličina.
 const PREKO = 1.15
@@ -93,24 +96,34 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
   }
   const potpis = CILJEVI.filter((k) => pogodjeni[k]).join(',')
   const [udar, setUdar] = useState<{ pukli: string[]; kasni: number }>({ pukli: [], kasni: 0 })
-  const [natpis, setNatpis] = useState(0) // ključ natpisa "Goal achieved!"; 0 = nema ga
+  const [natpis, setNatpis] = useState<{ kljuc: number; ciljevi: string[] } | null>(null)
+  const [fokus, setFokus] = useState<string[]>([]) // polja na koja je ekran upravo skrolovao
+  const traka = useRef<HTMLElement>(null)
   const prosli = useRef<{ dan: string; potpis: string } | null>(null)
-  useEffect(() => {
+  // useLayoutEffect: novo stanje (pukla) mora pre iscrtavanja, inače kartica na trenutak već izgleda oštećeno
+  useLayoutEffect(() => {
     if (!dan) return
     const bio = prosli.current?.dan === dan ? prosli.current.potpis.split(',') : null
     prosli.current = { dan, potpis }
     const novi = bio ? potpis.split(',').filter((k) => k && !bio.includes(k)) : []
-    const kcal = novi.includes('kcal')
-    const slavlje = kcal || novi.includes('proteini')
-    const konfeteKrecu = kcal ? KONFETE_POSLE_NATPISA : 0
     // eslint-disable-next-line react-hooks/set-state-in-effect -- prelazak cilja vidimo tek kad stigne novi zbir
-    setUdar({ pukli: novi.filter((k) => k !== 'kcal'), kasni: slavlje ? konfeteKrecu + KONFETE_TRAJU : 400 })
-    if (kcal) setNatpis(Date.now())
-    if (!slavlje) return
-    const t = setTimeout(() => void konfete(), konfeteKrecu)
-    return () => clearTimeout(t)
+    setUdar({ pukli: novi.filter((k) => k !== 'kcal'), kasni: EFEKAT_POSLE })
+    if (!novi.length) return
+    setNatpis({ kljuc: Date.now(), ciljevi: novi })
+    const tajmeri = [
+      setTimeout(() => setFokus(novi), FOKUS_POSLE),
+      setTimeout(() => void konfete(), EFEKAT_POSLE),
+      setTimeout(() => setFokus([]), EFEKAT_POSLE + novi.length * (EKSPLOZIJA_TRAJE + 300) + 600),
+    ]
+    return () => { tajmeri.forEach(clearTimeout); setFokus([]) }
   }, [dan, potpis])
+  // Skrol do prvog polja u fokusu (epruveta ili kartica makroa)
+  useEffect(() => {
+    if (!fokus.length) return
+    traka.current?.querySelector(`[data-polje="${fokus[0]}"]`)?.scrollIntoView({ block: 'center', behavior: bezPokreta() ? 'auto' : 'smooth' })
+  }, [fokus])
   const kasni = (k: string) => (udar.pukli.includes(k) ? udar.kasni + udar.pukli.indexOf(k) * (EKSPLOZIJA_TRAJE + 300) : null)
+  const uFokusu = (k: string) => (fokus.includes(k) ? ' fokus' : '')
 
   const odnos = c ? uneto.kcal / c : 0
   const p = Math.min(odnos, PREKO)
@@ -123,8 +136,9 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
   ]
 
   return (
-    <section className="traka" aria-live="polite" aria-labelledby="napredak-naslov">
-      {natpis > 0 && <CiljPostignut key={natpis} onKraj={() => setNatpis(0)} />}
+    <section ref={traka} className="traka" aria-live="polite" aria-labelledby="napredak-naslov">
+      {natpis && <CiljPostignut key={natpis.kljuc} ciljevi={natpis.ciljevi} onKraj={() => setNatpis(null)} />}
+      {fokus.length > 0 && <div className="fokus-zastor" aria-hidden />}
       <div className="napredak">
         <h2 id="napredak-naslov" className="traka-oznaka">Dnevni napredak</h2>
         <p className="traka-kcal num">
@@ -132,7 +146,7 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
           <span className="traka-sitno">{c ? `/ ${fmt(c)} kcal` : 'kcal uneto'}</span>
         </p>
         {/* Epruveta preko cele širine: neon tečnost raste do isprekidane crte cilja (cev prima do 115% cilja), mehurići stalno idu */}
-        <div className={`cev${pogodjeni.kcal ? ' ispunjen' : ''}`} aria-hidden>
+        <div className={`cev${pogodjeni.kcal ? ' ispunjen' : ''}${uFokusu('kcal')}`} data-polje="kcal" aria-hidden>
           <div className="cev-staklo">
             <div className="cev-tecnost" style={{ width: `${(p / PREKO) * 100}%` }}>
               {MEHURICI.map((m, i) => <i key={i} style={m} />)}
@@ -148,7 +162,7 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
             const puca = (m.k === 'proteini' || m.k === 'masti') && pogodjeni[m.k]
             const k = puca ? kasni(m.k) : null
             return (
-            <div key={m.naziv} className={puca ? `ostecena${k != null ? ' pukla' : ''}` : undefined}
+            <div key={m.naziv} data-polje={m.k} className={`${puca ? `ostecena${k != null ? ' pukla' : ''}` : ''}${uFokusu(m.k)}` || undefined}
               style={k != null ? ({ '--kasni': `${k}ms` } as React.CSSProperties) : undefined}>
               <dt>{m.naziv}</dt>
               <dd className="num" data-makro={m.k}>

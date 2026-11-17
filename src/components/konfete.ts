@@ -1,6 +1,5 @@
 // Konfete preko cele aplikacije kad se pređe cilj (pali ih početna, Dan.tsx). Tri talasa: prasak iz sredine i dva topa
 // sa strana, pa još jednom topovi, pa kiša odozgo. Bez pokreta (prefers-reduced-motion) ništa.
-export const KONFETE_TRAJU = 4200 // ms dok većina komada ne padne (ticks 320 pri 60 fps, poslednji talas kreće posle 1,6 s)
 
 export async function konfete() {
   const { default: confetti } = await import('canvas-confetti')
