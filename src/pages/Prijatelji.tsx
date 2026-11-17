@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { Check, ChevronRight, Flame, Search, UserPlus, Users, X } from 'lucide-react'
+import { Check, ChevronRight, Search, UserPlus, Users, X } from 'lucide-react'
 import { danas } from '../lib/datum'
 import { fmt } from '../lib/ishrana'
 import {
@@ -10,6 +10,7 @@ import {
 import { mesto, poRangu, type Zbir } from '../lib/rang'
 import { opisPlamena, plamen } from '../lib/plamen'
 import { useProfil } from '../components/useProfil'
+import ImeUPlamenu from '../components/ImeUPlamenu'
 import './dan.css'
 import './prijatelji.css'
 
@@ -100,12 +101,16 @@ export default function Prijatelji() {
                       <span className="rang-red-mesto num">{mesto(zbirovi, r)}.</span>
                       <span className="rang-red-ime">
                         <span className="rang-red-naziv">
-                          <b>{ja ? 'Ti' : r.nadimak}</b>
-                          {/* Plamen je ukras: veći za cilj kalorija, manji plavi za cilj proteina; čitač ekrana dobija tekst */}
-                          {gori.kalorije && <Flame className="plamen kcal" size={22} fill="currentColor" aria-hidden />}
-                          {gori.proteini && <Flame className="plamen proteini" size={16} fill="currentColor" aria-hidden />}
+                          {/* Proteini = ime gori iznutra (plavo), kalorije = vatra oko imena (narandžasto); čitač ekrana dobija tekst */}
+                          <ImeUPlamenu ime={ja ? 'Ti' : r.nadimak} iznutra={gori.proteini} spolja={gori.kalorije} />
                           {opisPlamena(gori) && <span className="sr">, {opisPlamena(gori)}</span>}
                         </span>
+                        {(gori.kalorije || gori.proteini) && (
+                          <span className="rang-oznake" aria-hidden>
+                            {gori.proteini && <span className="oznaka proteini">Proteini ostvareni</span>}
+                            {gori.kalorije && <span className="oznaka kcal">Kalorije ostvarene</span>}
+                          </span>
+                        )}
                         {r.ima_cilj && <span className="merac" aria-hidden><i style={{ width: `${pct}%` }} /></span>}
                       </span>
                       {r.ima_cilj ? (
