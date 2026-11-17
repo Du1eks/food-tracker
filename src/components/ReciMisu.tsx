@@ -1,9 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { ArrowRight, Pencil, Plus, X } from 'lucide-react'
-import { OBROCI, fmt, uBroj, zaKolicinu, zbir, type Makrosi, type Obrok, type Unos } from '../lib/ishrana'
+import { ArrowRight, Plus } from 'lucide-react'
+import { OBROCI, fmt, zbir, type Obrok, type Unos } from '../lib/ishrana'
 import { danas } from '../lib/datum'
 import { dodajUnos } from '../lib/podaci'
-import { razumiObrok, type Stavka } from '../lib/razumi'
+import { razumiObrok } from '../lib/razumi'
 import { stanjeMisa, type Poza } from '../lib/rang'
 import { useProfil } from './useProfil'
 import { useSad } from './useMouseMascot'
@@ -12,21 +12,11 @@ import Maskota from './Maskota'
 const ZiviMis = lazy(() => import('./ZiviMis').catch(() => ({ default: ({ rezerva }: { rezerva: React.ReactElement }) => rezerva })))
 const bezPokreta = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 import { letMakrosa } from './letMakrosa'
+import PregledStavki, { ispravna, kolicina, makrosiReda, uRed, type RedPregleda } from './PregledStavki'
 
-const POLJA = [['kcal', 'kcal'], ['proteini', 'P'], ['uh', 'UH'], ['masti', 'M']] as const
-type Vrednosti = Record<keyof Makrosi, string>
+// Red u pregledu; grupa je obrok koji je AI pročitao ("?" = nije naveden)
+type Red = RedPregleda & { grupa: string }
 
-// Red u pregledu: brojevi su tekst dok se kucaju; grupa je obrok koji je AI pročitao ("?" = nije naveden).
-// v su vrednosti po jedinici (na 100 g ili po komadu); menjaju se samo za procene, za proizvod iz baze važi baza.
-type Red = Stavka & { id: number; kol: string; grupa: string; v: Vrednosti; otvoren: boolean }
-
-const dobar = (s: string) => s.trim() !== '' && Number.isFinite(uBroj(s)) && uBroj(s) >= 0
-const kolicina = (r: Red) => uBroj(r.kol)
-const poJedinici = (r: Red): Makrosi =>
-  r.izvor === 'baza' ? r : { kcal: uBroj(r.v.kcal), proteini: uBroj(r.v.proteini), uh: uBroj(r.v.uh), masti: uBroj(r.v.masti) }
-const ispravna = (r: Red) =>
-  dobar(r.kol) && kolicina(r) > 0 && (r.izvor === 'baza' || POLJA.every(([k]) => dobar(r.v[k])))
-const tekstBroja = (n: number) => String(n).replace('.', ',')
 const SLAVI_POSLE_UPISA = 4000 // ms
 
 // Tok: napiši mišu šta si jeo → on pročita (AI na serveru) → pregled → "Upiši" stavlja sve u tabelu.
@@ -60,10 +50,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
     try {
       const stavke = await razumiObrok(tekst)
       if (stavke.length === 0) return setGreska('Nisam našao hranu u poruci. Napiši npr. „2 jaja i 100 g pirinča“.')
-      setRedovi(stavke.map((s, id) => ({
-        ...s, id, kol: tekstBroja(s.kolicina), grupa: s.obrok ?? '?', otvoren: false,
-        v: { kcal: tekstBroja(s.kcal), proteini: tekstBroja(s.proteini), uh: tekstBroja(s.uh), masti: tekstBroja(s.masti) },
-      })))
+      setRedovi(stavke.map((s, id) => ({ ...uRed(s, id), grupa: s.obrok ?? '?' })))
       setObroci(Object.fromEntries(stavke.map((s) => [s.obrok ?? '?', s.obrok])))
     } catch (e) {
       setGreska(e instanceof Error ? e.message : 'Ne mogu sad da pročitam. Dodaj ručno preko +.')
@@ -81,7 +68,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
       const stavke = redovi.map((r) => ({
         datum, obrok: obroci[r.grupa]!, kolicina: kolicina(r), jedinica: r.jedinica, ime: r.ime,
         proizvod_id: r.proizvod_id,
-        ...zaKolicinu({ ...poJedinici(r), jedinica: r.jedinica }, kolicina(r)),
+        ...makrosiReda(r),
       }))
       await dodajUnos(stavke)
       setRedovi(null); setTekst(''); setUpisano(true); setSlaviUpis(true); setProcena(redovi.some((r) => r.izvor === 'procena'))
@@ -174,53 +161,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
                     </label>
                   ))}
                 </div>
-                <ul className="pregled-lista">
-                  {redovi.filter((r) => r.grupa === g).map((r, i) => {
-                    const m = ispravna(r) ? zaKolicinu({ ...poJedinici(r), jedinica: r.jedinica }, kolicina(r)) : null
-                    const mera = r.jedinica === '100g' ? 'g' : 'kom'
-                    const procena = r.izvor === 'procena'
-                    return (
-                      <li key={r.id} style={{ '--i': i } as React.CSSProperties}>
-                        <span className="pregled-ime">
-                          <b>{r.ime}</b>
-                          <small className="num">
-                            <span className={`izvor ${r.izvor}`}>{procena ? 'procena' : 'iz baze'}</span>
-                            {m ? `${fmt(m.kcal)} kcal · P ${fmt(m.proteini)} · UH ${fmt(m.uh)} · M ${fmt(m.masti)}` : 'proveri brojeve'}
-                          </small>
-                        </span>
-                        <label className="pregled-kol">
-                          <span className="sr">Količina za {r.ime} ({mera})</span>
-                          <input className="unos mali num" inputMode="decimal" value={r.kol} aria-invalid={!(dobar(r.kol) && kolicina(r) > 0)}
-                            onChange={(e) => izmeni(r.id, { kol: e.target.value })} />
-                          <span aria-hidden>{mera}</span>
-                        </label>
-                        <span className="pregled-akcije">
-                          {procena && (
-                            <button type="button" className={`ikona${r.otvoren ? ' aktivna' : ''}`} aria-expanded={r.otvoren}
-                              aria-label={`Izmeni vrednosti za ${r.ime}`} onClick={() => izmeni(r.id, { otvoren: !r.otvoren })}>
-                              <Pencil size={18} aria-hidden />
-                            </button>
-                          )}
-                          <button type="button" className="ikona" aria-label={`Izbaci ${r.ime}`} onClick={() => izbaci(r.id)}>
-                            <X size={20} aria-hidden />
-                          </button>
-                        </span>
-                        {procena && r.otvoren && (
-                          <fieldset className="pregled-vrednosti">
-                            <legend className="tiho-tekst">{r.jedinica === '100g' ? 'Vrednosti na 100 g' : 'Vrednosti za 1 komad'}</legend>
-                            {POLJA.map(([k, naziv]) => (
-                              <label key={k} className="polje">
-                                <span>{naziv}</span>
-                                <input className="unos mali num" inputMode="decimal" value={r.v[k]} aria-invalid={!dobar(r.v[k])}
-                                  onChange={(e) => izmeni(r.id, { v: { ...r.v, [k]: e.target.value } })} />
-                              </label>
-                            ))}
-                          </fieldset>
-                        )}
-                      </li>
-                    )
-                  })}
-                </ul>
+                <PregledStavki redovi={redovi.filter((r) => r.grupa === g)} izmeni={izmeni} izbaci={izbaci} />
               </fieldset>
             ))}
             <div className="pregled-dalje">

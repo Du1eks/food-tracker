@@ -6,6 +6,7 @@ import Dan from './pages/Dan'
 import Profil from './pages/Profil'
 import Kalendar from './pages/Kalendar'
 import Namirnice from './pages/Namirnice'
+import Kuhinja from './pages/Kuhinja'
 import Prijatelji from './pages/Prijatelji'
 import PrijateljProfil from './pages/PrijateljProfil'
 
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="dan/:datum" element={<Dan />} />
         <Route path="profil" element={<Profil />} />
         <Route path="kalendar" element={<Kalendar />} />
+        <Route path="kuhinja" element={<Kuhinja />} />
         <Route path="namirnice" element={<Namirnice />} />
         <Route path="prijatelji" element={<Prijatelji />} />
         <Route path="prijatelji/:id" element={<PrijateljProfil />} />
