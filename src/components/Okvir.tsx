@@ -23,6 +23,7 @@ export default function Okvir() {
   const nepopunjen = ucitan && !profil?.cilj_kcal
   const { pathname } = useLocation()
   const naDanu = pathname === '/' || pathname.startsWith('/dan/') // tamo je živi miš u panelu
+  const svojMis = naDanu || pathname === '/kuhinja' // Kuhinja ima miša kuvara na stranici
   return (
     <>
       <header className="gornja">
@@ -51,7 +52,7 @@ export default function Okvir() {
       </header>
       <Outlet context={{ profil, osveziProfil } satisfies OkvirKontekst} />
       {/* ključ na stranici: pri svakom prelasku miš ponovo proviri */}
-      {!naDanu && ucitan && <MisViri key={pathname} cilj={profil} />}
+      {!svojMis && ucitan && <MisViri key={pathname} cilj={profil} />}
     </>
   )
 }

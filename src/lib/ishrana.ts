@@ -108,3 +108,16 @@ export function godineOd(datumRodjenja: string, danas = new Date()): number {
 
 const broj = new Intl.NumberFormat('sr-Latn', { maximumFractionDigits: 1 })
 export const fmt = (n: number) => broj.format(n)
+
+// Oznake jela (kartica posle čuvanja u Kuhinji). Udeo makroa računa se iz kcal jela: 4 kcal/g P i UH, 9 kcal/g M.
+export function oznakeJela(m: Makrosi): string[] {
+  const udeo = (g: number, poGramu: number) => (m.kcal > 0 ? (g * poGramu) / m.kcal : 0)
+  const [p, uh, ma] = [udeo(m.proteini, 4), udeo(m.uh, 4), udeo(m.masti, 9)]
+  const oznake: string[] = []
+  if (m.proteini >= 30 || p >= 0.3) oznake.push('HIGH PROTEIN')
+  if (m.kcal >= 700) oznake.push('HIGH CALORIE')
+  if (m.masti <= 10) oznake.push('LOW FAT')
+  if (m.uh <= 20) oznake.push('LOW CARB')
+  if ([p, uh, ma].every((u) => u >= 0.2 && u <= 0.4)) oznake.push('BALANSIRANO')
+  return oznake
+}

@@ -1,14 +1,16 @@
-// Kuhinja: korisnik pravi i čuva svoja jela (šablone obroka). Miš sa ivice (MisViri) otvara panel za kuvanje,
+// Kuhinja: korisnik pravi i čuva svoja jela (šablone obroka). Miš kuvar na stranici otvara panel za kuvanje,
 // tekst ide kroz isti AI kao unos na početnoj, pregled je isti (PregledStavki), a čuva se u tabelu jelo, ne u dnevnik.
+// Posle čuvanja namirnice uskoče mišu u kapu (letNamirnica), pa iskoči kartica jela (KarticaJela).
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { ArrowRight, Pencil, Trash2, X } from 'lucide-react'
-import { fmt, poJedinici, zbir, type Jelo, type StavkaJela } from '../lib/ishrana'
+import { fmt, poJedinici, zbir, type Jelo, type Makrosi, type StavkaJela } from '../lib/ishrana'
 import { mojaJela, obrisiJelo, sacuvajJelo } from '../lib/podaci'
 import { razumiObrok } from '../lib/razumi'
 import PregledStavki, { ispravna, kolicina, makrosiReda, uRed, type RedPregleda } from '../components/PregledStavki'
-import Maskota from '../components/Maskota'
-import { KUVAJ } from '../components/MisViri'
+import MisKuvar from '../components/MisKuvar'
+import KarticaJela from '../components/KarticaJela'
+import { letNamirnica } from '../components/letNamirnica'
 import './dan.css'
 import './namirnice.css'
 import './kuhinja.css'
@@ -19,7 +21,7 @@ const MAX_IME = 80
 // 1 stavka, 2–4 stavke, 5–20 stavki (više od 20 jelo ne može da ima)
 const brojStavki = (n: number) => `${n} ${n === 1 ? 'stavka' : n < 5 ? 'stavke' : 'stavki'}`
 
-type Urednik ={ id?: string; ime: string; redovi: RedPregleda[] }
+type Urednik = { id?: string; ime: string; redovi: RedPregleda[] }
 
 // Sačuvana stavka nosi vrednosti za količinu; pregled radi sa vrednostima po jedinici
 const izStavke = (s: StavkaJela, id: number) =>
@@ -37,6 +39,8 @@ export default function Kuhinja() {
   const [cuva, setCuva] = useState(false)
   const [greska, setGreska] = useState('')
   const [sacuvano, setSacuvano] = useState('')
+  const [kartica, setKartica] = useState<{ ime: string; m: Makrosi } | null>(null)
+  const zatvoriKarticu = useCallback(() => setKartica(null), [])
 
   const ucitaj = useCallback(async () => {
     try {
@@ -54,13 +58,6 @@ export default function Kuhinja() {
     // posle crtanja panela: kursor u polje (na telefonu se otvori tastatura)
     requestAnimationFrame(() => document.getElementById('sta-kuvamo')?.focus())
   }, [])
-
-  // Klik na miša sa ivice: otvori novo jelo, ili samo vrati kursor u polje ako je panel već otvoren
-  useEffect(() => {
-    const kuvaj = () => (urednik ? document.getElementById('sta-kuvamo')?.focus() : otvori({ ime: '', redovi: [] }))
-    window.addEventListener(KUVAJ, kuvaj)
-    return () => window.removeEventListener(KUVAJ, kuvaj)
-  }, [urednik, otvori])
 
   async function procitaj(e?: React.FormEvent) {
     e?.preventDefault()
@@ -88,8 +85,12 @@ export default function Kuhinja() {
     setCuva(true); setGreska('')
     try {
       const ime = urednik.ime.trim()
-      await sacuvajJelo({ id: urednik.id, ime, stavke: urednik.redovi.map(uStavku) })
-      setUrednik(null); setSacuvano(`Jelo „${ime}“ je sačuvano.`)
+      const stavke = urednik.redovi.map(uStavku)
+      // namirnice lete dok se jelo čuva; kartica tek kad je oboje gotovo
+      const let_ = letNamirnica(stavke.map((s, i) => ({ ime: s.ime, el: document.querySelectorAll('.pregled-lista li')[i] })), document.getElementById('mis-kuvar'))
+      await sacuvajJelo({ id: urednik.id, ime, stavke })
+      await let_
+      setUrednik(null); setSacuvano(`Jelo „${ime}“ je sačuvano.`); setKartica({ ime, m: zbir(stavke) })
       ucitaj()
     } catch {
       setGreska('Jelo nije sačuvano. Proveri internet pa probaj ponovo.')
@@ -120,7 +121,8 @@ export default function Kuhinja() {
 
   const poruka = greska ? greska
     : cita ? 'Čitam…'
-    : redovi.length ? (urednik!.ime.trim() ? 'Još nešto ide unutra? Napiši, ili sačuvaj.' : 'Evo šta ide u jelo. Daj mu ime, pa sačuvaj.')
+    : cuva ? 'Kuvam… Mljac!'
+    : redovi.length ? (urednik!.ime.trim() ? 'Još nešto ide unutra? Ako ne, kuvamo!' : 'Evo šta ide u jelo. Daj mu ime, pa kuvamo.')
     : urednik?.id ? 'Prazno jelo ne može. Reci mi šta ide unutra.'
     : 'Šta kuvamo? Reci mi šta ide u jelo.'
 
@@ -128,6 +130,14 @@ export default function Kuhinja() {
     <>
       <div className="dan-red namirnice-naslov"><h1>Kuhinja</h1></div>
       <main className="namirnice kuhinja">
+        {!urednik && (
+          <button type="button" className="kuhinja-poziv" onClick={() => otvori({ ime: '', redovi: [] })}>
+            <MisKuvar />
+            <span className="mis-oblacic">Šta kuvamo? Klikni me, pa mi reci šta ide u jelo.</span>
+            <span className="plocica" aria-hidden><ArrowRight size={22} strokeWidth={2.5} /></span>
+          </button>
+        )}
+
         {urednik && (
           <section className="panel" aria-labelledby="kuvanje-naslov">
             <div className="panel-glava">
@@ -138,7 +148,7 @@ export default function Kuhinja() {
             </div>
             <div className="panel-telo">
               <div className={`mis${cita ? ' cita' : ''}`}>
-                <Maskota key={redovi.length ? 'jede' : 'hoda'} poza={redovi.length ? 'jede' : 'hoda'} />
+                <MisKuvar id="mis-kuvar" />
                 <p key={poruka} className={`mis-oblacic${greska ? ' lose' : ''}`} role={greska ? 'alert' : 'status'}>{poruka}</p>
               </div>
 
@@ -167,7 +177,7 @@ export default function Kuhinja() {
                       onChange={(e) => setUrednik({ ...urednik, ime: e.target.value })} />
                   </label>
                   <button className="dugme glavno" type="submit" disabled={!spremno || cuva}>
-                    {cuva ? 'Čuvam…' : 'Sačuvaj jelo'}
+                    {cuva ? 'Kuvam…' : urednik.id ? 'Sačuvaj izmene' : 'Napravi obrok'}
                     <span className="plocica" aria-hidden><ArrowRight size={22} strokeWidth={2.5} /></span>
                   </button>
                 </form>
@@ -184,7 +194,7 @@ export default function Kuhinja() {
           {jela === null ? (
             greskaListe ? null : <p className="tiho-tekst" role="status">Učitavam…</p>
           ) : jela.length === 0 ? (
-            <p className="tiho-tekst">Još nemaš sačuvanih jela. Klikni miša sa ivice ekrana i reci mu šta ide u jelo.</p>
+            <p className="tiho-tekst">Još nemaš sačuvanih jela. Klikni miša kuvara i reci mu šta ide u jelo.</p>
           ) : (
             <ul className="nam-lista">
               {jela.map((j) => {
@@ -215,6 +225,7 @@ export default function Kuhinja() {
 
         <Link to="/namirnice" className="kuhinja-baza">Baza namirnica</Link>
       </main>
+      {kartica && <KarticaJela ime={kartica.ime} m={kartica.m} onZatvori={zatvoriKarticu} />}
     </>
   )
 }
