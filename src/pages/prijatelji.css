@@ -153,23 +153,16 @@ a.rang-red:hover { background: var(--mint); }
 /* Živi miš (Masko klip) sam sebe animira: bez CSS pokreta, i prima dodir (postane "prejak") */
 .maskota.ziv { animation: none !important; pointer-events: auto; cursor: pointer; }
 
-/* Rang lista: ko je pogodio cilj "gori". Kalorije = veći narandžasti plamen i narandžasti broj mesta, proteini = manji plavi plamen.
-   Boje su van palete namerno, da se ne pomešaju sa zelenom trakom napretka; obe imaju bar 3:1 na beloj i na mint. */
-.rang-lista { --plamen-kcal: #d9480f; --plamen-proteini: #1971c2; }
-.rang-red-naziv { display: flex; align-items: center; gap: 4px; min-width: 0; }
-.rang-red-naziv b { min-width: 0; }
-.plamen { flex: none; }
-.plamen.kcal { color: var(--plamen-kcal); filter: drop-shadow(0 0 4px rgb(247 103 7 / 0.55)); }
-.plamen.proteini { color: var(--plamen-proteini); filter: drop-shadow(0 0 3px rgb(25 113 194 / 0.45)); }
-.rang-lista li.gori .rang-red-mesto { color: var(--plamen-kcal); }
-/* Treperi samo bez prefers-reduced-motion; inače stoji kao mirna oznaka */
-@media (prefers-reduced-motion: no-preference) {
-  .plamen { transform-origin: 50% 90%; animation: plamen-treperi 1.1s ease-in-out infinite; }
-  .plamen.proteini { animation-duration: 1.6s; animation-delay: -0.5s; }
-}
-@keyframes plamen-treperi {
-  0%, 100% { transform: rotate(-3deg) scale(1); }
-  25% { transform: rotate(2deg) scale(1.08, 0.94); }
-  50% { transform: rotate(-1deg) scale(0.95, 1.08); }
-  75% { transform: rotate(2deg) scale(1.05, 0.97); }
-}
+/* Rang lista: ko je pogodio cilj "gori" (components/ImeUPlamenu): proteini = ime gori iznutra (plavo),
+   kalorije = vatra oko table (narandžasto) i narandžast broj mesta. Ispod imena oznake u boji plamena. */
+.rang-lista { --kcal: #c2410c; --proteini: #1864ab; }
+.rang-red-naziv { display: flex; align-items: center; min-width: 0; }
+.rang-lista li.gori .rang-red-mesto { color: var(--kcal); }
+/* Red je sloj, da vatra iza table (z-index -1) ostane iznad pozadine reda i mint hovera */
+.rang-lista .rang-red { isolation: isolate; }
+
+/* Oznake ispod imena, u boji svog plamena (obe bar 4,5:1 na beloj i na mint) */
+.rang-oznake { display: flex; flex-wrap: wrap; gap: 2px 12px; margin-top: -2px; }
+.oznaka { font-size: 11px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; line-height: 1.2; }
+.oznaka.kcal { color: var(--kcal); }
+.oznaka.proteini { color: var(--proteini); }
