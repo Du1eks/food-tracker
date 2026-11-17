@@ -10,6 +10,7 @@ import {
 import { mesto, poRangu, type Zbir } from '../lib/rang'
 import { opisPlamena, plamen } from '../lib/plamen'
 import { useProfil } from '../components/useProfil'
+import ImeUPlamenu from '../components/ImeUPlamenu'
 import './dan.css'
 import './prijatelji.css'
 
@@ -90,28 +91,18 @@ export default function Prijatelji() {
             greska ? null : <p className="tiho-tekst" role="status">Učitavam…</p>
           ) : (
             <>
-              {/* Prag za jezike plamena: mekan šum postaje oštar, zašiljen plamen (koristi ga prijatelji.css) */}
-              <svg className="sr" aria-hidden>
-                <filter id="vatra-prag" colorInterpolationFilters="sRGB"><feComponentTransfer><feFuncA type="linear" slope="7" intercept="-2.6" /></feComponentTransfer></filter>
-              </svg>
               <ol className="rang-lista">
                 {poRangu(zbirovi).map((r) => {
                   const ja = r.id === profil?.id
                   const pct = Math.round(r.procenat * 100)
                   const gori = plamen(r)
-                  const ime = ja ? 'Ti' : r.nadimak
                   const sadrzaj = (
                     <>
                       <span className="rang-red-mesto num">{mesto(zbirovi, r)}.</span>
                       <span className="rang-red-ime">
                         <span className="rang-red-naziv">
-                          {/* Ko gori dobija crnu tablu: proteini = ime gori plavo, kalorije = narandžasta vatra oko table.
-                              Vatra je ukras (aria-hidden); čitač ekrana dobija tekst. */}
-                          <span className={['ime', gori.kalorije && 'gori-kcal', gori.proteini && 'gori-proteini'].filter(Boolean).join(' ')}>
-                            {gori.kalorije && <span className="vatra" aria-hidden />}
-                            {gori.proteini && <span className="jezici" aria-hidden />}
-                            <b>{ime}</b>
-                          </span>
+                          {/* Proteini = ime gori iznutra (plavo), kalorije = vatra oko imena (narandžasto); čitač ekrana dobija tekst */}
+                          <ImeUPlamenu ime={ja ? 'Ti' : r.nadimak} iznutra={gori.proteini} spolja={gori.kalorije} />
                           {opisPlamena(gori) && <span className="sr">, {opisPlamena(gori)}</span>}
                         </span>
                         {(gori.kalorije || gori.proteini) && (
