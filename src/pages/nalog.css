@@ -1,20 +1,19 @@
 .nalog { min-height: 100dvh; display: grid; grid-template-rows: auto auto 1fr; }
-/* Traka sa logom je ista zelena kao traka ispod; logo-zeleno.webp ima svetlije zelene delove da se vide na njoj.
+/* Logo (logo-zeleno.webp je crtan za tamnozelenu podlogu) stoji na maloj zelenoj etiketi na tamnom stolu.
    Na telefonu je logo na sredini, na širokom ekranu levo. */
-.nalog-gornja { display: flex; justify-content: center; padding: 14px clamp(16px, 4vw, 32px) 0; background: var(--zelena);
-  box-shadow: 0 1px 0 var(--zelena); /* zatvara šav od delića piksela između dve iste zelene trake (npr. na 125% zumu) */ }
-.nalog-gornja img { height: 52px; width: auto; }
+.nalog-gornja { display: flex; justify-content: center; padding: 16px clamp(16px, 4vw, 32px) 0; }
+.nalog-gornja img { height: 52px; width: auto; padding: 6px 14px; border-radius: 12px; background: #389600; box-shadow: var(--sjaj); }
 @media (min-width: 961px) {
   .nalog-gornja { justify-content: flex-start; }
   .nalog-gornja img { height: 72px; }
 }
 .nalog-traka {
-  background: var(--zelena); color: var(--tekst);
+  color: var(--tekst);
   padding: 32px clamp(16px, 5vw, 64px) 32px;
   text-align: center;
 }
-.nalog-traka h1 { font-weight: 900; font-size: clamp(56px, 10vw, 112px); line-height: 0.95; letter-spacing: -0.03em; }
-.nalog-opis { font-size: 20px; font-weight: 600; margin-top: 10px; }
+.nalog-traka h1 { font-size: clamp(52px, 10vw, 108px); line-height: 0.95; color: var(--zelena); text-shadow: 0 0 40px rgb(140 255 90 / 0.5); }
+.nalog-opis { font-size: 20px; font-weight: 600; margin-top: 10px; color: var(--sivi-tekst); }
 .nalog-panel { padding: 32px clamp(16px, 5vw, 64px) 48px; position: relative; }
 /* Uži ekran: miš leži na vrhu forme, prst prelazi preko ivice. Širi: stoji desno od forme (440px na sredini) i pokazuje ulevo */
 .nalog-mis {
@@ -27,7 +26,7 @@
 }
 .nalog-forma {
   max-width: 440px; margin-inline: auto; display: grid; gap: 18px;
-  background: var(--bela); border-radius: var(--r); padding: 24px;
+  background: var(--bela); border: 1px solid var(--spolja); border-radius: var(--r); padding: 24px;
   box-shadow: var(--senka);
 }
 .nalog-forma .dugme.glavno { width: 100%; }

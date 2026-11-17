@@ -1,12 +1,12 @@
 /* Tvoj napredak: nedeljni grafik makroa (naslagani stubići) */
 .kal-napredak { margin-top: 12px; }
-.kal-napredak [data-makro="proteini"] { --boja: var(--tekst); }
-.kal-napredak [data-makro="uh"] { --boja: var(--zelena); }
-.kal-napredak [data-makro="masti"] { --boja: var(--sivi); }
+.kal-napredak [data-makro="proteini"] { --boja: var(--proteini-boja); }
+.kal-napredak [data-makro="uh"] { --boja: var(--uh-boja); }
+.kal-napredak [data-makro="masti"] { --boja: var(--masti-boja); }
 .kal-napredak .panel-glava { flex-wrap: wrap; }
 .kal-nedelja { display: flex; align-items: center; gap: 10px; margin-left: auto; font-size: 17px; }
 .kal-nedelja button { border: 0; cursor: pointer; }
-.kal-nedelja button:hover:not(:disabled) { background: var(--svetlozelena); }
+.kal-nedelja button:hover:not(:disabled) { background: var(--zelena-jaca); }
 .kal-nedelja button:disabled { opacity: 0.35; cursor: not-allowed; }
 .kal-napredak > .greska { margin: 14px 18px 0; }
 .kal-graf-legenda { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0; padding: 16px 18px 0; font-size: 15px; font-weight: 700; }
@@ -23,10 +23,10 @@
   width: min(100%, 40px); height: 180px;
 }
 /* 6px = dva razmaka između tri segmenta, da najviši stubić ne izađe iz okvira */
-.kal-stubic i { height: calc((100% - 6px) * var(--d)); min-height: 3px; border-radius: 4px; background: var(--boja); }
+.kal-stubic i { height: calc((100% - 6px) * var(--d)); min-height: 3px; border-radius: 4px; background: var(--boja); box-shadow: 0 0 10px -2px var(--boja); }
 .kal-stubic .prazan { height: 100%; background: var(--pozadina); }
 .kal-graf-dan { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sivi-tekst); padding: 0 6px; }
-.kal-graf .danas .kal-graf-dan { background: var(--tekst); color: var(--bela); border-radius: 999px; }
+.kal-graf .danas .kal-graf-dan { background: var(--zelena); color: var(--na-neonu); border-radius: 999px; }
 
 @media (max-width: 640px) {
   .kal-graf { gap: 4px; padding: 10px 12px 14px; }

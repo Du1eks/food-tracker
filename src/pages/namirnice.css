@@ -5,7 +5,7 @@
 .namirnice .dan-tabela { padding-top: 16px; }
 .nam-lista { list-style: none; margin: 0; padding: 0; }
 .nam-red { padding: 12px 0; }
-.nam-red + .nam-red { border-top: 1px solid var(--pozadina); }
+.nam-red + .nam-red { border-top: 1px solid var(--spolja); }
 .nam-glavno { display: flex; align-items: center; gap: 12px; }
 .nam-ime { flex: 1; display: grid; min-width: 0; }
 .nam-ime b { font-size: 18px; overflow-wrap: anywhere; }

@@ -1,6 +1,6 @@
-// Kuhinja: korisnik pravi i čuva svoja jela (šablone obroka). Miš kuvar na stranici otvara panel za kuvanje,
+// Laboratorija (ruta /kuhinja): korisnik pravi i čuva svoja jela (šablone obroka). Miš na stranici otvara panel za kuvanje,
 // tekst ide kroz isti AI kao unos na početnoj, pregled je isti (PregledStavki), a čuva se u tabelu jelo, ne u dnevnik.
-// Posle čuvanja namirnice uskoče mišu u kapu (letNamirnica), pa iskoči kartica jela (KarticaJela).
+// Posle čuvanja namirnice uskoče u neon bocu pored miša (letNamirnica), pa iskoči kartica jela (KarticaJela).
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { ArrowRight, Pencil, Trash2, X } from 'lucide-react'
@@ -128,7 +128,7 @@ export default function Kuhinja() {
 
   return (
     <>
-      <div className="dan-red namirnice-naslov"><h1>Kuhinja</h1></div>
+      <div className="dan-red namirnice-naslov"><h1>Laboratorija</h1></div>
       <main className="namirnice kuhinja">
         {!urednik && (
           <button type="button" className="kuhinja-poziv" onClick={() => otvori({ ime: '', redovi: [] })}>
@@ -194,7 +194,7 @@ export default function Kuhinja() {
           {jela === null ? (
             greskaListe ? null : <p className="tiho-tekst" role="status">Učitavam…</p>
           ) : jela.length === 0 ? (
-            <p className="tiho-tekst">Još nemaš sačuvanih jela. Klikni miša kuvara i reci mu šta ide u jelo.</p>
+            <p className="tiho-tekst">Još nemaš sačuvanih jela. Klikni miša i reci mu šta ide u jelo.</p>
           ) : (
             <ul className="nam-lista">
               {jela.map((j) => {

@@ -1,41 +1,60 @@
-/* Kartica dnevnog napretka: zeleni luk od "tečnosti" na podlozi aplikacije, ispod tri bele kartice makroa.
-   Nije lepljiva: sa lukom je visoka ~360px i na telefonu bi pokrila pola ekrana. */
+/* Kartica dnevnog napretka: neon epruveta preko cele širine na laboratorijskom stolu, ispod/pored tri kartice makroa.
+   Nije lepljiva: sa epruvetom je visoka ~300px i na telefonu bi pokrila pola ekrana. */
 .traka {
   color: var(--tekst);
   display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: clamp(20px, 4vw, 48px);
   padding: 18px clamp(16px, 4vw, 32px) 22px;
 }
-.napredak { width: min(100%, 440px); display: grid; justify-items: center; gap: 6px; }
-.traka-oznaka { font-weight: 700; font-size: 18px; justify-self: start; }
-/* boje tečnosti u luku (svetlija unutra, tamnija spolja), sredina je --zelena */
-.luk { --luk-svetla: #7bd63a; --luk-sredina: var(--zelena); --luk-tamna: #2a7400; position: relative; width: min(100%, 300px); }
-/* pogođen cilj kalorija: tečnost u luku postane zlatna, boje sira */
-.luk.ispunjen { --luk-svetla: var(--sir-vrh); --luk-sredina: var(--sir-lice); --luk-tamna: var(--sir-bok); }
-.luk stop { transition: stop-color 900ms ease; }
-.luk > svg { display: block; width: 100%; overflow: visible; }
-.luk > svg path { fill: none; stroke-width: 15; stroke-linecap: round; }
-.luk-staza { stroke: rgb(17 19 17 / 0.1); }
-/* mehurići: tačkice koje teku kroz cev; odsjaj: širi svetli talas, sporiji */
-.luk > svg .luk-mehurici { stroke: rgb(255 255 255 / 0.55); stroke-width: 3.5; stroke-dasharray: 0.1 7.9; }
-.luk > svg .luk-odsjaj { stroke: rgb(255 255 255 / 0.22); stroke-width: 7; stroke-dasharray: 9 23; }
-/* oznaka procenta sedi na kraju ispune */
-.luk-procenat {
-  position: absolute; transform: translate(-50%, -50%);
-  background: var(--bela); color: var(--tekst); border: var(--okvir); border-radius: 999px;
-  padding: 1px 7px; font-weight: 800; font-size: 14px; line-height: 1.2; white-space: nowrap;
+.napredak { width: min(100%, 440px); display: grid; gap: 6px; }
+.traka-oznaka { font-weight: 800; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sivi-tekst); justify-self: start; }
+/* Broj kalorija: monumentalno neon, cilj sitno pored */
+.traka-kcal { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; justify-self: start; }
+.traka-broj { font-family: var(--font-d); font-size: clamp(52px, 6vw, 84px); line-height: 0.95; color: var(--zelena); text-shadow: 0 0 30px rgb(140 255 90 / 0.5); }
+.traka-sitno { font-weight: 600; font-size: 20px; color: var(--sivi-tekst); }
+/* Epruveta položena preko cele širine (Dan.tsx): staklo, neon tečnost sa mehurićima, isprekidana crta cilja */
+.cev { --tecnost-1: #b8ff95; --tecnost-2: var(--zelena); --tecnost-3: var(--zelena-duboka); --tecnost-sjaj: rgb(140 255 90 / 0.7);
+  position: relative; width: 100%; height: 96px; margin: 30px 0 26px; }
+/* pogođen cilj kalorija: tečnost postane zlatna, boje sira */
+.cev.ispunjen { --tecnost-1: var(--sir-vrh); --tecnost-2: var(--sir-lice); --tecnost-3: var(--sir-bok); --tecnost-sjaj: rgb(255 194 26 / 0.7); }
+.cev-staklo {
+  position: absolute; inset: 0; overflow: hidden; border-radius: 12px 48px 48px 12px;
+  border: 2px solid rgb(200 255 220 / 0.45); border-left-width: 8px;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.01) 40%, rgb(255 255 255 / 0.04));
+  box-shadow: inset 0 10px 18px -12px rgb(255 255 255 / 0.35);
 }
-.luk-sredina { position: absolute; inset: auto 0 0; display: grid; justify-items: center; text-align: center; }
-.traka-broj { font-weight: 900; font-size: clamp(48px, 5vw, 60px); line-height: 0.95; letter-spacing: -0.03em; }
-.traka-sitno { font-weight: 700; font-size: 15px; margin-top: 2px; }
+.cev-tecnost {
+  position: absolute; left: 0; top: 0; bottom: 0; overflow: hidden; border-radius: 0 6px 6px 0;
+  background: linear-gradient(180deg, var(--tecnost-1), var(--tecnost-2) 35%, var(--tecnost-3));
+  box-shadow: 0 0 40px var(--tecnost-sjaj), inset -6px 0 12px rgb(255 255 255 / 0.35);
+}
+.cev-tecnost i {
+  position: absolute; bottom: -10px; left: var(--x); width: var(--s); height: var(--s); border-radius: 50%;
+  background: rgb(240 255 235 / 0.85); opacity: 0;
+}
+/* crta cilja na 1/1,15 dužine (Dan.tsx: PREKO) */
+.cev-cilj { position: absolute; left: calc(100% / 1.15); top: -28px; bottom: -6px; border-left: 2px dashed var(--tekst); }
+.cev-cilj > span { position: absolute; left: 8px; top: 0; font-size: 13px; font-weight: 700; white-space: nowrap; color: var(--tekst); }
+.cev-cilj b { color: var(--zelena); letter-spacing: 0.06em; }
+.cev-procenat {
+  position: absolute; top: 100%; margin-top: 6px; transform: translateX(-50%);
+  font-weight: 800; font-size: 13px; color: var(--sivi-tekst); white-space: nowrap;
+}
+/* sir iskoči na kraju epruvete kad je cilj kalorija pogođen */
+.cev-sir { position: absolute; right: -6px; top: 50%; translate: 0 -50%; }
+.cev-sir .sir:not(.slavi) { display: none; }
 .traka-ostatak { font-weight: 700; font-size: 16px; }
 .traka-makrosi { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 8px 0 0; }
-.traka-makrosi > div { background: var(--bela); border-radius: var(--r); padding: 10px 12px 12px; box-shadow: var(--senka); min-width: 0; }
+.traka-makrosi > div { background: var(--bela); border: 1px solid var(--spolja); border-radius: var(--r); padding: 10px 12px 12px; box-shadow: var(--senka); min-width: 0; }
+/* svaki makro ima svoju tečnost: proteini plavi, UH žuti, masti narandžasti */
+.traka-makrosi > div:nth-child(1) { --boja: var(--proteini-boja); }
+.traka-makrosi > div:nth-child(2) { --boja: var(--uh-boja); }
+.traka-makrosi > div:nth-child(3) { --boja: var(--masti-boja); }
 .traka-makrosi dt { font-weight: 700; font-size: 14px; color: var(--sivi-tekst); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .traka-makrosi dd { margin: 4px 0 0; font-weight: 800; font-size: 24px; line-height: 1; white-space: nowrap; }
 .traka-makrosi dd small { font-size: 14px; font-weight: 700; color: var(--sivi-tekst); }
 /* tanka traka napretka makroa, kao traka u polju kalendara */
-.makro-traka { display: block; position: relative; height: 6px; margin-top: 10px; border-radius: 999px; background: var(--pozadina); overflow: hidden; }
-.makro-traka::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--p); background: var(--zelena); }
+.makro-traka { display: block; position: relative; height: 8px; margin-top: 10px; border-radius: 999px; background: var(--pozadina); box-shadow: inset 0 0 0 1px var(--spolja); overflow: hidden; }
+.makro-traka::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--p); border-radius: inherit; background: var(--boja, var(--zelena)); box-shadow: 0 0 10px var(--boja, var(--zelena)); }
 .traka-mis, .traka-profil { grid-column: -2; }
 /* Glava miša u okviru (samo telefon): na hover/fokus se isplazi, a pozadina se odozdo napuni zelenom */
 .traka-mis {
@@ -53,12 +72,12 @@
   .traka-mis:hover .jezik, .traka-mis:focus-visible .jezik { animation: plazi 420ms cubic-bezier(0.34, 1.56, 0.64, 1); }
 }
 @keyframes plazi { from { transform: scale(0.9) rotate(-6deg); } to { transform: none; } }
-.traka-profil { background: var(--tekst); color: var(--bela); border-color: var(--tekst); }
-.traka-profil:hover { background: #2a2e2a; }
-.traka-profil .plocica { background: var(--bela); color: var(--tekst); }
+.traka-profil { background: var(--zelena); color: var(--na-neonu); border-color: var(--zelena); box-shadow: var(--sjaj); }
+.traka-profil:hover { background: var(--zelena-jaca); }
+.traka-profil .plocica { background: var(--na-neonu); color: var(--zelena); }
 
 /* Pečat "cilj pogođen" (crtež i boje: components/pecat.css): otisak pokriva celo polje, preko kartice makroa
-   (proteini, masti); pokret udarca je u Dan.tsx (Pecat). Cilj kalorija nema pečat, luk promeni boju. */
+   (proteini, masti); pokret udarca je u Dan.tsx (Pecat). Cilj kalorija nema pečat, epruveta postane zlatna. */
 .traka-makrosi > div { position: relative; }
 .pecat {
   --ugao: -12deg; position: absolute; z-index: 3; top: 50%; left: 50%; height: 125%; aspect-ratio: 1;
@@ -69,14 +88,17 @@
 .pecat.udara { z-index: 30; }
 .pecat .pecat-alat { position: absolute; left: 50%; margin-left: -31%; bottom: 41%; width: 62%; opacity: 0; }
 @media (prefers-reduced-motion: no-preference) {
-  .luk-ispuna { transition: stroke-dasharray 700ms cubic-bezier(0.16, 1, 0.3, 1); }
-  .luk-mehurici { animation: tece 1.4s linear infinite; }
-  .luk-odsjaj { animation: tece 3.2s linear infinite; }
+  .cev-tecnost { transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
+  .cev-tecnost i { animation: mehur var(--d) linear var(--k) infinite; }
+  .cev-procenat { transition: left 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
   /* sir (crtež: components/Sir) iskoči kad je cilj kalorija pogođen, pa se blago njiše */
   .sir.slavi { transform-origin: 50% 90%; animation: sir-iskoci 700ms cubic-bezier(0.34, 1.56, 0.64, 1), sir-njise 2.6s ease-in-out 700ms infinite; }
 }
-/* tečnost teče od početka luka ka kraju ispune */
-@keyframes tece { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -32; } }
+@keyframes mehur {
+  0% { transform: translateY(0); opacity: 0; }
+  12% { opacity: 0.95; }
+  100% { transform: translateY(-120px) translateX(-3px); opacity: 0; }
+}
 @keyframes sir-iskoci {
   0% { transform: translateY(16px) scale(0.2); opacity: 0; }
   60% { transform: translateY(-6px) scale(1.18); opacity: 1; }
@@ -88,27 +110,27 @@
 .nedelja { display: flex; align-items: center; gap: 8px; padding: 14px clamp(16px, 4vw, 32px) 4px; }
 .nedelja > .plocica, .nedelja-prazno { flex: none; width: 36px; height: 36px; }
 .nedelja-sredina { flex: 1; min-width: 0; max-width: 560px; margin: 0 auto; display: grid; gap: 6px; }
-.nedelja-mesec { text-align: center; font-weight: 800; font-size: 15px; }
+.nedelja-mesec { text-align: center; font-family: var(--font-d); font-size: 15px; }
 .nedelja-dani { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
 .nedelja-dan {
   display: grid; justify-items: center; gap: 4px; padding: 6px 0 8px;
   border: 2px solid transparent; border-radius: var(--r); color: var(--tekst); text-decoration: none;
 }
 a.nedelja-dan:hover { background: var(--mint); }
-.nedelja-dan[aria-current] { background: var(--bela); border-color: var(--tekst); box-shadow: var(--senka); }
+.nedelja-dan[aria-current] { background: var(--bela); border-color: var(--zelena); box-shadow: 0 0 22px -8px rgb(140 255 90 / 0.6); }
 .nedelja-ime { font-weight: 700; font-size: 13px; line-height: 1; padding: 3px 6px; border-radius: 999px; }
-.nedelja-broj { font-weight: 800; font-size: 15px; line-height: 1; }
-.nedelja-dan[data-danas] .nedelja-ime { background: var(--tekst); color: var(--bela); }
+.nedelja-broj { font-family: var(--font-d); font-size: 16px; line-height: 1; }
+.nedelja-dan[data-danas] .nedelja-ime { background: var(--zelena); color: var(--na-neonu); }
 .nedelja-znak {
   width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%;
   border: 2px solid var(--sivi); font-weight: 900; font-size: 20px; line-height: 1;
 }
-.nedelja-dan[data-stanje="pogodjen"] .nedelja-znak { background: var(--zelena); border-color: var(--zelena); }
+.nedelja-dan[data-stanje="pogodjen"] .nedelja-znak { background: var(--zelena); border-color: var(--zelena); color: var(--na-neonu); box-shadow: 0 0 14px -2px rgb(140 255 90 / 0.7); }
 .nedelja-dan[data-stanje="promasen"] .nedelja-znak { background: var(--greska-bg); border-color: var(--greska); color: var(--greska); }
 .nedelja-dan.buduci { opacity: 0.55; }
 .nedelja-dan.buduci .nedelja-znak { border-style: dashed; }
 .dan-naslov { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; padding: 4px clamp(16px, 4vw, 32px) 14px; }
-.dan-naslov h1 { font-size: 20px; font-weight: 800; }
+.dan-naslov h1 { font-size: 20px; }
 
 /* Potpis: brojka se preispiše kao traka na tabli */
 @media (prefers-reduced-motion: no-preference) {
@@ -120,9 +142,9 @@ a.nedelja-dan:hover { background: var(--mint); }
 }
 
 .dan-red { display: flex; align-items: center; gap: 12px; padding: 18px clamp(16px, 4vw, 32px); }
-.dan-red h1 { font-size: clamp(22px, 2.4vw, 28px); font-weight: 800; }
+.dan-red h1 { font-size: clamp(24px, 2.6vw, 32px); }
 .dan-red .plocica { width: 36px; height: 36px; }
-.dan-oznaka { background: var(--tekst); color: var(--bela); font-weight: 700; font-size: 14px; padding: 3px 10px; border-radius: 999px; }
+.dan-oznaka { background: var(--zelena); color: var(--na-neonu); font-weight: 700; font-size: 14px; padding: 3px 10px; border-radius: 999px; }
 
 .dan {
   display: grid; grid-template-columns: minmax(340px, 440px) 1fr; gap: 24px; align-items: start;
@@ -130,16 +152,16 @@ a.nedelja-dan:hover { background: var(--mint); }
 }
 
 /* Panel sa crnom glavom, kao tabla "sledeća odluka" */
-.panel { background: var(--bela); border-radius: var(--r); overflow: hidden; box-shadow: var(--senka); }
+.panel { background: var(--bela); border: 1px solid var(--spolja); border-radius: var(--r); overflow: hidden; box-shadow: var(--senka); }
 .panel-glava {
   display: flex; align-items: center; gap: 14px; padding: 14px 18px;
-  background: var(--tekst); color: var(--bela); font-size: 20px; font-weight: 700;
+  background: var(--crna); color: var(--tekst); font-size: 20px; font-weight: 700;
+  border-bottom: 1px solid rgb(140 255 90 / 0.35);
 }
 .panel-glava .plocica { width: 32px; height: 32px; }
 .panel-glava h2 { font: inherit; }
 .panel-glava .plus { width: 40px; height: 40px; border: 0; cursor: pointer; }
-.panel-glava .plus:hover { background: var(--svetlozelena); }
-.panel-glava :focus-visible { outline-color: var(--svetlozelena); }
+.panel-glava .plus:hover { background: var(--zelena-jaca); }
 
 .obroci { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .obroci .dugme { min-height: 64px; font-size: 19px; }
@@ -152,7 +174,7 @@ a.nedelja-dan:hover { background: var(--mint); }
 
 .pretraga { display: flex; gap: 8px; }
 .pretraga .plocica { width: 48px; height: 48px; border: 0; cursor: pointer; }
-.pretraga .plocica:hover { background: #2a2e2a; }
+.pretraga .plocica:hover { background: var(--zelena-jaca); }
 .tiho-tekst { color: var(--sivi-tekst); font-weight: 600; font-size: 15px; }
 .prazno { padding: 12px 0; }
 
@@ -187,12 +209,12 @@ a.nedelja-dan:hover { background: var(--mint); }
 .unos-forma .dugme.glavno { width: 100%; }
 
 /* Tabela dana */
-.dan-tabela { background: var(--bela); border-radius: var(--r); padding: 8px 24px 16px; box-shadow: var(--senka); display: grid; gap: 12px; }
+.dan-tabela { background: var(--bela); border: 1px solid var(--spolja); border-radius: var(--r); padding: 8px 24px 16px; box-shadow: var(--senka); display: grid; gap: 12px; }
 .ikona {
   width: 36px; height: 36px; display: inline-grid; place-items: center; border-radius: 4px;
   border: 0; background: none; cursor: pointer; color: var(--sivi-tekst);
 }
-.ikona:hover { background: var(--tekst); color: var(--bela); }
+.ikona:hover { background: var(--mint); color: var(--zelena); }
 
 /* Miš kome pišeš: stoji levo, govori u oblačiću (tekst je u HTML-u, ne u slici) */
 .panel-glava .nazad-misu { margin-left: auto; }
@@ -231,13 +253,13 @@ a.nedelja-dan:hover { background: var(--mint); }
 /* Pregled pre upisa: po obroku, svaka namirnica u svom redu */
 .pregled-grupa { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 8px; }
 /* linija između grupa je pozadina, ne border: legend fieldseta bi presekao border */
-.pregled-grupa + .pregled-grupa { padding-top: 16px; background: linear-gradient(var(--tekst), var(--tekst)) top / 100% 2px no-repeat; }
+.pregled-grupa + .pregled-grupa { padding-top: 16px; background: linear-gradient(var(--spolja), var(--spolja)) top / 100% 2px no-repeat; }
 .pregled-grupa legend { padding: 0; margin-bottom: 8px; }
 .pregled-pitanje { font-weight: 800; font-size: 17px; }
 .pregled-lista { list-style: none; margin: 0; padding: 0; }
 .pregled-lista li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 10px 0; }
 .pregled-akcije { display: flex; }
-.ikona.aktivna { background: var(--tekst); color: var(--bela); }
+.ikona.aktivna { background: var(--zelena); color: var(--na-neonu); }
 /* Izmena vrednosti procene: četiri mala polja ispod reda, preko cele širine */
 .pregled-vrednosti {
   grid-column: 1 / -1; border: 0; margin: 0; padding: 10px 12px 12px; min-width: 0;
@@ -253,13 +275,13 @@ a.nedelja-dan:hover { background: var(--mint); }
 .pregled-ime small { display: block; margin-top: 3px; color: var(--sivi-tekst); font-size: 13px; font-weight: 600; }
 /* Odakle su vrednosti: naša baza (puna oznaka) ili procena AI-ja (samo okvir) */
 .izvor { display: inline-block; margin-right: 6px; padding: 0 6px; border-radius: 999px; border: 1px solid var(--tekst); color: var(--tekst); font-weight: 700; }
-.izvor.baza { background: var(--tekst); color: var(--bela); }
+.izvor.baza { background: var(--zelena); color: var(--na-neonu); }
 /* Procena u tabeli: dugme da postane namirnica u bazi (oblik iste oznake, uvek vidljivo) */
 .u-bazu {
   display: inline-flex; align-items: center; gap: 3px; margin: 0 0 0 8px; min-height: 26px; padding: 0 9px;
   background: var(--bela); font: inherit; font-size: 12px; cursor: pointer; vertical-align: 1px;
 }
-.u-bazu:hover { background: var(--tekst); color: var(--bela); }
+.u-bazu:hover { background: var(--zelena); color: var(--na-neonu); border-color: var(--zelena); }
 .u-bazu:disabled { opacity: 0.5; cursor: default; }
 .pregled-kol { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--sivi-tekst); }
 .pregled-kol .unos.mali { width: 76px; }
@@ -286,17 +308,18 @@ a.nedelja-dan:hover { background: var(--mint); }
 .dan > .kal-napredak { grid-column: 2; grid-row: 1; margin-top: 0; }
 .dan > .rang-omot { grid-column: 2; grid-row: 2; }
 .dan > .dan-tabela { grid-column: 1 / -1; }
-/* Računar: kartica napretka preko cele širine, luk levo, kartice makroa desno i krupnije */
+/* Računar: broj levo, kartice makroa desno i krupnije, epruveta ispod preko cele širine */
 @media (min-width: 961px) {
   .traka { grid-template-columns: 1fr; }
   .napredak {
-    width: 100%; grid-template-columns: minmax(260px, 340px) 1fr; column-gap: clamp(24px, 4vw, 56px);
-    grid-template-areas: "naslov naslov" "luk makrosi" "ostatak makrosi";
+    width: 100%; grid-template-columns: auto 1fr; column-gap: clamp(24px, 4vw, 56px); align-items: end;
+    grid-template-areas: "naslov makrosi" "kcal makrosi" "ostatak makrosi" "cev cev";
   }
   .traka-oznaka { grid-area: naslov; }
-  .luk { grid-area: luk; }
+  .traka-kcal { grid-area: kcal; }
+  .cev { grid-area: cev; }
   .traka-ostatak { grid-area: ostatak; }
-  .traka-makrosi { grid-area: makrosi; gap: 16px; margin: 0; }
+  .traka-makrosi { grid-area: makrosi; gap: 16px; margin: 0; justify-self: end; width: min(100%, 720px); }
   .traka-makrosi > div { padding: 18px 20px 20px; }
   .traka-makrosi dt { font-size: 16px; }
   .traka-makrosi dd { font-size: 40px; }
@@ -310,10 +333,13 @@ a.nedelja-dan:hover { background: var(--mint); }
   .dan > .kal-napredak { display: none; }
 }
 @media (max-width: 640px) {
-  /* Telefon: luk preko cele širine, strelica u gornjem desnom uglu kartice */
+  /* Telefon: epruveta preko cele širine, glava miša u gornjem desnom uglu kartice */
   .traka { position: relative; grid-template-columns: 1fr; gap: 14px; padding: 14px 16px 18px; }
   .napredak { width: 100%; }
   .traka-mis { display: block; position: absolute; top: 12px; right: 16px; }
+  .cev { height: 72px; margin: 30px 0 22px; }
+  .cev-cilj > span { left: auto; right: 8px; }
+  .traka-broj { font-size: 52px; }
   .traka-profil { grid-column: auto; }
   .traka-makrosi > div { padding: 8px 8px 10px; }
   .traka-makrosi dt { font-size: 13px; }
@@ -356,8 +382,8 @@ a.nedelja-dan:hover { background: var(--mint); }
   display: grid; gap: 16px; text-align: center; text-wrap: balance;
   font-weight: 900; font-size: clamp(40px, 11vw, 104px); line-height: 1; letter-spacing: -0.03em;
   /* tamnozelen tekst sa belim obrubom (četiri senke) i senkom: ističe se i na zelenoj traci i na svetloj pozadini */
-  color: #1b4a00;
-  filter: drop-shadow(0 3px 0 var(--bela)) drop-shadow(0 -3px 0 var(--bela)) drop-shadow(3px 0 0 var(--bela)) drop-shadow(-3px 0 0 var(--bela)) drop-shadow(0 6px 14px rgb(17 19 17 / 0.45));
+  font-family: var(--font-d); font-weight: 400; color: var(--zelena);
+  filter: drop-shadow(0 3px 0 var(--crna)) drop-shadow(0 -3px 0 var(--crna)) drop-shadow(3px 0 0 var(--crna)) drop-shadow(-3px 0 0 var(--crna)) drop-shadow(0 0 24px rgb(140 255 90 / 0.65));
   animation: pohvala 3200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 @keyframes pohvala {

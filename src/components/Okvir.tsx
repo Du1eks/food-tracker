@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link, Outlet, useLocation } from 'react-router'
-import { CalendarDays, ChefHat, House, UserRound, Users } from 'lucide-react'
+import { Link, NavLink, Outlet, useLocation } from 'react-router'
+import { CalendarDays, FlaskConical, House, UserRound, Users } from 'lucide-react'
 import { ucitajProfil, type Profil } from '../lib/podaci'
 import type { OkvirKontekst } from './useProfil'
 import MisViri from './MisViri'
@@ -23,31 +23,31 @@ export default function Okvir() {
   const nepopunjen = ucitan && !profil?.cilj_kcal
   const { pathname } = useLocation()
   const naDanu = pathname === '/' || pathname.startsWith('/dan/') // tamo je živi miš u panelu
-  const svojMis = naDanu || pathname === '/kuhinja' // Kuhinja ima miša kuvara na stranici
+  const svojMis = naDanu || pathname === '/kuhinja' // Laboratorija ima svog miša na stranici
   return (
     <>
       <header className="gornja">
         <div className="gornja-levo">
-          <Link to="/" className="plocica svetla" aria-label="Početna, današnji dan">
+          <NavLink to="/" end className="plocica svetla" aria-label="Početna, današnji dan">
             <House size={22} strokeWidth={2.25} aria-hidden />
-          </Link>
+          </NavLink>
           {/* Na uskom telefonu nema mesta za ime; ikona kuće vodi na isto mesto */}
           <Link to="/" className="gornja-ime">Mouse's tracker</Link>
         </div>
         <div className="gornja-desno">
-          <Link to="/kalendar" className="plocica svetla" aria-label="Kalendar">
+          <NavLink to="/kalendar" className="plocica svetla" aria-label="Kalendar">
             <CalendarDays size={22} strokeWidth={2.25} aria-hidden />
-          </Link>
-          <Link to="/kuhinja" className="plocica svetla" aria-label="Kuhinja, moja jela">
-            <ChefHat size={22} strokeWidth={2.25} aria-hidden />
-          </Link>
-          <Link to="/prijatelji" className="plocica svetla" aria-label="Prijatelji">
+          </NavLink>
+          <NavLink to="/kuhinja" className="plocica svetla" aria-label="Laboratorija, moja jela">
+            <FlaskConical size={22} strokeWidth={2.25} aria-hidden />
+          </NavLink>
+          <NavLink to="/prijatelji" className="plocica svetla" aria-label="Prijatelji">
             <Users size={22} strokeWidth={2.25} aria-hidden />
-          </Link>
-          <Link to="/profil" className="plocica svetla gornja-profil" aria-label={nepopunjen ? 'Profil, nije popunjen' : 'Profil'}>
+          </NavLink>
+          <NavLink to="/profil" className="plocica svetla gornja-profil" aria-label={nepopunjen ? 'Profil, nije popunjen' : 'Profil'}>
             <UserRound size={22} strokeWidth={2.25} aria-hidden />
             {nepopunjen && <span className="tacka" aria-hidden />}
-          </Link>
+          </NavLink>
         </div>
       </header>
       <Outlet context={{ profil, osveziProfil } satisfies OkvirKontekst} />

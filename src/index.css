@@ -1,51 +1,73 @@
-/* Paleta je zadata (PRODUCT.md). Na zelenoj ide crni tekst, kao na aerodromskim tablama: belo na #389600 ne prolazi kontrast za sitan tekst. */
+/* Ludi naučnik: noćna laboratorija. Jedina svetlost je neon tečnost (--zelena); tekst na neonu je tamni (--na-neonu).
+   Imena tokena su ostala iz prve palete da komponente ne moraju da se menjaju: --bela je sada površina ploče, --tekst svetao tekst,
+   --crna najdublja tama (gornja traka, glave panela, zbir dana). */
 :root {
-  --zelena: #389600;
-  --svetlozelena: #c2dcb8;
-  --mint: #dff6ed;
-  --pozadina: #e3eee6;
-  --spolja: #d5dcd7;
-  --bela: #ffffff;
-  --tekst: #111311;
-  --sivi: #818581;
-  /* tamnija nijansa iste sive za sitan tekst (#818581 na beloj je 3,7:1, ispod AA) */
-  --sivi-tekst: #5c605c;
-  --greska: #b3261e;
-  --greska-bg: #fdeceb;
+  color-scheme: dark;
+  --zelena: #8cff5a;
+  --zelena-jaca: #a8ff82;
+  --zelena-duboka: #4fd12a;
+  --na-neonu: #061206;
+  --svetlozelena: #2f6b1a;
+  --mint: #1a2a22;
+  --pozadina: #0b100e;
+  --spolja: #22312b;
+  --bela: #121a17;
+  --ploca-2: #18221e;
+  --crna: #050807;
+  --tekst: #e8f3ed;
+  --sivi: #6f857b;
+  /* sitan tekst na ploči (#93a99f na #121a17 je oko 6,8:1) */
+  --sivi-tekst: #93a99f;
+  --greska: #ff6b6b;
+  --greska-bg: #3a1414;
+  --proteini-boja: #49c6ff;
+  --uh-boja: #ffd84a;
+  --masti-boja: #ff8f3f;
 
-  --font: 'Source Sans 3 Variable', 'Source Sans 3', system-ui, sans-serif;
-  --r: 6px;
-  --okvir: 2px solid var(--tekst);
-  --senka: 0 6px 18px -8px rgb(17 19 17 / 0.28);
+  --font: 'Chivo Variable', 'Chivo', system-ui, sans-serif;
+  --font-d: 'Bungee', 'Chivo Variable', system-ui, sans-serif;
+  --r: 12px;
+  --okvir: 1.5px solid #35503f;
+  --senka: inset 0 1px 0 rgb(255 255 255 / 0.04), 0 20px 40px -24px rgb(0 0 0 / 0.8);
+  --sjaj: 0 4px 24px -6px rgb(140 255 90 / 0.6);
 
   font-family: var(--font);
   font-size: 16px;
   line-height: 1.45;
   color: var(--tekst);
-  background: var(--spolja);
+  background: var(--crna);
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
-  scrollbar-color: var(--sivi) var(--pozadina);
+  scrollbar-color: #35503f var(--pozadina);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-body { margin: 0; min-height: 100dvh; background: var(--pozadina); }
+/* laboratorijski sto: tamna mreža i slab zeleni odsjaj odozgo */
+body {
+  margin: 0; min-height: 100dvh;
+  background:
+    radial-gradient(1100px 480px at 15% -8%, rgb(140 255 90 / 0.08), transparent 70%),
+    linear-gradient(rgb(255 255 255 / 0.022) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(90deg, rgb(255 255 255 / 0.022) 1px, transparent 1px) 0 0 / 32px 32px,
+    var(--pozadina);
+}
+h1 { font-family: var(--font-d); font-weight: 400; letter-spacing: 0.01em; }
 h1, h2, h3, p { margin: 0; }
 button, input, select, textarea { font: inherit; color: inherit; }
-::selection { background: var(--svetlozelena); color: var(--tekst); }
+::selection { background: var(--zelena); color: var(--na-neonu); }
 input, textarea { caret-color: var(--zelena); }
-:focus-visible { outline: 3px solid var(--tekst); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--zelena); outline-offset: 2px; }
 a { color: inherit; text-underline-offset: 3px; }
 .num { font-variant-numeric: tabular-nums; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-/* Pločica: crni kvadrat sa piktogramom ili strelicom */
+/* Pločica: neon kvadrat sa piktogramom ili strelicom; svetla = tiha, za gornju traku */
 .plocica {
   display: inline-grid; place-items: center; flex: none;
-  width: 40px; height: 40px; border-radius: 4px;
-  background: var(--tekst); color: var(--bela);
+  width: 40px; height: 40px; border-radius: 8px;
+  background: var(--zelena); color: var(--na-neonu);
 }
-.plocica.svetla { background: var(--bela); color: var(--tekst); }
+.plocica.svetla { background: transparent; color: var(--sivi-tekst); }
 
 /* Kontrole */
 .polje { display: grid; gap: 6px; }
@@ -55,8 +77,9 @@ a { color: inherit; text-underline-offset: 3px; }
   border: var(--okvir); border-radius: var(--r); background: var(--bela);
   font-size: 17px;
 }
-.unos::placeholder { color: var(--sivi-tekst); }
-.unos:focus-visible { outline-offset: 0; box-shadow: 0 0 0 3px var(--svetlozelena); outline: none; }
+.unos { background: #0a0f0d; }
+.unos::placeholder { color: var(--sivi); }
+.unos:focus-visible { outline: none; border-color: var(--zelena); box-shadow: 0 0 0 3px rgb(140 255 90 / 0.22); }
 
 .dugme {
   display: inline-flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -65,9 +88,10 @@ a { color: inherit; text-underline-offset: 3px; }
   font-weight: 700; font-size: 17px; text-decoration: none;
 }
 .dugme .plocica { width: 36px; height: 36px; }
-.dugme.glavno { background: var(--zelena); font-size: 20px; font-weight: 800; min-height: 56px; }
+.dugme.glavno { background: var(--zelena); color: var(--na-neonu); border-color: var(--zelena); font-size: 20px; font-weight: 800; min-height: 56px; box-shadow: var(--sjaj); }
+.dugme.glavno .plocica { background: var(--na-neonu); color: var(--zelena); }
 .dugme:hover { background: var(--mint); }
-.dugme.glavno:hover { background: #3fa800; }
+.dugme.glavno:hover { background: var(--zelena-jaca); }
 .dugme:disabled { opacity: 0.5; cursor: not-allowed; }
 .dugme.tiho { border-color: transparent; background: transparent; padding: 0 12px; justify-content: center; }
 .dugme.tiho:hover { background: var(--spolja); }
@@ -77,11 +101,11 @@ a { color: inherit; text-underline-offset: 3px; }
 .segment input { position: absolute; opacity: 0; pointer-events: none; }
 .segment span { display: block; padding: 10px 8px; text-align: center; font-weight: 600; border-right: var(--okvir); }
 .segment label:last-child span { border-right: 0; }
-.segment input:checked + span { background: var(--tekst); color: var(--bela); }
-.segment input:focus-visible + span { box-shadow: inset 0 0 0 3px var(--svetlozelena); }
+.segment input:checked + span { background: var(--zelena); color: var(--na-neonu); }
+.segment input:focus-visible + span { box-shadow: inset 0 0 0 3px var(--zelena); }
 
 .greska {
   padding: 12px 14px; border-radius: var(--r);
   background: var(--greska-bg); color: var(--greska); font-weight: 600;
 }
-.poruka { padding: 12px 14px; border-radius: var(--r); background: var(--mint); font-weight: 600; }
+.poruka { padding: 12px 14px; border-radius: var(--r); background: var(--mint); color: var(--zelena); font-weight: 600; }

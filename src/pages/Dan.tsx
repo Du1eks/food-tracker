@@ -50,7 +50,7 @@ export default function Dan() {
       <h1 className="sr">{lepDatum(datum)}</h1>
       {!jeDanas && <div className="dan-naslov"><Link className="dugme tiho" to="/">Nazad na danas</Link></div>}
       <Traka uneto={uneto} cilj={profil} dan={unosi && datum} />
-      {/* Ispod luka: računar = unos levo, grafik makroa i rang desno, tabela preko cele širine; telefon = rang, unos, tabela (dan.css) */}
+      {/* Ispod epruvete: računar = unos levo, grafik makroa i rang desno, tabela preko cele širine; telefon = rang, unos, tabela (dan.css) */}
       <main className="dan">
         {jeDanas && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />}
         <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} govor={govor} />
@@ -70,14 +70,17 @@ const pogodio = (kcal: number, cilj: number | null) => plamen({ ima_cilj: !!cilj
 // Proteini i masti: isto poređenje kao stanjeMisa (lib/rang.ts): cilj postoji i uneto ga je dostiglo
 const dostigao = (uneto: number, cilj: number | null | undefined) => !!cilj && uneto >= cilj
 // Slavlje ide samo za cilj koji je upravo pređen na istom, već učitanom danu; posle učitavanja ostaje samo stanje
-// (luk u boji cilja, otisak pečata). Kalorije: natpis "Goal achieved!", pa konfete. Proteini: konfete. Proteini i masti
+// (zlatna epruveta, otisak pečata). Kalorije: natpis "Goal achieved!", pa konfete. Proteini: konfete. Proteini i masti
 // dobijaju i pečat na svoju karticu, tek kad konfete padnu.
 const CILJEVI = ['kcal', 'proteini', 'masti'] as const
 const KONFETE_POSLE_NATPISA = 1300 // ms: konfete krenu kad natpis stoji na vrhuncu
 const UDAR_TRAJE = 2800 // ms: pečat izađe veliki na sredini ekrana, zadrži se, odleti na polje i udari
 
-// Luk je polukrug poluprečnika 85 oko (100, 100) u viewBox-u 200×108; pathLength=100 pa je dužina ispune = procenat.
-const LUK = 'M15 100 A85 85 0 0 1 185 100'
+// Epruveta prima do 115% cilja; crta cilja je na 1/1,15 dužine. Mehurići: položaj, brzina, kašnjenje i veličina.
+const PREKO = 1.15
+const MEHURICI = Array.from({ length: 14 }, (_, i) => ({
+  '--x': `${((i * 37) % 92) + 3}%`, '--d': `${1.8 + ((i * 7) % 5) * 0.35}s`, '--k': `${i * 0.43}s`, '--s': `${4 + ((i * 5) % 7)}px`,
+}) as React.CSSProperties)
 
 // Kartica dnevnog napretka: preispiše se posle svakog unosa (ključ na vrednosti pokreće animaciju table).
 // dan: datum čiji su unosi učitani (null dok se učitavaju), da učitavanje ne izgleda kao prelazak cilja
@@ -110,8 +113,7 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
   const kasni = (k: string) => (udar.pecati.includes(k) ? udar.kasni + udar.pecati.indexOf(k) * (UDAR_TRAJE + 300) : null)
 
   const odnos = c ? uneto.kcal / c : 0
-  const p = Math.min(odnos, 1)
-  const ugao = Math.PI * (1 - p)
+  const p = Math.min(odnos, PREKO)
   const razlika = c ? c - uneto.kcal : 0
 
   const makrosi = [
@@ -126,40 +128,20 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
       {natpis > 0 && <CiljPostignut key={natpis} onKraj={() => setNatpis(0)} />}
       <div className="napredak">
         <h2 id="napredak-naslov" className="traka-oznaka">Dnevni napredak</h2>
-        <div className={`luk${pogodjeni.kcal ? ' ispunjen' : ''}`}>
-          <svg viewBox="0 0 200 108" aria-hidden>
-            {/* Tečnost: zelena cev (svetlija unutra, tamnija spolja), a preko nje mehurići i odsjaj teku samo kroz ispunjeni deo (maska) */}
-            <defs>
-              <radialGradient id="luk-tecnost" gradientUnits="userSpaceOnUse" cx="100" cy="100" r="92.5">
-                <stop offset="0.84" style={{ stopColor: 'var(--luk-svetla)' }} />
-                <stop offset="0.93" style={{ stopColor: 'var(--luk-sredina)' }} />
-                <stop offset="1" style={{ stopColor: 'var(--luk-tamna)' }} />
-              </radialGradient>
-              <mask id="luk-maska" maskUnits="userSpaceOnUse">
-                <path className="luk-ispuna" d={LUK} pathLength={100} stroke="#fff" style={{ strokeDasharray: `${p * 100} 100` }} />
-              </mask>
-            </defs>
-            <path className="luk-staza" d={LUK} pathLength={100} />
-            {p > 0 && (
-              <>
-                <path className="luk-ispuna" d={LUK} pathLength={100} stroke="url(#luk-tecnost)" style={{ strokeDasharray: `${p * 100} 100` }} />
-                <g mask="url(#luk-maska)">
-                  <path className="luk-odsjaj" d={LUK} pathLength={100} />
-                  <path className="luk-mehurici" d={LUK} pathLength={100} />
-                </g>
-              </>
-            )}
-          </svg>
-          {c && (
-            <span className="luk-procenat num" style={{ left: `${(100 + 85 * Math.cos(ugao)) / 2}%`, top: `${((100 - 85 * Math.sin(ugao)) / 108) * 100}%` }}>
-              {Math.round(odnos * 100)}%
-            </span>
-          )}
-          <div className="luk-sredina">
-            <Sir key={String(pogodio(uneto.kcal, c))} slavi={pogodio(uneto.kcal, c)} />
-            <p className="traka-broj num" data-makro="kcal"><span key={uneto.kcal} className="preklop">{fmt(uneto.kcal)}</span></p>
-            <p className="traka-sitno num">{c ? `od ${fmt(c)} kcal` : 'kcal uneto'}</p>
+        <p className="traka-kcal num">
+          <span className="traka-broj" data-makro="kcal"><span key={uneto.kcal} className="preklop">{fmt(uneto.kcal)}</span></span>
+          <span className="traka-sitno">{c ? `/ ${fmt(c)} kcal` : 'kcal uneto'}</span>
+        </p>
+        {/* Epruveta preko cele širine: neon tečnost raste do isprekidane crte cilja (cev prima do 115% cilja), mehurići stalno idu */}
+        <div className={`cev${pogodjeni.kcal ? ' ispunjen' : ''}`} aria-hidden>
+          <div className="cev-staklo">
+            <div className="cev-tecnost" style={{ width: `${(p / PREKO) * 100}%` }}>
+              {MEHURICI.map((m, i) => <i key={i} style={m} />)}
+            </div>
           </div>
+          {c && <span className="cev-cilj"><span><b>CILJ</b> {fmt(c)}</span></span>}
+          {c && <span className="cev-procenat num" style={{ left: `${(p / PREKO) * 100}%` }}>{Math.round(odnos * 100)}%</span>}
+          <span className="cev-sir"><Sir key={String(pogodjeni.kcal)} slavi={pogodjeni.kcal} /></span>
         </div>
         {c && <p className="traka-ostatak num">{razlika < 0 ? `Preko cilja ${fmt(-razlika)} kcal` : `Ostalo ${fmt(razlika)} kcal`}</p>}
         <dl className="traka-makrosi">

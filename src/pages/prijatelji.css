@@ -155,7 +155,7 @@ a.rang-red:hover { background: var(--mint); }
 
 /* Rang lista: ko je pogodio cilj "gori" (components/ImeUPlamenu): proteini = ime gori iznutra (plavo),
    kalorije = vatra oko table (narandžasto) i narandžast broj mesta. Ispod imena oznake u boji plamena. */
-.rang-lista { --kcal: #c2410c; --proteini: #1864ab; }
+.rang-lista { --kcal: var(--masti-boja); --proteini: var(--proteini-boja); }
 .rang-red-naziv { display: flex; align-items: center; min-width: 0; }
 .rang-lista li.gori .rang-red-mesto { color: var(--kcal); }
 /* Red je sloj, da vatra iza table (z-index -1) ostane iznad pozadine reda i mint hovera */
