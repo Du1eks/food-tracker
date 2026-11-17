@@ -53,7 +53,15 @@
   /* Zbir: kcal i proteini jedan pored drugog, jedinica sitno ispod broja */
   .tabela tfoot th:first-child { padding-left: 12px; }
   .tabela tfoot td:last-child { padding-right: 12px; }
-  .tabela tfoot .p-mob { font-size: 30px; white-space: nowrap; }
+  /* Bungee je širok: zbir manji, bez nevidljivog ",0", "g proteina" u dva reda, da tabela stane u karticu */
+  .tabela tfoot th, .tabela tfoot td { font-size: 18px; }
+  .tabela tfoot td:nth-child(2), .tabela tfoot .p-mob { font-size: 19px; }
+  .tabela tfoot .bez-dec { display: none; }
+  .tabela tfoot .p-mob { padding-left: 4px; }
+  .tabela tfoot .p-mob .jed-mob { width: min-content; }
+  .tabela .akcije .ikona { width: 32px; min-width: 32px; }
+  /* "U bazu" u svom redu ispod imena, da ne prelazi preko teksta */
+  .tabela .u-bazu { display: flex; width: fit-content; margin: 6px 0 2px; }
   .p-mob > span, .jed-mob { display: block; }
   .jed-mob { margin-top: 2px; color: var(--sivi-tekst); font-size: 13px; font-weight: 700; letter-spacing: 0; }
   /* Obroci se skupljaju strelicom; zbir kcal obroka ostaje vidljiv u zaglavlju */
@@ -61,8 +69,4 @@
   .grupa-dugme svg { display: block; }
   .zatvoren .grupa-dugme svg { transform: rotate(-90deg); }
   .zatvoren .red, .zatvoren .red-vrednosti { display: none; }
-}
-/* Uži telefoni (do ~420px): zbir u podnožju od 30px širi poslednje dve kolone, pa tabela izlazi iz kartice */
-@media (max-width: 420px) {
-  .tabela tfoot td:nth-child(2), .tabela tfoot .p-mob { font-size: 24px; }
 }

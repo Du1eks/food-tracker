@@ -1,0 +1,18 @@
+/* Boje eksplozije napitka: prekipeli napitak je druge boje od neona aplikacije (ljubičasto-roze), kao da je "pokvaren".
+   Menjaju se ovde (ili u temi); izgled kartice pre/posle je u dan.css (.ostecena, .pukla). */
+:root {
+  --eksplozija-mrlja: #c84dff;
+  --eksplozija-mrlja-2: #ff4fa3;
+  --eksplozija-blesak: #f4ffe8;
+}
+.eksplozija { position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit; }
+.eksplozija-pukotine { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.eksplozija-pukotine path {
+  fill: none; stroke: color-mix(in srgb, var(--eksplozija-mrlja) 65%, white); stroke-width: 1.5px; vector-effect: non-scaling-stroke;
+  stroke-linecap: round; stroke-linejoin: round; opacity: 0.75;
+}
+.eksplozija-komadi { position: absolute; left: 50%; top: 50%; }
+.eksplozija-komadi i { position: absolute; width: var(--s); height: var(--s); margin: calc(var(--s) / -2); opacity: 0; }
+.eksplozija-komadi .kap { border-radius: 50% 50% 50% 0; background: var(--eksplozija-mrlja); box-shadow: 0 0 8px var(--eksplozija-mrlja); }
+.eksplozija-komadi .kap:nth-child(4n) { background: var(--eksplozija-mrlja-2); box-shadow: 0 0 8px var(--eksplozija-mrlja-2); }
+.eksplozija-komadi .staklo { clip-path: polygon(50% 0, 100% 70%, 15% 100%); background: rgb(220 255 235 / 0.85); }

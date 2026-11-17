@@ -77,17 +77,74 @@
 .traka-profil:hover { background: var(--zelena-jaca); }
 .traka-profil .plocica { background: var(--na-neonu); color: var(--zelena); }
 
-/* Pečat "cilj pogođen" (crtež i boje: components/pecat.css): otisak pokriva celo polje, preko kartice makroa
-   (proteini, masti); pokret udarca je u Dan.tsx (Pecat). Cilj kalorija nema pečat, epruveta postane zlatna. */
+/* Cilj proteina ili masti pogođen: kartica je "eksplodirala" kao napitak (slojevi i boje: components/Eksplozija).
+   .ostecena = trajno stanje: mrlje prekipelog napitka u drugoj boji, gar odozdo, napukline, kartica malo nakrivljena,
+   broj i traka u boji mrlje. .pukla = upravo puca (posle konfeta, od --kasni): nadme se, trese, blesne i rasprsne,
+   pa pređe u oštećeno; do pucanja animacija drži normalan izgled. Cilj kalorija ne puca, epruveta postane zlatna. */
 .traka-makrosi > div { position: relative; }
-.pecat {
-  --ugao: -12deg; position: absolute; z-index: 3; top: 50%; left: 50%; height: 125%; aspect-ratio: 1;
-  translate: -50% -50%; pointer-events: none;
+.traka-makrosi > div.ostecena {
+  isolation: isolate; rotate: -1.2deg;
+  border-color: color-mix(in srgb, var(--eksplozija-mrlja) 65%, transparent);
+  box-shadow: 0 0 24px -8px var(--eksplozija-mrlja), var(--senka);
 }
-.traka-makrosi > div:last-child .pecat { --ugao: 9deg; }
-/* dok udara, alat leti preko svega ostalog na strani (konfete su već pale) */
-.pecat.udara { z-index: 30; }
-.pecat .pecat-alat { position: absolute; left: 50%; margin-left: -31%; bottom: 41%; width: 62%; opacity: 0; }
+.traka-makrosi > div.ostecena:last-child { rotate: 1deg; }
+.ostecena::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  background:
+    radial-gradient(circle at 16% 30%, color-mix(in srgb, var(--eksplozija-mrlja) 42%, transparent) 0 13%, transparent 14%),
+    radial-gradient(circle at 27% 48%, color-mix(in srgb, var(--eksplozija-mrlja) 32%, transparent) 0 5%, transparent 6%),
+    radial-gradient(circle at 85% 72%, color-mix(in srgb, var(--eksplozija-mrlja-2) 38%, transparent) 0 11%, transparent 12%),
+    radial-gradient(circle at 71% 22%, color-mix(in srgb, var(--eksplozija-mrlja-2) 32%, transparent) 0 4%, transparent 5%),
+    radial-gradient(ellipse at 50% 118%, rgb(0 0 0 / 0.55), transparent 65%);
+}
+.ostecena dd { color: color-mix(in srgb, var(--eksplozija-mrlja) 30%, var(--tekst)); text-shadow: 1px 0 color-mix(in srgb, var(--eksplozija-mrlja-2) 70%, transparent), -1px 0 rgb(80 220 255 / 0.45); }
+.ostecena .makro-traka::after { background: var(--eksplozija-mrlja); box-shadow: 0 0 10px var(--eksplozija-mrlja); }
+/* Sve faze traju 1600ms (EKSPLOZIJA_TRAJE u Dan.tsx) i kreću sa --kasni; pucanje je na ~40% */
+@media (prefers-reduced-motion: no-preference) {
+  .pukla { animation: kartica-pukne 1600ms var(--kasni) both; }
+  .pukla::before { animation: mrlja-pojava 1600ms var(--kasni) both; }
+  .pukla dd { animation: broj-pukne 1600ms var(--kasni) both; }
+  .pukla .makro-traka::after { animation: traka-pukne 1600ms var(--kasni) both; }
+  .pukla .eksplozija-pukotine path { stroke-dasharray: 1; animation: pukotina 1600ms var(--kasni) both; }
+  .pukla .eksplozija-komadi i { animation: komad 1600ms var(--kasni) both; }
+  .pukla::after {
+    content: ''; position: absolute; left: 50%; top: 50%; z-index: 3; width: 44px; height: 44px; margin: -22px; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(var(--eksplozija-blesak), color-mix(in srgb, var(--eksplozija-mrlja) 60%, transparent) 45%, transparent 70%);
+    animation: blesak 1600ms var(--kasni) both;
+  }
+}
+@keyframes kartica-pukne {
+  0%, 8% { transform: none; rotate: 0deg; border-color: var(--spolja); box-shadow: var(--senka); }
+  14% { transform: scale(1.03); }
+  18% { transform: scale(1.04) translate(-2px, 1px) rotate(-1deg); }
+  22% { transform: scale(1.05) translate(2px, -1px) rotate(1deg); }
+  26% { transform: scale(1.06) translate(-3px, 0) rotate(-1.5deg); }
+  30% { transform: scale(1.07) translate(3px, 1px) rotate(1.5deg); }
+  34% { transform: scale(1.09) translate(-3px, -1px) rotate(-2deg); }
+  38% { transform: scale(1.13); filter: brightness(1.9) saturate(1.6); rotate: 0deg; border-color: var(--spolja); box-shadow: var(--senka); }
+  44% { transform: scale(0.94) rotate(-2.5deg); filter: none; }
+  56% { transform: scale(1.02) rotate(0.6deg); }
+  70%, 100% { transform: none; }
+}
+@keyframes mrlja-pojava {
+  0%, 40% { opacity: 0; transform: scale(0.5); }
+  52% { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes broj-pukne { 0%, 40% { color: var(--tekst); text-shadow: none; } }
+@keyframes traka-pukne { 0%, 40% { background: var(--boja, var(--zelena)); box-shadow: 0 0 10px var(--boja, var(--zelena)); } }
+@keyframes pukotina { 0%, 42% { stroke-dashoffset: 1; } 60%, 100% { stroke-dashoffset: 0; } }
+@keyframes blesak {
+  0%, 36% { opacity: 0; transform: scale(0.2); }
+  42% { opacity: 1; transform: scale(3); }
+  62%, 100% { opacity: 0; transform: scale(5.5); }
+}
+@keyframes komad {
+  0%, 39% { opacity: 0; transform: none; }
+  42% { opacity: 1; transform: scale(1.2); }
+  78% { opacity: 1; transform: translate(var(--dx), var(--dy)) rotate(var(--r)); }
+  100% { opacity: 0; transform: translate(var(--dx), calc(var(--dy) + 34px)) rotate(calc(var(--r) * 1.6)) scale(0.6); }
+}
 @media (prefers-reduced-motion: no-preference) {
   .cev-tecnost { transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
   .cev-tecnost i { animation: mehur var(--d) linear var(--k) infinite; }

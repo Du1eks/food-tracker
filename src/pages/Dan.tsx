@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react'
 import { danas, ispravan, izIso, lepDatum, pomeri } from '../lib/datum'
@@ -11,7 +11,7 @@ import TabelaDana from '../components/TabelaDana'
 import RangPolje from '../components/RangPolje'
 import NedeljaMakroa from '../components/NedeljaMakroa'
 import Sir from '../components/Sir'
-import { PecatAlat, PecatDefs, PecatOtisak } from '../components/Pecat'
+import Eksplozija from '../components/Eksplozija'
 import CiljPostignut from '../components/CiljPostignut'
 import { KONFETE_TRAJU, konfete } from '../components/konfete'
 import './dan.css'
@@ -70,11 +70,11 @@ const pogodio = (kcal: number, cilj: number | null) => plamen({ ima_cilj: !!cilj
 // Proteini i masti: isto poređenje kao stanjeMisa (lib/rang.ts): cilj postoji i uneto ga je dostiglo
 const dostigao = (uneto: number, cilj: number | null | undefined) => !!cilj && uneto >= cilj
 // Slavlje ide samo za cilj koji je upravo pređen na istom, već učitanom danu; posle učitavanja ostaje samo stanje
-// (zlatna epruveta, otisak pečata). Kalorije: natpis "Goal achieved!", pa konfete. Proteini: konfete. Proteini i masti
-// dobijaju i pečat na svoju karticu, tek kad konfete padnu.
+// (zlatna epruveta, oštećena kartica). Kalorije: natpis "Goal achieved!", pa konfete. Proteini: konfete. Kartice proteina
+// i masti puknu kao napitak (i ostanu oštećene), tek kad konfete padnu.
 const CILJEVI = ['kcal', 'proteini', 'masti'] as const
 const KONFETE_POSLE_NATPISA = 1300 // ms: konfete krenu kad natpis stoji na vrhuncu
-const UDAR_TRAJE = 2800 // ms: pečat izađe veliki na sredini ekrana, zadrži se, odleti na polje i udari
+const EKSPLOZIJA_TRAJE = 1600 // ms: kartica se nadme, pukne i pređe u oštećeno (isto trajanje je u dan.css)
 
 // Epruveta prima do 115% cilja; crta cilja je na 1/1,15 dužine. Mehurići: položaj, brzina, kašnjenje i veličina.
 const PREKO = 1.15
@@ -92,7 +92,7 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
     masti: dostigao(uneto.masti, cilj?.cilj_masti),
   }
   const potpis = CILJEVI.filter((k) => pogodjeni[k]).join(',')
-  const [udar, setUdar] = useState<{ pecati: string[]; kasni: number }>({ pecati: [], kasni: 0 })
+  const [udar, setUdar] = useState<{ pukli: string[]; kasni: number }>({ pukli: [], kasni: 0 })
   const [natpis, setNatpis] = useState(0) // ključ natpisa "Goal achieved!"; 0 = nema ga
   const prosli = useRef<{ dan: string; potpis: string } | null>(null)
   useEffect(() => {
@@ -104,13 +104,13 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
     const slavlje = kcal || novi.includes('proteini')
     const konfeteKrecu = kcal ? KONFETE_POSLE_NATPISA : 0
     // eslint-disable-next-line react-hooks/set-state-in-effect -- prelazak cilja vidimo tek kad stigne novi zbir
-    setUdar({ pecati: novi.filter((k) => k !== 'kcal'), kasni: slavlje ? konfeteKrecu + KONFETE_TRAJU : 400 })
+    setUdar({ pukli: novi.filter((k) => k !== 'kcal'), kasni: slavlje ? konfeteKrecu + KONFETE_TRAJU : 400 })
     if (kcal) setNatpis(Date.now())
     if (!slavlje) return
     const t = setTimeout(() => void konfete(), konfeteKrecu)
     return () => clearTimeout(t)
   }, [dan, potpis])
-  const kasni = (k: string) => (udar.pecati.includes(k) ? udar.kasni + udar.pecati.indexOf(k) * (UDAR_TRAJE + 300) : null)
+  const kasni = (k: string) => (udar.pukli.includes(k) ? udar.kasni + udar.pukli.indexOf(k) * (EKSPLOZIJA_TRAJE + 300) : null)
 
   const odnos = c ? uneto.kcal / c : 0
   const p = Math.min(odnos, PREKO)
@@ -124,7 +124,6 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
 
   return (
     <section className="traka" aria-live="polite" aria-labelledby="napredak-naslov">
-      <PecatDefs />
       {natpis > 0 && <CiljPostignut key={natpis} onKraj={() => setNatpis(0)} />}
       <div className="napredak">
         <h2 id="napredak-naslov" className="traka-oznaka">Dnevni napredak</h2>
@@ -145,17 +144,22 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
         </div>
         {c && <p className="traka-ostatak num">{razlika < 0 ? `Preko cilja ${fmt(-razlika)} kcal` : `Ostalo ${fmt(razlika)} kcal`}</p>}
         <dl className="traka-makrosi">
-          {makrosi.map((m) => (
-            <div key={m.naziv}>
+          {makrosi.map((m) => {
+            const puca = (m.k === 'proteini' || m.k === 'masti') && pogodjeni[m.k]
+            const k = puca ? kasni(m.k) : null
+            return (
+            <div key={m.naziv} className={puca ? `ostecena${k != null ? ' pukla' : ''}` : undefined}
+              style={k != null ? ({ '--kasni': `${k}ms` } as React.CSSProperties) : undefined}>
               <dt>{m.naziv}</dt>
               <dd className="num" data-makro={m.k}>
                 <span key={m.u} className="preklop">{fmt(m.u)}</span>
                 <small>{m.c ? ` / ${fmt(m.c)} g` : ' g'}</small>
                 {!!m.c && <span className="makro-traka" style={{ '--p': `${Math.min(m.u / m.c, 1) * 100}%` } as React.CSSProperties} aria-hidden />}
               </dd>
-              {(m.k === 'proteini' || m.k === 'masti') && pogodjeni[m.k] && <Pecat naziv={m.naziv} kasni={kasni(m.k)} />}
+              {puca && <Eksplozija naziv={m.naziv} pukla={k != null} />}
             </div>
-          ))}
+            )
+          })}
         </dl>
       </div>
       {c ? (
@@ -177,51 +181,6 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
         </Link>
       )}
     </section>
-  )
-}
-
-// Pečat "cilj pogođen": crtež je u components/Pecat, otisak pokriva celu karticu makroa.
-// kasni != null: pečat upravo udara. Alat izađe veliki na sredini ekrana, zadrži se, odleti na svoje polje i udari,
-// a otisak ostane. Bez toga (učitana strana) stoji samo otisak; uz prefers-reduced-motion se samo pojavi.
-// Put od sredine ekrana do polja zavisi od mesta na strani, pa je pokret u kodu (Web Animations), ne u CSS-u.
-function Pecat({ naziv, kasni }: { naziv: string; kasni: number | null }) {
-  const omot = useRef<HTMLSpanElement>(null)
-  useLayoutEffect(() => {
-    const alat = omot.current?.querySelector('.pecat-alat')
-    const otisak = omot.current?.querySelector('.pecat-otisak')
-    if (kasni == null || !alat || !otisak || matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const a = alat.getBoundingClientRect()
-    const centar = `translate(${innerWidth / 2 - (a.left + a.width / 2)}px, ${innerHeight / 2 - (a.top + a.height / 2)}px)`
-    const s = (Math.min(innerWidth, innerHeight) * 0.5) / a.height // na sredini ekrana alat je visok pola ekrana
-    const vreme = { duration: UDAR_TRAJE, delay: kasni, fill: 'both' } as const
-    const pokreti = [
-      alat.animate([
-        { transform: `${centar} scale(${s * 0.2}) perspective(600px) rotateY(-70deg)`, opacity: 0 },
-        { transform: `${centar} scale(${s * 1.08}) perspective(600px) rotateY(12deg)`, opacity: 1, offset: 0.12, easing: 'ease-out' },
-        { transform: `${centar} scale(${s}) perspective(600px) rotateY(-22deg) rotate(-4deg)`, offset: 0.25 },
-        { transform: `${centar} scale(${s}) perspective(600px) rotateY(20deg) rotate(3deg)`, offset: 0.36 },
-        { transform: `${centar} scale(${s}) perspective(600px) rotateX(18deg)`, offset: 0.44, easing: 'cubic-bezier(0.5, 0, 0.75, 0)' },
-        { transform: 'translateY(-70%) perspective(600px) rotateX(10deg)', offset: 0.64, easing: 'cubic-bezier(0.55, 0, 1, 0.45)' },
-        { transform: 'none', offset: 0.7 },
-        { transform: 'translateY(5%) scaleY(0.86)', offset: 0.73 },
-        { transform: 'translateY(-45%)', opacity: 1, offset: 0.86 },
-        { transform: 'translateY(-110%)', opacity: 0 },
-      ], vreme),
-      otisak.animate([
-        { transform: 'scale(1.1)', opacity: 0 },
-        { transform: 'scale(1.1)', opacity: 0, offset: 0.7 },
-        { transform: 'scale(0.94)', opacity: 0.95, offset: 0.74 },
-        { transform: 'none', opacity: 0.9, offset: 0.84 },
-        { transform: 'none', opacity: 0.9 },
-      ], vreme),
-    ]
-    return () => pokreti.forEach((x) => x.cancel())
-  }, [kasni])
-  return (
-    <span ref={omot} className={`pecat${kasni != null ? ' udara' : ''}`}>
-      <PecatOtisak naziv={naziv} />
-      {kasni != null && <PecatAlat />}
-    </span>
   )
 }
 

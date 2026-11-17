@@ -48,6 +48,11 @@
   .mis-viri-dugme:active { transform: scale(0.96); }
   .mis-viri-oblacic { animation: viri-oblacic 220ms ease-out; }
 }
+/* Na širokom ekranu sadržaj se skloni od ivice na kojoj miš viri (širina dugmeta + razmak), da miš ne pokrije kolone */
+@media (min-width: 961px) {
+  body:has(.mis-viri:not(.levo)) main { padding-right: calc(clamp(84px, 9vw, 112px) + 12px); }
+  body:has(.mis-viri.levo) main { padding-left: calc(clamp(84px, 9vw, 112px) + 12px); }
+}
 /* Sa leve ivice: ogledalo rasporeda, oblačić desno od miša */
 .mis-viri.levo { right: auto; left: 0; flex-direction: row-reverse; }
 .mis-viri.levo .mis-viri-dugme { border-radius: 0 var(--r) var(--r) 0; transform-origin: 0% 60%; }
