@@ -10,7 +10,6 @@ import DodajNamirnicu from '../components/DodajNamirnicu'
 import TabelaDana from '../components/TabelaDana'
 import RangPolje from '../components/RangPolje'
 import NedeljaMakroa from '../components/NedeljaMakroa'
-import Sir from '../components/Sir'
 import Eksplozija from '../components/Eksplozija'
 import CiljPostignut, { NATPIS_TRAJE } from '../components/CiljPostignut'
 import { konfete } from '../components/konfete'
@@ -156,7 +155,6 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
           </div>
           {c && <span className="cev-cilj"><span><b>CILJ</b> {fmt(c)}</span></span>}
           {c && <span className="cev-procenat num" style={{ left: `${(p / PREKO) * 100}%` }}>{Math.round(odnos * 100)}%</span>}
-          <span className="cev-sir"><Sir key={String(pogodjeni.kcal)} slavi={pogodjeni.kcal} /></span>
         </div>
         {c && <p className="traka-ostatak num">{razlika < 0 ? `Preko cilja ${fmt(-razlika)} kcal` : `Ostalo ${fmt(razlika)} kcal`}</p>}
         <dl className="traka-makrosi">
@@ -178,19 +176,7 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
           })}
         </dl>
       </div>
-      {c ? (
-        // Samo na telefonu (dan.css): glava miša vodi do polja "Reci mišu šta si jeo" i odmah otvara tastaturu; na hover se isplazi
-        <a className="traka-mis" href="#unos" aria-label="Reci mišu šta si jeo" onClick={(e) => {
-          const polje = document.getElementById('sta-si-jeo')
-          if (!polje) return
-          e.preventDefault()
-          polje.focus({ preventScroll: true })
-          polje.scrollIntoView({ block: 'center' })
-        }}>
-          <img src="/maskota/glava.webp" alt="" width={60} height={60} />
-          <img className="jezik" src="/maskota/glava-jezik.webp" alt="" width={60} height={60} />
-        </a>
-      ) : (
+      {!c && (
         <Link className="dugme traka-profil" to="/profil">
           Popuni profil za cilj
           <span className="plocica" aria-hidden><ChevronRight size={22} /></span>

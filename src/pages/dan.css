@@ -14,7 +14,7 @@
 /* Epruveta položena preko cele širine (Dan.tsx): staklo, neon tečnost sa mehurićima, isprekidana crta cilja */
 .cev { --tecnost-1: #b8ff95; --tecnost-2: var(--zelena); --tecnost-3: var(--zelena-duboka); --tecnost-sjaj: rgb(140 255 90 / 0.7);
   position: relative; width: 100%; height: 96px; margin: 30px 0 26px; }
-/* pogođen cilj kalorija: tečnost postane zlatna (boje sira), iste boje kao prekipeli napitak na karticama makroa (eksplozija.css) */
+/* pogođen cilj kalorija: tečnost postane zlatna (--sir-*, eksplozija.css), iste boje kao prekipeli napitak na karticama makroa (eksplozija.css) */
 .cev.ispunjen { --tecnost-1: var(--sir-vrh); --tecnost-2: var(--sir-lice); --tecnost-3: var(--sir-bok); --tecnost-sjaj: rgb(255 194 26 / 0.7); }
 .cev-staklo {
   position: absolute; inset: 0; overflow: hidden; border-radius: 12px 48px 48px 12px;
@@ -40,9 +40,6 @@
   position: absolute; top: 100%; margin-top: 6px; transform: translateX(-50%);
   font-weight: 800; font-size: 13px; color: var(--sivi-tekst); white-space: nowrap;
 }
-/* sir iskoči na kraju epruvete kad je cilj kalorija pogođen */
-.cev-sir { position: absolute; right: -6px; top: 50%; translate: 0 -50%; }
-.cev-sir .sir:not(.slavi) { display: none; }
 .traka-ostatak { font-weight: 700; font-size: 16px; }
 .traka-makrosi { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 8px 0 0; }
 .traka-makrosi > div { background: var(--bela); border: 1px solid var(--spolja); border-radius: var(--r); padding: 10px 12px 12px; box-shadow: var(--senka); min-width: 0; }
@@ -56,23 +53,7 @@
 /* tanka traka napretka makroa, kao traka u polju kalendara */
 .makro-traka { display: block; position: relative; height: 8px; margin-top: 10px; border-radius: 999px; background: var(--pozadina); box-shadow: inset 0 0 0 1px var(--spolja); overflow: hidden; }
 .makro-traka::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--p); border-radius: inherit; background: var(--boja, var(--zelena)); box-shadow: 0 0 10px var(--boja, var(--zelena)); }
-.traka-mis, .traka-profil { grid-column: -2; }
-/* Glava miša u okviru (samo telefon): na hover/fokus se isplazi, a pozadina se odozdo napuni zelenom */
-.traka-mis {
-  display: none; position: relative; overflow: hidden; width: 72px; height: 72px;
-  background: var(--bela); border: var(--okvir); border-radius: var(--r); box-shadow: var(--senka);
-}
-.traka-mis::before { content: ''; position: absolute; inset: 0; background: var(--zelena); transform: scaleY(0); transform-origin: 50% 100%; }
-.traka-mis img { position: absolute; inset: 4px; width: 60px; height: 60px; }
-.traka-mis .jezik { opacity: 0; }
-.traka-mis:hover::before, .traka-mis:focus-visible::before { transform: none; }
-.traka-mis:hover img, .traka-mis:focus-visible img { opacity: 0; }
-.traka-mis:hover .jezik, .traka-mis:focus-visible .jezik { opacity: 1; }
-@media (prefers-reduced-motion: no-preference) {
-  .traka-mis::before { transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1); }
-  .traka-mis:hover .jezik, .traka-mis:focus-visible .jezik { animation: plazi 420ms cubic-bezier(0.34, 1.56, 0.64, 1); }
-}
-@keyframes plazi { from { transform: scale(0.9) rotate(-6deg); } to { transform: none; } }
+.traka-profil { grid-column: -2; }
 .traka-profil { background: var(--zelena); color: var(--na-neonu); border-color: var(--zelena); box-shadow: var(--sjaj); }
 .traka-profil:hover { background: var(--zelena-jaca); }
 .traka-profil .plocica { background: var(--na-neonu); color: var(--zelena); }
@@ -170,20 +151,12 @@
   .cev-tecnost { transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
   .cev-tecnost i { animation: mehur var(--d) linear var(--k) infinite; }
   .cev-procenat { transition: left 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
-  /* sir (crtež: components/Sir) iskoči kad je cilj kalorija pogođen, pa se blago njiše */
-  .sir.slavi { transform-origin: 50% 90%; animation: sir-iskoci 700ms cubic-bezier(0.34, 1.56, 0.64, 1), sir-njise 2.6s ease-in-out 700ms infinite; }
 }
 @keyframes mehur {
   0% { transform: translateY(0); opacity: 0; }
   12% { opacity: 0.95; }
   100% { transform: translateY(-120px) translateX(-3px); opacity: 0; }
 }
-@keyframes sir-iskoci {
-  0% { transform: translateY(16px) scale(0.2); opacity: 0; }
-  60% { transform: translateY(-6px) scale(1.18); opacity: 1; }
-  100% { transform: none; }
-}
-@keyframes sir-njise { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
 
 /* Nedelja: sedam dana sa kvačicom (pogođen cilj), "!" (promašen) ili praznim krugom */
 .nedelja { display: flex; align-items: center; gap: 8px; padding: 14px clamp(16px, 4vw, 32px) 4px; }
@@ -415,7 +388,6 @@ a.nedelja-dan:hover { background: var(--mint); }
   /* Telefon: epruveta preko cele širine, glava miša u gornjem desnom uglu kartice */
   .traka { position: relative; grid-template-columns: 1fr; gap: 14px; padding: 14px 16px 18px; }
   .napredak { width: 100%; }
-  .traka-mis { display: block; position: absolute; top: 12px; right: 16px; }
   .cev { height: 72px; margin: 30px 0 22px; }
   .cev-cilj > span { left: auto; right: 8px; }
   .traka-broj { font-size: 52px; }

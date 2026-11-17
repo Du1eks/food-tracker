@@ -1,6 +1,9 @@
-/* Boje eksplozije napitka: prekipeli napitak je zlatan, iste boje kao epruveta na pogođenom cilju kalorija (sir.css).
-   Menjaju se ovde (ili u temi); izgled kartice pre/posle je u dan.css (.ostecena, .pukla). */
+/* Boje eksplozije napitka: prekipeli napitak je zlatan (boje sira), iste boje kao epruveta na pogođenom cilju kalorija
+   (dan.css, .cev.ispunjen koristi --sir-*). Menjaju se ovde (ili u temi); izgled kartice pre/posle je u dan.css (.ostecena, .pukla). */
 :root {
+  --sir-vrh: #ffd95a;
+  --sir-lice: #ffc21a;
+  --sir-bok: #f0a500;
   --eksplozija-mrlja: var(--sir-lice);
   --eksplozija-mrlja-2: var(--sir-bok);
   --eksplozija-blesak: #f4ffe8;
