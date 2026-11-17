@@ -1,0 +1,68 @@
+/* Tabela dana (TabelaDana). Iste klase koristi i TabelaPrijatelja (profil prijatelja);
+   App učitava sve strane odmah, pa je ovaj CSS uvek tu. Kartica oko tabele je .dan-tabela u dan.css. */
+.tabela { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 17px; }
+.tabela th, .tabela td { padding: 12px 10px; text-align: right; white-space: nowrap; }
+/* Ime uzima sav višak širine; brojevi stoje u kolonama iste širine, desno */
+.tabela th:first-child, .tabela td:first-child { width: 100%; text-align: left; white-space: normal; }
+.tabela thead th { padding-top: 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sivi-tekst); border-bottom: var(--okvir); }
+.tabela thead th:not(:first-child) { min-width: 6.5em; }
+/* Nevidljivo ",0" uz ceo broj: kolona se poravna po zarezu */
+.bez-dec { visibility: hidden; }
+
+/* Obrok kao podnaslov: ime verzalom levo, zbir obroka pod svakom kolonom */
+.tabela .grupa th, .tabela .grupa td { padding-top: 22px; padding-bottom: 8px; border-bottom: 1px solid var(--spolja); }
+.tabela tbody + tbody .grupa th, .tabela tbody + tbody .grupa td { border-top: var(--okvir); }
+.tabela .grupa th { font-weight: 900; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; }
+.tabela .grupa td { font-weight: 700; font-size: 15px; color: var(--sivi-tekst); }
+
+.tabela .red + .red td, .tabela .red-vrednosti + .red td { border-top: 1px solid var(--pozadina); }
+.tabela .red td { transition: background-color 120ms ease-out; }
+.tabela .red:hover td { background: var(--pozadina); }
+.tabela .red:has(+ .red-vrednosti) td { background: var(--mint); }
+.tabela .ime { font-weight: 600; line-height: 1.3; overflow-wrap: break-word; }
+.tabela .red td:nth-child(3) { font-weight: 700; }
+
+/* Zbir dana: crna traka kao tabla, kcal najkrupniji */
+.tabela tfoot th, .tabela tfoot td { background: var(--tekst); color: var(--bela); font-weight: 900; font-size: 24px; padding-top: 16px; padding-bottom: 16px; letter-spacing: -0.01em; }
+.tabela tfoot th:first-child { padding-left: 16px; border-radius: var(--r) 0 0 var(--r); }
+.tabela tfoot td:last-child { padding-right: 16px; border-radius: 0 var(--r) var(--r) 0; }
+.tabela tfoot td:nth-child(2) { font-size: 30px; }
+
+.mak-mob, .jed-mob, .p-mob > span { display: none; }
+.grupa-dugme { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; cursor: default; }
+.grupa-dugme svg { display: none; transition: transform 200ms ease-out; }
+.akcije { width: 1%; padding-right: 4px !important; }
+.tabela .red-vrednosti td { padding: 0 10px 14px; text-align: left; background: var(--mint); }
+.tabela .pregled-vrednosti { max-width: 560px; }
+
+/* Akcije se vide na hover/fokus reda; na dodir uvek */
+@media (hover: hover) {
+  .red .akcije .ikona { opacity: 0; transition: opacity 120ms ease-out; }
+  .red:hover .akcije .ikona, .red:focus-within .akcije .ikona { opacity: 1; }
+}
+
+@media (max-width: 640px) {
+  .tabela { font-size: 16px; }
+  .tabela .mak { display: none; }
+  .tabela th, .tabela td { padding: 10px 5px; }
+  .tabela thead th { letter-spacing: 0.02em; }
+  .tabela thead th:not(:first-child) { min-width: 0; }
+  .tabela th:first-child, .tabela td:first-child { padding-left: 0; }
+  .tabela .red:hover td { background: none; }
+  .mak-mob { display: block; margin-top: 2px; color: var(--sivi-tekst); font-size: 13px; }
+  /* Zbir: kcal i proteini jedan pored drugog, jedinica sitno ispod broja */
+  .tabela tfoot th:first-child { padding-left: 12px; }
+  .tabela tfoot td:last-child { padding-right: 12px; }
+  .tabela tfoot .p-mob { font-size: 30px; white-space: nowrap; }
+  .p-mob > span, .jed-mob { display: block; }
+  .jed-mob { margin-top: 2px; color: var(--svetlozelena); font-size: 13px; font-weight: 700; letter-spacing: 0; }
+  /* Obroci se skupljaju strelicom; zbir kcal obroka ostaje vidljiv u zaglavlju */
+  .grupa-dugme { cursor: pointer; min-height: 32px; }
+  .grupa-dugme svg { display: block; }
+  .zatvoren .grupa-dugme svg { transform: rotate(-90deg); }
+  .zatvoren .red, .zatvoren .red-vrednosti { display: none; }
+}
+/* Uži telefoni (do ~420px): zbir u podnožju od 30px širi poslednje dve kolone, pa tabela izlazi iz kartice */
+@media (max-width: 420px) {
+  .tabela tfoot td:nth-child(2), .tabela tfoot .p-mob { font-size: 24px; }
+}

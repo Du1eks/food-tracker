@@ -194,12 +194,12 @@ Zadata zelena sa crnim i neutralnim svetlozelenim tonovima; jedan akcent, dve fu
 
 ### Hierarchy
 - **Display** (900, clamp 56–96px, 0.95, -0.03em): ostatak kcal u traci. Ista uloga, šira skala na ekranu prijave (clamp 56–112px, naslov) i na profilu prijatelja (clamp 56–88px). Jedinica (kcal) je 0.3–0.36em, težine 700.
-- **Figure** (800, clamp 26–40px, 1): makrosi u traci; zbir u podnožju tabele (900, 24px, kcal 30px); broj mesta u rangu 80px/900 zelen.
+- **Figure** (800, clamp 26–40px, 1): makrosi u traci; zbir u podnožju tabele (900, 24px, kcal 30px, beli na crnoj traci); broj mesta u rangu 80px/900 zelen.
 - **Headline** (800, clamp 22–28px): datum ili naslov ekrana u redu ispod trake.
 - **Title** (700, 20px): glava panela; glavno dugme 800/20px, ostala dugmad 700/17px.
 - **Body** (400, 16px, 1.45): tekst; polja unosa 17px.
 - **Label** (600, 14px, sivi-tekst): oznake polja iznad unosa; sporedni red 13px/500.
-- **Column head** (700, 13px, 0.06em, verzal, sivi-tekst): samo zaglavlja kolona tabele i dana u kalendaru; grupe obroka u tabeli 800/14px verzal crno.
+- **Column head** (700, 13px, 0.06em, verzal, sivi-tekst): samo zaglavlja kolona tabele i dana u kalendaru; grupe obroka u tabeli 900/15px verzal crno, zbir obroka 700/15px sivi-tekst.
 
 ### Named Rules
 **The Tabular Rule.** Svaki broj koji se menja ima tabularne cifre (klasa num), da se tabla ne trese pri preispisu.
@@ -261,7 +261,13 @@ Izbor jedne opcije (pol, cilj, obrok): okvir 2px, pregrade 2px, izabrana opcija 
 
 ### Cards / Containers
 - **Panel:** bela, 6px, senka, crna glava (Title, pločica 32px levo), telo 18px.
-- **Tabela dana:** bela površina 6px sa senkom, padding 8px 24px 16px.
+- **Tabela dana:** bela površina 6px sa senkom, padding 8px 24px 16px. Stil je u `components/tabela-dana.css` (iste klase koristi i tabela prijatelja).
+  - **Kolone:** ime levo i uzima sav višak širine (600, lomi se samo između reči); količina, kcal, P, UH, M desno, svaka bar 6.5em (13px zaglavlje), tabular-nums. Ceo broj dobija nevidljivo ",0" pa se kolona poravna po zarezu. kcal u redu je 700.
+  - **Zaglavlje:** Column head, ispod okvir 2px.
+  - **Obrok:** podnaslov (ime verzalom) sa zbirom obroka pod kolonama kcal/P/UH/M; od drugog obroka nadalje okvir 2px iznad, ispod linija 1px spolja.
+  - **Red:** 17px, razdelnik 1px pozadina; hover pozadina, red koji se menja i njegovo polje vrednosti mint. Akcije (olovka, kanta) na kraju reda, vidljive na hover/fokus; na dodir uvek.
+  - **Zbir dana:** crna traka (6px) preko cele širine, beli brojevi 900/24px, kcal 30px; na telefonu jedinice svetlozelene sitno ispod broja.
+  - **Telefon (do 640px):** 16px, bez P/UH/M kolona; makrosi su sitan red ispod imena koji se lomi samo između vrednosti.
 - **Poruka / izabrano:** mint površina, 6px, 12px 14px, bez okvira.
 
 ### Navigation
