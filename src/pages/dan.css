@@ -188,21 +188,6 @@ a.nedelja-dan:hover { background: var(--mint); }
 
 /* Tabela dana */
 .dan-tabela { background: var(--bela); border-radius: var(--r); padding: 8px 24px 16px; box-shadow: var(--senka); display: grid; gap: 12px; }
-.tabela { width: 100%; border-collapse: collapse; }
-.tabela th, .tabela td { padding: 12px 8px; text-align: right; }
-.tabela th:first-child, .tabela td:first-child { text-align: left; padding-left: 0; }
-.tabela thead th { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sivi-tekst); }
-.tabela .grupa th, .tabela .grupa td {
-  border-top: var(--okvir); padding-top: 18px; font-weight: 800; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
-}
-.tabela .grupa td { color: var(--sivi-tekst); text-transform: none; letter-spacing: 0; font-weight: 700; }
-.tabela .red td { border-top: 1px solid var(--pozadina); }
-.tabela tfoot th, .tabela tfoot td { border-top: var(--okvir); font-weight: 900; font-size: 24px; padding-top: 16px; letter-spacing: -0.01em; }
-.tabela tfoot td:nth-child(2) { font-size: 30px; }
-.mak-mob, .jed-mob, .p-mob > span { display: none; }
-.grupa-dugme { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; cursor: default; }
-.grupa-dugme svg { display: none; transition: transform 200ms ease-out; }
-.akcije { white-space: nowrap; width: 1%; padding-right: 0 !important; }
 .ikona {
   width: 36px; height: 36px; display: inline-grid; place-items: center; border-radius: 4px;
   border: 0; background: none; cursor: pointer; color: var(--sivi-tekst);
@@ -276,7 +261,6 @@ a.nedelja-dan:hover { background: var(--mint); }
 }
 .u-bazu:hover { background: var(--tekst); color: var(--bela); }
 .u-bazu:disabled { opacity: 0.5; cursor: default; }
-.tabela .red-vrednosti td { padding: 0 0 12px; text-align: left; }
 .pregled-kol { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--sivi-tekst); }
 .pregled-kol .unos.mali { width: 76px; }
 .pregled-dalje { display: grid; grid-template-columns: auto 1fr; gap: 12px; }
@@ -294,10 +278,6 @@ a.nedelja-dan:hover { background: var(--mint); }
 @keyframes mis-cita { from { transform: rotate(-4deg); } to { transform: rotate(4deg) translateY(-3px); } }
 @keyframes oblacic { from { transform: scale(0.94); opacity: 0.4; } to { transform: none; opacity: 1; } }
 
-@media (hover: hover) {
-  .red .akcije .ikona { opacity: 0; }
-  .red:hover .akcije .ikona, .red:focus-within .akcije .ikona { opacity: 1; }
-}
 .unos.mali { height: 38px; width: 90px; font-size: 16px; padding: 0 10px; text-align: right; }
 .prazno-dan { padding: 32px 0; display: grid; gap: 6px; }
 
@@ -344,18 +324,6 @@ a.nedelja-dan:hover { background: var(--mint); }
   .nedelja-znak { width: 30px; height: 30px; font-size: 18px; }
   .nedelja-ime { padding: 3px 4px; font-size: 12px; }
   .dan-tabela { padding: 4px 14px 12px; }
-  .tabela .mak { display: none; }
-  .mak-mob { display: block; color: var(--sivi-tekst); font-size: 13px; }
-  /* Zbir: kcal i proteini jedan pored drugog, jedinica sitno ispod broja */
-  .tabela tfoot .p-mob { font-size: 30px; white-space: nowrap; }
-  .p-mob > span, .jed-mob { display: block; }
-  .jed-mob { margin-top: 2px; color: var(--sivi-tekst); font-size: 13px; font-weight: 700; letter-spacing: 0; }
-  .tabela th, .tabela td { padding: 10px 6px; }
-  /* Obroci se skupljaju strelicom; zbir kcal obroka ostaje vidljiv u zaglavlju */
-  .grupa-dugme { cursor: pointer; min-height: 32px; }
-  .grupa-dugme svg { display: block; }
-  .zatvoren .grupa-dugme svg { transform: rotate(-90deg); }
-  .zatvoren .red, .zatvoren .red-vrednosti { display: none; }
 }
 
 /* Makrosi unosa lete u traku (letMakrosa.ts): zapaljena pločica, žar za njom, iskre i blesak pri udaru, natpis za jak unos */
@@ -403,8 +371,3 @@ a.nedelja-dan:hover { background: var(--mint); }
   .let-pohvala { transform: translate(-50%, -50%); animation: pohvala-mirno 3200ms linear forwards; }
 }
 [data-makro] { transform-origin: 0 50%; }
-
-/* Uži telefoni (do ~420px): zbir u podnožju od 30px širi poslednje dve kolone, pa tabela izlazi iz kartice */
-@media (max-width: 420px) {
-  .tabela tfoot td:nth-child(2), .tabela tfoot .p-mob { font-size: 24px; }
-}
