@@ -77,7 +77,7 @@ export default function RangPolje({ kljuc, onGovor }: { kljuc: number; onGovor: 
   return (
     <div className={`rang-omot pehar-${vrsta ?? 'nema'}${udar ? ' udar' : ''}`}>
       {/* ukras, mesto je u opisu polja; bez ključa, pa novo mesto samo promeni sliku, bez novog pada */}
-      {vrsta && <Pehar vrsta={vrsta} />}
+      {vrsta && <Pehar vrsta={vrsta} mesto={r && r.ukupno > 1 ? r.mesto : undefined} />}
       {udar && VARNICE.map((v, i) => (
         <span key={i} className="varnica" aria-hidden
           style={{ '--ugao': `${v.ugao}deg`, '--dalj': `${v.dalj}px`, height: v.duz, animationDelay: `${v.kasni}ms` } as React.CSSProperties} />
