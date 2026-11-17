@@ -4,6 +4,16 @@
     "ignoreFiles": [
       ".impeccable/mocks/**"
     ],
-    "ignoreValues": []
+    "ignoreValues": [
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/pages/prijatelji.css"
+        ],
+        "createdAt": "2026-11-17T11:10:25.822Z",
+        "reason": "zadatak (sesija koja je pokrenula ovu): ime koje gori plavim plamenom, gradijent je boja plamena u slovima"
+      }
+    ]
   }
 }

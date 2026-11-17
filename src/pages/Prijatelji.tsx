@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { Check, ChevronRight, Flame, Search, UserPlus, Users, X } from 'lucide-react'
+import { Check, ChevronRight, Search, UserPlus, Users, X } from 'lucide-react'
 import { danas } from '../lib/datum'
 import { fmt } from '../lib/ishrana'
 import {
@@ -90,22 +90,36 @@ export default function Prijatelji() {
             greska ? null : <p className="tiho-tekst" role="status">Učitavam…</p>
           ) : (
             <>
+              {/* Prag za jezike plamena: mekan šum postaje oštar, zašiljen plamen (koristi ga prijatelji.css) */}
+              <svg className="sr" aria-hidden>
+                <filter id="vatra-prag" colorInterpolationFilters="sRGB"><feComponentTransfer><feFuncA type="linear" slope="7" intercept="-2.6" /></feComponentTransfer></filter>
+              </svg>
               <ol className="rang-lista">
                 {poRangu(zbirovi).map((r) => {
                   const ja = r.id === profil?.id
                   const pct = Math.round(r.procenat * 100)
                   const gori = plamen(r)
+                  const ime = ja ? 'Ti' : r.nadimak
                   const sadrzaj = (
                     <>
                       <span className="rang-red-mesto num">{mesto(zbirovi, r)}.</span>
                       <span className="rang-red-ime">
                         <span className="rang-red-naziv">
-                          <b>{ja ? 'Ti' : r.nadimak}</b>
-                          {/* Plamen je ukras: veći za cilj kalorija, manji plavi za cilj proteina; čitač ekrana dobija tekst */}
-                          {gori.kalorije && <Flame className="plamen kcal" size={22} fill="currentColor" aria-hidden />}
-                          {gori.proteini && <Flame className="plamen proteini" size={16} fill="currentColor" aria-hidden />}
+                          {/* Ko gori dobija crnu tablu: proteini = ime gori plavo, kalorije = narandžasta vatra oko table.
+                              Vatra je ukras (aria-hidden); čitač ekrana dobija tekst. */}
+                          <span className={['ime', gori.kalorije && 'gori-kcal', gori.proteini && 'gori-proteini'].filter(Boolean).join(' ')}>
+                            {gori.kalorije && <span className="vatra" aria-hidden />}
+                            {gori.proteini && <span className="jezici" aria-hidden />}
+                            <b>{ime}</b>
+                          </span>
                           {opisPlamena(gori) && <span className="sr">, {opisPlamena(gori)}</span>}
                         </span>
+                        {(gori.kalorije || gori.proteini) && (
+                          <span className="rang-oznake" aria-hidden>
+                            {gori.proteini && <span className="oznaka proteini">Proteini ostvareni</span>}
+                            {gori.kalorije && <span className="oznaka kcal">Kalorije ostvarene</span>}
+                          </span>
+                        )}
                         {r.ima_cilj && <span className="merac" aria-hidden><i style={{ width: `${pct}%` }} /></span>}
                       </span>
                       {r.ima_cilj ? (
