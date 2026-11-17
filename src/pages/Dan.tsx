@@ -10,6 +10,8 @@ import DodajNamirnicu from '../components/DodajNamirnicu'
 import TabelaDana from '../components/TabelaDana'
 import RangPolje from '../components/RangPolje'
 import NedeljaMakroa from '../components/NedeljaMakroa'
+import Sir from '../components/Sir'
+import { PecatAlat, PecatDefs, PecatOtisak } from '../components/Pecat'
 import './dan.css'
 
 export default function Dan() {
@@ -103,19 +105,7 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
 
   return (
     <section className="traka" aria-live="polite" aria-labelledby="napredak-naslov">
-      {/* zajedničko za sve pečate: mastilo (iskrzana ivica i tačkice) i krug po kome ide tekst */}
-      <svg className="pecat-defs" aria-hidden>
-        <defs>
-          <filter id="pecat-mastilo" x="-10%" y="-10%" width="120%" height="120%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="7" result="sum" />
-            <feDisplacementMap in="SourceGraphic" in2="sum" scale="2.6" result="iskrzano" />
-            <feTurbulence type="fractalNoise" baseFrequency="0.22" seed="3" result="mrlje" />
-            <feColorMatrix in="mrlje" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 2.4" result="rupe" />
-            <feComposite in="iskrzano" in2="rupe" operator="in" />
-          </filter>
-          <path id="pecat-krug" d="M50 50 m-35 0 a35 35 0 1 1 70 0 a35 35 0 1 1 -70 0" />
-        </defs>
-      </svg>
+      <PecatDefs />
       <div className="napredak">
         <h2 id="napredak-naslov" className="traka-oznaka">Dnevni napredak</h2>
         <div className="luk">
@@ -123,9 +113,9 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
             {/* Tečnost: zelena cev (svetlija unutra, tamnija spolja), a preko nje mehurići i odsjaj teku samo kroz ispunjeni deo (maska) */}
             <defs>
               <radialGradient id="luk-tecnost" gradientUnits="userSpaceOnUse" cx="100" cy="100" r="92.5">
-                <stop offset="0.84" stopColor="#7bd63a" />
-                <stop offset="0.93" stopColor="#389600" />
-                <stop offset="1" stopColor="#2a7400" />
+                <stop offset="0.84" style={{ stopColor: 'var(--luk-svetla)' }} />
+                <stop offset="0.93" style={{ stopColor: 'var(--zelena)' }} />
+                <stop offset="1" style={{ stopColor: 'var(--luk-tamna)' }} />
               </radialGradient>
               <mask id="luk-maska" maskUnits="userSpaceOnUse">
                 <path className="luk-ispuna" d={LUK} pathLength={100} stroke="#fff" style={{ strokeDasharray: `${p * 100} 100` }} />
@@ -191,54 +181,14 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
   )
 }
 
-// Zeleni pečat "cilj pogođen". udara: alat (drvena drška + guma) se spusti, udari i odskoči, a otisak ostane;
+// Pečat "cilj pogođen": crtež je u components/Pecat. udara: alat se spusti, udari i odskoči, a otisak ostane;
 // bez toga (učitana strana) stoji samo otisak. red: pečati udaraju jedan za drugim. Pokret je u dan.css.
 function Pecat({ naziv, udara, red }: { naziv: string; udara: boolean; red: number }) {
   return (
     <span className={`pecat${udara ? ' udara' : ''}`} style={{ '--red': red } as React.CSSProperties}>
-      <svg className="pecat-otisak" viewBox="0 0 100 100" role="img" aria-label={`${naziv}: cilj pogođen`}>
-        <g filter="url(#pecat-mastilo)" fill="none" stroke="currentColor">
-          <circle cx="50" cy="50" r="46" strokeWidth="4.5" />
-          <circle cx="50" cy="50" r="40.5" strokeWidth="1.6" />
-          <circle cx="50" cy="50" r="26" strokeWidth="1.6" />
-          <text fill="currentColor" stroke="none" fontSize="10.5" fontWeight="900" letterSpacing="0.4">
-            <textPath href="#pecat-krug" textLength="214" lengthAdjust="spacing">CILJ POGOĐEN · {naziv.toUpperCase()} ·</textPath>
-          </text>
-          <path d="M38 52 L47 61 L64 41" strokeWidth="6.5" strokeLinecap="round" strokeLinejoin="round" />
-          <path fill="currentColor" stroke="none" d="M50 28.5l1.2 2.6 2.8.3-2.1 1.9.6 2.8-2.5-1.4-2.5 1.4.6-2.8-2.1-1.9 2.8-.3z M39 31.5l.9 1.9 2.1.2-1.6 1.4.5 2-1.9-1-1.9 1 .5-2-1.6-1.4 2.1-.2z M61 31.5l.9 1.9 2.1.2-1.6 1.4.5 2-1.9-1-1.9 1 .5-2-1.6-1.4 2.1-.2z" />
-        </g>
-      </svg>
-      {udara && (
-        <svg className="pecat-alat" viewBox="0 0 60 92" aria-hidden>
-          <g stroke="#111311" strokeWidth="2.5" strokeLinejoin="round">
-            <circle cx="30" cy="13" r="10" fill="#c98642" />
-            <path d="M25 22 h10 l2 24 h-14 z" fill="#b06d32" />
-            <rect x="9" y="46" width="42" height="18" rx="3" fill="#c98642" />
-            <rect x="6" y="64" width="48" height="12" rx="2" fill="#2a7400" />
-          </g>
-          <path d="M14 51 h20" stroke="#e9b27a" strokeWidth="2.5" strokeLinecap="round" />
-        </svg>
-      )}
+      <PecatOtisak naziv={naziv} />
+      {udara && <PecatAlat />}
     </span>
-  )
-}
-
-// Piktogram sira kao znak na tabli: ravne boje, debeo crn obris, rupe. Kad je cilj kalorija pogođen iskoči i njiše se (dan.css).
-function Sir({ slavi }: { slavi: boolean }) {
-  return (
-    <svg className={`sir${slavi ? ' slavi' : ''}`} viewBox="0 0 64 50" width={66} height={52} {...(slavi ? { role: 'img', 'aria-label': 'Cilj kalorija pogođen' } : { 'aria-hidden': true })}>
-      <g stroke="#111311" strokeWidth="3" strokeLinejoin="round">
-        <path d="M4 25 L44 9 L58 16 L18 31 Z" fill="#ffd95a" />
-        <path d="M44 9 L58 16 V40 L44 46 Z" fill="#f0a500" />
-        <path d="M4 25 L44 9 V46 H4 Z" fill="#ffc21a" />
-      </g>
-      <g fill="#fff3c4" stroke="#111311" strokeWidth="2.2">
-        <circle cx="15" cy="35" r="4" />
-        <circle cx="30" cy="26" r="5" />
-        <circle cx="34" cy="39" r="3" />
-        <ellipse cx="38" cy="16.5" rx="3.6" ry="1.6" />
-      </g>
-    </svg>
   )
 }
 

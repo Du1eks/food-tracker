@@ -1,0 +1,19 @@
+/* Boje crteža pečata; menjaju se ovde (ili u temi), crtež ih samo koristi */
+:root {
+  --pecat-mastilo: #2a7400;
+  --pecat-drvo: #c98642;
+  --pecat-drvo-tamno: #b06d32;
+  --pecat-drvo-svetlo: #e9b27a;
+}
+.pecat-defs { position: absolute; width: 0; height: 0; }
+/* --ugao postavlja raspored (dan.css), pa svaki otisak stoji malo drugačije */
+.pecat-otisak {
+  display: block; width: 100%; height: 100%; overflow: visible; color: var(--pecat-mastilo);
+  opacity: 0.95; mix-blend-mode: multiply; transform: rotate(var(--ugao, -12deg));
+}
+.pecat-alat { overflow: visible; }
+.pecat-alat-obris { stroke: var(--tekst); stroke-width: 2.5; stroke-linejoin: round; }
+.pecat-drvo { fill: var(--pecat-drvo); }
+.pecat-drvo-tamno { fill: var(--pecat-drvo-tamno); }
+.pecat-guma { fill: var(--pecat-mastilo); }
+.pecat-odsjaj { fill: none; stroke: var(--pecat-drvo-svetlo); stroke-width: 2.5; stroke-linecap: round; }
