@@ -10,7 +10,6 @@ import {
 import { mesto, poRangu, type Zbir } from '../lib/rang'
 import { opisPlamena, plamen } from '../lib/plamen'
 import { useProfil } from '../components/useProfil'
-import ImeUPlamenu from '../components/ImeUPlamenu'
 import './dan.css'
 import './prijatelji.css'
 
@@ -105,16 +104,9 @@ export default function Prijatelji() {
                       <span className="rang-red-mesto num">{mesto(zbirovi, r)}.</span>
                       <span className="rang-red-ime">
                         <span className="rang-red-naziv">
-                          {/* Proteini = ime gori iznutra (plavo), kalorije = vatra oko imena (narandžasto); čitač ekrana dobija tekst */}
-                          <ImeUPlamenu ime={ja ? 'Ti' : r.nadimak} iznutra={gori.proteini} spolja={gori.kalorije} />
+                          <b>{ja ? 'Ti' : r.nadimak}</b>
                           {opisPlamena(gori) && <span className="sr">, {opisPlamena(gori)}</span>}
                         </span>
-                        {(gori.kalorije || gori.proteini) && (
-                          <span className="rang-oznake" aria-hidden>
-                            {gori.proteini && <span className="oznaka proteini">Proteini ostvareni</span>}
-                            {gori.kalorije && <span className="oznaka kcal">Kalorije ostvarene</span>}
-                          </span>
-                        )}
                         {r.ima_cilj && (gori.kalorije || gori.proteini ? (
                           // Napitak ključa: pogođen cilj = epruveta koja ključa (zlatno = kalorije, plavi mehurići i para = proteini)
                           <span className={['kljuca', gori.kalorije && 'kcal', gori.proteini && 'proteini'].filter(Boolean).join(' ')}

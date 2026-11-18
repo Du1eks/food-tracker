@@ -193,29 +193,21 @@ a.rang-red:hover { background: var(--mint); }
 /* Živi miš (Masko klip) sam sebe animira: bez CSS pokreta, i prima dodir (postane "prejak") */
 .maskota.ziv { animation: none !important; pointer-events: auto; cursor: pointer; }
 
-/* Rang lista: ko je pogodio cilj "gori" (components/ImeUPlamenu): proteini = ime gori iznutra (plavo),
-   kalorije = vatra oko table (narandžasto) i narandžast broj mesta. Ispod imena oznake u boji plamena. */
-.rang-lista { --kcal: var(--masti-boja); --proteini: var(--proteini-boja); }
+/* Rang lista: ko je pogodio cilj kalorija ima narandžast broj mesta; glavni znak je epruveta koja ključa (ispod).
+   Ime je običan tekst; čitač ekrana dobija opis pogođenog cilja (lib/plamen). */
+.rang-lista { --kcal: var(--masti-boja); }
 .rang-red-naziv { display: flex; align-items: center; min-width: 0; }
 .rang-lista li.gori .rang-red-mesto { color: var(--kcal); }
-/* Red je sloj, da vatra iza table (z-index -1) ostane iznad pozadine reda i mint hovera */
-.rang-lista .rang-red { isolation: isolate; }
-
-/* Oznake ispod imena, u boji svog plamena (obe bar 4,5:1 na beloj i na mint) */
-.rang-oznake { display: flex; flex-wrap: wrap; gap: 2px 12px; margin-top: -2px; }
-.oznaka { font-size: 11px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; line-height: 1.2; }
-.oznaka.kcal { color: var(--kcal); }
-.oznaka.proteini { color: var(--proteini); }
 
 /* Napitak ključa: red koji je pogodio cilj umesto merača ima epruvetu koja ključa.
-   Kalorije = zlatna tečnost (boje sira, --sir-* iz eksplozija.css) koja peni i prekipi preko kraja; proteini = plavi sjaj, mehurići i para.
+   Kalorije = zlatna tečnost (boje sira, --sir-* iz eksplozija.css) koja peni i prekipi preko kraja; proteini = plavi sjaj, rub, mehurići i para
+   (i na zlatnoj, pa se oba cilja razlikuju od samo kalorija i bez natpisa).
    Pokret samo bez prefers-reduced-motion (tada ostaju boja, sjaj, pena i curak). Samo transform/opacity, da 20+ redova ne koči. */
 .kljuca { --t1: #b8ff95; --t2: var(--zelena); --t3: var(--zelena-duboka); --sjaj: rgb(140 255 90 / 0.5);
   --mehur-rub: rgb(240 255 235 / 0.85); --para: rgb(235 245 240 / 0.55);
   position: relative; display: block; height: 22px; margin-top: 14px; }
 .kljuca.kcal { --t1: var(--sir-vrh); --t2: var(--sir-lice); --t3: var(--sir-bok); --sjaj: rgb(255 194 26 / 0.7); --mehur-rub: rgb(255 250 225 / 0.9); }
 .kljuca.proteini { --sjaj: rgb(73 198 255 / 0.75); --mehur-rub: var(--proteini-boja); --para: rgb(73 198 255 / 0.6); }
-.kljuca.kcal.proteini { --sjaj: rgb(255 194 26 / 0.7); }
 
 /* Staklo: tanak rub, odsjaj odozgo i senka dna */
 .kljuca-cev {
