@@ -42,3 +42,12 @@
   .moja-jela-dijalog[open] { animation: moja-jela-ulaz 260ms cubic-bezier(0.16, 1, 0.3, 1); }
 }
 @keyframes moja-jela-ulaz { from { opacity: 0; translate: 0 24px; } }
+
+/* Treće dugme u izboru: ručni unos (tiše od ostala dva) */
+.unos-rucno { font-size: 17px; font-weight: 700; padding-right: 10px; }
+.unos-rucno svg { color: var(--sivi-tekst); }
+.unos-rucno .plocica { background: transparent; color: var(--sivi-tekst); }
+/* Pregled: ručno dodavanje namirnice koju je miš preskočio */
+.dodaj-u-pregled { justify-self: start; gap: 6px; color: var(--zelena); font-weight: 700; min-height: 40px; padding: 0 8px; }
+.dodaj-u-pregled-telo { display: grid; gap: 10px; padding: 12px; border: 1px dashed var(--ivica); border-radius: var(--r); }
+.dodaj-u-pregled-telo .pretraga .unos { flex: 1; min-width: 0; }

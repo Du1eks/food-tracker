@@ -1,9 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { ArrowRight, MessageSquareText, Plus } from 'lucide-react'
+import { ArrowRight, MessageSquareText, PencilLine } from 'lucide-react'
 import { OBROCI, fmt, zbir, type Jelo, type Obrok, type Unos } from '../lib/ishrana'
 import { danas } from '../lib/datum'
 import { dodajUnos, mojaJela } from '../lib/podaci'
-import { razumiObrok } from '../lib/razumi'
+import { razumiObrok, type Stavka } from '../lib/razumi'
 import { stanjeMisa, type Poza } from '../lib/rang'
 import { useProfil } from './useProfil'
 import { useSad } from './useMouseMascot'
@@ -14,6 +14,7 @@ const bezPokreta = () => window.matchMedia('(prefers-reduced-motion: reduce)').m
 import { letMakrosa } from './letMakrosa'
 import PregledStavki, { ispravna, izStavke, kolicina, makrosiReda, uRed, type RedPregleda } from './PregledStavki'
 import BiracJela from './BiracJela'
+import DodajUPregled from './DodajUPregled'
 
 // Red u pregledu; grupa je obrok koji je AI pročitao ("?" = nije naveden)
 type Red = RedPregleda & { grupa: string }
@@ -22,7 +23,8 @@ const SLAVI_POSLE_UPISA = 4000 // ms
 
 // Tok: napiši mišu šta si jeo → on pročita (AI na serveru) → pregled → "Upiši" stavlja sve u tabelu.
 // Ili klik na sačuvano jelo iz Laboratorije: njegove stavke idu u isti pregled, bez AI-ja.
-// Panel počinje izborom (piši mišu / uzmi svoje jelo); polje za tekst se otvara tek na klik.
+// Panel počinje izborom (piši mišu / uzmi svoje jelo / ručno); polje za tekst se otvara tek na klik.
+// U pregledu se može ručno dodati namirnica koju je miš preskočio (DodajUPregled).
 export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
   datum: string; unosi: Unos[] | null; onDodato: () => void; onRucno: () => void
   govor: string | null // usputna rečenica o rangu (RangPolje); samo kad miš nema šta važnije da kaže
@@ -97,6 +99,10 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
 
   const izmeni = (id: number, izmena: Partial<Red>) => setRedovi(redovi!.map((x) => (x.id === id ? { ...x, ...izmena } : x)))
 
+  // ručno dodata namirnica ide na kraj svoje grupe obroka
+  const dodajRed = (g: string) => (st: Stavka) =>
+    setRedovi((rs) => [...(rs ?? []), { ...uRed(st, (rs ?? []).reduce((m, x) => Math.max(m, x.id + 1), 0)), grupa: g }])
+
   function izbaci(id: number) {
     const ostalo = redovi!.filter((r) => r.id !== id)
     setRedovi(ostalo.length ? ostalo : null)
@@ -133,10 +139,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
   return (
     <section className="panel" id="unos" aria-labelledby="unos-naslov">
       <div className="panel-glava">
-        <button type="button" className="plocica svetla plus" aria-label="Unesi namirnicu ručno" onClick={onRucno}>
-          <Plus size={22} strokeWidth={2.75} aria-hidden />
-        </button>
-        <h2 id="unos-naslov">Reci mišu šta si jeo</h2>
+        <h2 id="unos-naslov">Dodaj hranu</h2>
       </div>
       <div className="panel-telo">
         <div className={`mis${cita ? ' cita' : ''}`}>
@@ -157,6 +160,10 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
               <span className="plocica" aria-hidden><ArrowRight size={22} strokeWidth={2.5} /></span>
             </button>
             {jela && <BiracJela jela={jela} onIzaberi={uzmiJelo} />}
+            <button type="button" className="dugme unos-rucno" onClick={onRucno}>
+              <span className="unos-izbor-tekst"><PencilLine size={22} aria-hidden /> Unesi ručno</span>
+              <span className="plocica" aria-hidden><ArrowRight size={20} strokeWidth={2.5} /></span>
+            </button>
           </div>
         ) : !redovi ? (
           <form className="mis-forma" onSubmit={procitaj}>
@@ -189,6 +196,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
                   ))}
                 </div>
                 <PregledStavki redovi={redovi.filter((r) => r.grupa === g)} izmeni={izmeni} izbaci={izbaci} />
+                <DodajUPregled onDodaj={dodajRed(g)} />
               </fieldset>
             ))}
             <div className="pregled-dalje">
