@@ -4,11 +4,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { ArrowRight, Pencil, Trash2, X } from 'lucide-react'
-import { fmt, poJedinici, zbir, type Jelo, type Makrosi, type StavkaJela } from '../lib/ishrana'
+import { fmt, zbir, type Jelo, type Makrosi, type StavkaJela } from '../lib/ishrana'
 import { mojaJela, obrisiJelo, sacuvajJelo } from '../lib/podaci'
 import Potvrdi from '../components/Potvrdi'
 import { razumiObrok } from '../lib/razumi'
-import PregledStavki, { ispravna, kolicina, makrosiReda, uRed, type RedPregleda } from '../components/PregledStavki'
+import PregledStavki, { ispravna, izStavke, kolicina, makrosiReda, uRed, type RedPregleda } from '../components/PregledStavki'
 import MisKuvar from '../components/MisKuvar'
 import KarticaJela from '../components/KarticaJela'
 import { letNamirnica } from '../components/letNamirnica'
@@ -24,9 +24,6 @@ const brojStavki = (n: number) => `${n} ${n === 1 ? 'stavka' : n < 5 ? 'stavke' 
 
 type Urednik = { id?: string; ime: string; redovi: RedPregleda[] }
 
-// Sačuvana stavka nosi vrednosti za količinu; pregled radi sa vrednostima po jedinici
-const izStavke = (s: StavkaJela, id: number) =>
-  uRed({ ...s, ...poJedinici(s), obrok: null, izvor: s.proizvod_id ? 'baza' : 'procena' }, id)
 
 const uStavku = (r: RedPregleda): StavkaJela =>
   ({ ime: r.ime, proizvod_id: r.proizvod_id, kolicina: kolicina(r), jedinica: r.jedinica, ...makrosiReda(r) })

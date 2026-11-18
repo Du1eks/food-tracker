@@ -1,8 +1,8 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { ArrowRight, Plus } from 'lucide-react'
-import { OBROCI, fmt, zbir, type Obrok, type Unos } from '../lib/ishrana'
+import { ArrowRight, MessageSquareText, Plus } from 'lucide-react'
+import { OBROCI, fmt, zbir, type Jelo, type Obrok, type Unos } from '../lib/ishrana'
 import { danas } from '../lib/datum'
-import { dodajUnos } from '../lib/podaci'
+import { dodajUnos, mojaJela } from '../lib/podaci'
 import { razumiObrok } from '../lib/razumi'
 import { stanjeMisa, type Poza } from '../lib/rang'
 import { useProfil } from './useProfil'
@@ -12,7 +12,8 @@ import Maskota from './Maskota'
 const ZiviMis = lazy(() => import('./ZiviMis').catch(() => ({ default: ({ rezerva }: { rezerva: React.ReactElement }) => rezerva })))
 const bezPokreta = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 import { letMakrosa } from './letMakrosa'
-import PregledStavki, { ispravna, kolicina, makrosiReda, uRed, type RedPregleda } from './PregledStavki'
+import PregledStavki, { ispravna, izStavke, kolicina, makrosiReda, uRed, type RedPregleda } from './PregledStavki'
+import BiracJela from './BiracJela'
 
 // Red u pregledu; grupa je obrok koji je AI pročitao ("?" = nije naveden)
 type Red = RedPregleda & { grupa: string }
@@ -20,6 +21,8 @@ type Red = RedPregleda & { grupa: string }
 const SLAVI_POSLE_UPISA = 4000 // ms
 
 // Tok: napiši mišu šta si jeo → on pročita (AI na serveru) → pregled → "Upiši" stavlja sve u tabelu.
+// Ili klik na sačuvano jelo iz Laboratorije: njegove stavke idu u isti pregled, bez AI-ja.
+// Panel počinje izborom (piši mišu / uzmi svoje jelo); polje za tekst se otvara tek na klik.
 export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
   datum: string; unosi: Unos[] | null; onDodato: () => void; onRucno: () => void
   govor: string | null // usputna rečenica o rangu (RangPolje); samo kad miš nema šta važnije da kaže
@@ -34,7 +37,18 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
   const [upisano, setUpisano] = useState(false)
   const [procena, setProcena] = useState(false)
   const [slaviUpis, setSlaviUpis] = useState(false)
+  const [jela, setJela] = useState<Jelo[] | null>(null)
+  const [izJela, setIzJela] = useState<string | null>(null) // ime jela čije su stavke u pregledu
+  const [pise, setPise] = useState(false) // otvoreno polje za tekst (inače izbor)
   const sad = useSad()
+
+  // bez interneta (ili baze) samo nema reda sa jelima; pisanje mišu radi i dalje
+  useEffect(() => { mojaJela().then(setJela, () => setJela([])) }, [])
+
+  function uzmiJelo(j: Jelo) {
+    setRedovi(j.stavke.map((s, id) => ({ ...izStavke(s, id), grupa: '?' })))
+    setObroci({ '?': null }); setIzJela(j.ime); setGreska(''); setUpisano(false)
+  }
 
   // Klik na "Upiši": miš kratko slavi, pa se vraća na stanje koje traje
   useEffect(() => {
@@ -46,7 +60,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
   async function procitaj(e?: React.FormEvent) {
     e?.preventDefault()
     if (!tekst.trim() || cita) return
-    setCita(true); setGreska(''); setUpisano(false)
+    setCita(true); setGreska(''); setUpisano(false); setIzJela(null)
     try {
       const stavke = await razumiObrok(tekst)
       if (stavke.length === 0) return setGreska('Nisam našao hranu u poruci. Napiši npr. „2 jaja i 100 g pirinča“.')
@@ -71,7 +85,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
         ...makrosiReda(r),
       }))
       await dodajUnos(stavke)
-      setRedovi(null); setTekst(''); setUpisano(true); setSlaviUpis(true); setProcena(redovi.some((r) => r.izvor === 'procena'))
+      setRedovi(null); setTekst(''); setIzJela(null); setPise(false); setUpisano(true); setSlaviUpis(true); setProcena(redovi.some((r) => r.izvor === 'procena'))
       // makrosi polete u traku; brojevi (i tabela) se preračunaju kad udare
       void letMakrosa(zbir(stavke), document.getElementById('unos')).finally(onDodato)
     } catch {
@@ -107,11 +121,12 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
     : ''
   const poruka = greska ? greska
     : cita ? 'Čitam…'
+    : redovi && izJela ? (bezObroka ? `${izJela}! Koji je ovo obrok? Izaberi ispod.` : 'Proveri količine, pa upiši.')
     : redovi ? (bezObroka ? 'Nisi napisao obrok. Izaberi ga ispod.' : 'Evo šta sam razumeo. Proveri, pa upiši.')
     : upisano ? `Mljac, upisano! ${procena ? 'Procene možeš da ispraviš i sačuvaš u bazu iz tabele. ' : ''}${ostatak}`.trim()
     : gladan && !unosiTekst ? 'Nisi dugo jeo, mišu!'
     : govor && !unosiTekst ? govor
-    : ostatak || 'Šta si jeo? Napiši mi, ja upisujem.'
+    : ostatak || (pise ? 'Šta si jeo? Napiši mi, ja upisujem.' : 'Reci mi šta si jeo ili uzmi svoje jelo.')
   // Slika (bez pokreta i dok se živi miš učitava): dok pišeš jede; greška ili gladan: ljut; upisano ili cilj: slavi
   const poza: Poza = unosiTekst ? 'jede' : greska || gladan ? 'cilj' : upisano || pogodjen ? 'slavi' : 'hoda'
 
@@ -135,18 +150,30 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
           <p key={poruka} className={`mis-oblacic${greska ? ' lose' : ''}`} role={greska ? 'alert' : 'status'}>{poruka}</p>
         </div>
 
-        {!redovi ? (
+        {!redovi && !pise ? (
+          <div className="unos-izbor">
+            <button type="button" className="dugme glavno" onClick={() => setPise(true)}>
+              <span className="unos-izbor-tekst"><MessageSquareText size={22} aria-hidden /> Reci mišu šta si jeo</span>
+              <span className="plocica" aria-hidden><ArrowRight size={22} strokeWidth={2.5} /></span>
+            </button>
+            {jela && <BiracJela jela={jela} onIzaberi={uzmiJelo} />}
+          </div>
+        ) : !redovi ? (
           <form className="mis-forma" onSubmit={procitaj}>
             <label className="sr" htmlFor="sta-si-jeo">Šta si jeo</label>
-            <textarea id="sta-si-jeo" className="unos mis-tekst" rows={3} maxLength={500} enterKeyHint="send"
+            {/* otvara se na klik "Reci mišu", pa kursor odmah ide u polje (na telefonu i tastatura) */}
+            <textarea id="sta-si-jeo" className="unos mis-tekst" rows={3} maxLength={500} enterKeyHint="send" autoFocus
               placeholder="npr. za doručak 3 jaja, 100 g piletine i tortilja"
               value={tekst} disabled={cita}
               onChange={(e) => { setTekst(e.target.value); setUpisano(false) }}
               onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) procitaj(e) }} />
-            <button className="dugme glavno" type="submit" disabled={cita || !tekst.trim()}>
-              {cita ? 'Čitam…' : 'Pročitaj'}
-              <span className="plocica" aria-hidden><ArrowRight size={22} strokeWidth={2.5} /></span>
-            </button>
+            <div className="pregled-dalje">
+              <button type="button" className="dugme tiho" disabled={cita} onClick={() => { setPise(false); setGreska('') }}>Nazad</button>
+              <button className="dugme glavno" type="submit" disabled={cita || !tekst.trim()}>
+                {cita ? 'Čitam…' : 'Pročitaj'}
+                <span className="plocica" aria-hidden><ArrowRight size={22} strokeWidth={2.5} /></span>
+              </button>
+            </div>
           </form>
         ) : (
           <form className="pregled" onSubmit={upisi}>
@@ -165,7 +192,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
               </fieldset>
             ))}
             <div className="pregled-dalje">
-              <button type="button" className="dugme tiho" onClick={() => { setRedovi(null); setGreska('') }}>Ispravi tekst</button>
+              <button type="button" className="dugme tiho" onClick={() => { setRedovi(null); setGreska(''); setIzJela(null) }}>{izJela ? 'Nazad' : 'Ispravi tekst'}</button>
               <button className="dugme glavno" type="submit" disabled={!spremno || cuva}>
                 {cuva ? 'Upisujem…' : `Upiši ${redovi.length}`}
                 <span className="plocica" aria-hidden><ArrowRight size={22} strokeWidth={2.5} /></span>

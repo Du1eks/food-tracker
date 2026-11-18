@@ -1,6 +1,6 @@
 // Pregled stavki koje je miš pročitao: količina, izbaci, izmena procene. Deli ga unos na početnoj (ReciMisu) i Kuhinja.
 import { Pencil, X } from 'lucide-react'
-import { fmt, uBroj, zaKolicinu, type Makrosi } from '../lib/ishrana'
+import { fmt, poJedinici as izSnimka, uBroj, zaKolicinu, type Makrosi, type StavkaJela } from '../lib/ishrana'
 import type { Stavka } from '../lib/razumi'
 
 const POLJA = [['kcal', 'kcal'], ['proteini', 'P'], ['uh', 'UH'], ['masti', 'M']] as const
@@ -25,6 +25,10 @@ export const uRed = (s: Stavka, id: number): RedPregleda => ({
   ...s, id, kol: tekstBroja(s.kolicina), otvoren: false,
   v: { kcal: tekstBroja(s.kcal), proteini: tekstBroja(s.proteini), uh: tekstBroja(s.uh), masti: tekstBroja(s.masti) },
 })
+
+// Stavka sačuvanog jela nosi vrednosti za količinu; pregled radi sa vrednostima po jedinici (Laboratorija i unos na početnoj)
+export const izStavke = (s: StavkaJela, id: number) =>
+  uRed({ ...s, ...izSnimka(s), obrok: null, izvor: s.proizvod_id ? 'baza' : 'procena' }, id)
 
 export default function PregledStavki<R extends RedPregleda>({ redovi, izmeni, izbaci }: {
   redovi: R[]; izmeni: (id: number, izmena: Partial<R>) => void; izbaci: (id: number) => void

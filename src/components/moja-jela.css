@@ -1,0 +1,44 @@
+/* Unos na početnoj: dugme "Ili uzmi svoje jelo" i spisak sačuvanih jela iz Laboratorije (components/BiracJela) */
+/* Izbor na početku panela: dva dugmeta jedno ispod drugog, ikona levo, strelica ili broj uz desnu ivicu */
+.unos-izbor { display: grid; gap: 10px; }
+.unos-izbor .dugme { width: 100%; min-height: 56px; }
+.unos-izbor-tekst { display: inline-flex; align-items: center; gap: 10px; }
+.moja-jela-dugme { font-size: 18px; font-weight: 800; padding-right: 14px; }
+.moja-jela-dugme svg { color: var(--zelena); }
+.moja-jela-broj { min-width: 30px; text-align: center; padding: 1px 8px; border-radius: 999px; background: var(--zelena); color: var(--na-neonu); font-size: 14px; font-weight: 800; }
+.moja-jela-link { display: inline-flex; align-items: center; gap: 6px; justify-self: start; font-weight: 700; color: var(--zelena); padding: 6px 0; }
+
+.moja-jela-dijalog {
+  width: min(560px, calc(100% - 32px)); max-height: min(720px, calc(100dvh - 48px)); padding: 0; overflow: hidden;
+  color: var(--tekst); background: var(--bela); border: var(--okvir); border-radius: var(--r); box-shadow: var(--senka), var(--sjaj);
+}
+.moja-jela-dijalog[open] { display: flex; flex-direction: column; }
+.moja-jela-dijalog::backdrop { background: color-mix(in srgb, var(--crna) 75%, transparent); backdrop-filter: blur(3px); }
+.moja-jela-dijalog .panel-glava { justify-content: space-between; }
+.moja-jela-telo { display: grid; gap: 12px; padding: 16px; overflow-y: auto; }
+.moja-jela-trazi { position: relative; display: block; }
+.moja-jela-trazi svg { position: absolute; left: 14px; top: 50%; translate: 0 -50%; color: var(--sivi-tekst); pointer-events: none; }
+.moja-jela-trazi .unos { width: 100%; padding-left: 42px; }
+.moja-jela-telo ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.moje-jelo {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; padding: 10px 14px;
+  font: inherit; color: var(--tekst); text-align: left; cursor: pointer;
+  background: var(--ploca-2); border: var(--okvir); border-left: 4px solid var(--zelena); border-radius: var(--r);
+  transition: border-color 160ms, box-shadow 160ms;
+}
+.moje-jelo:hover, .moje-jelo:focus-visible { border-color: var(--zelena); box-shadow: var(--sjaj); }
+.moje-jelo-ime { display: grid; gap: 2px; min-width: 0; }
+.moje-jelo-ime b { font-weight: 700; overflow-wrap: anywhere; line-height: 1.2; }
+.moje-jelo-ime small, .moje-jelo-brojevi small { font-size: 13px; font-weight: 600; color: var(--sivi-tekst); }
+.moje-jelo-brojevi { display: grid; text-align: right; white-space: nowrap; }
+.moje-jelo-brojevi b { font-weight: 800; color: var(--zelena); }
+/* telefon: spisak je lista odozdo preko celog ekrana */
+@media (max-width: 640px) {
+  .moja-jela-dijalog { width: 100%; max-width: 100%; max-height: 88dvh; margin: auto 0 0; border-radius: var(--r) var(--r) 0 0; }
+  .moje-jelo { flex-direction: column; align-items: stretch; gap: 4px; }
+  .moje-jelo-brojevi { text-align: left; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .moja-jela-dijalog[open] { animation: moja-jela-ulaz 260ms cubic-bezier(0.16, 1, 0.3, 1); }
+}
+@keyframes moja-jela-ulaz { from { opacity: 0; translate: 0 24px; } }
