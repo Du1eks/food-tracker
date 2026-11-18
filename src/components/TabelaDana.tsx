@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { Check, ChevronDown, Pencil, Plus, Trash2, X } from 'lucide-react'
 import { OBROCI, fmt, poJedinici, skaliraj, uBroj, zaKolicinu, zbir, type Makrosi, type Unos } from '../lib/ishrana'
 import { dodajProizvod, izmeniUnos, obrisiUnos } from '../lib/podaci'
@@ -12,6 +12,14 @@ const tekst = (n: number) => String(n).replace('.', ',')
 // Ceo broj dobija nevidljivo ",0" pa se kolona poravna po zarezu (fmt daje najviše jednu decimalu)
 const Br = ({ n }: { n: number }) => { const s = fmt(n); return s.includes(',') ? s : <>{s}<span className="bez-dec" aria-hidden>,0</span></> }
 
+// Skupljanje obroka postoji samo na telefonu (isti prag kao u tabela-dana.css)
+const uskiUpit = matchMedia('(max-width: 640px)')
+const useUski = () =>
+  useSyncExternalStore(
+    (javi) => { uskiUpit.addEventListener('change', javi); return () => uskiUpit.removeEventListener('change', javi) },
+    () => uskiUpit.matches,
+  )
+
 export default function TabelaDana({ unosi, onPromena }: { unosi: Unos[] | null; onPromena: () => void }) {
   const [menja, setMenja] = useState<string | null>(null)
   const [nova, setNova] = useState('')
@@ -19,7 +27,17 @@ export default function TabelaDana({ unosi, onPromena }: { unosi: Unos[] | null;
   const [v, setV] = useState<Vrednosti | null>(null)
   const [zauzet, setZauzet] = useState(false)
   const [greska, setGreska] = useState('')
-  const [zatvoreni, setZatvoreni] = useState<string[]>([])
+  // Na telefonu su obroci po default-u skupljeni; ovde su samo oni koje je korisnik otvorio (ili im je upravo dodata hrana)
+  const [otvoreni, setOtvoreni] = useState<string[]>([])
+  const uski = useUski()
+  // Broj stavki po obroku; kad naraste (novi unos) obrok se otvori, a za novi dan (unosi se ponovo učitavaju) sve je skupljeno.
+  // Stanje se menja u toku renderovanja (React to dozvoljava, bez dodatnog efekta) i mora pre ranih return-ova.
+  const brojevi = unosi ? OBROCI.map((o) => unosi.filter((u) => u.obrok === o.id).length) : null
+  const [prosli, setProsli] = useState<number[] | null>(null)
+  if (String(brojevi) !== String(prosli)) {
+    setProsli(brojevi)
+    setOtvoreni(prosli && brojevi ? [...new Set([...otvoreni, ...OBROCI.filter((_, i) => brojevi[i] > prosli[i]).map((o) => o.id)])] : [])
+  }
 
   if (!unosi) return <p className="tiho-tekst" role="status">Učitavam unose…</p>
   if (unosi.length === 0)
@@ -78,14 +96,16 @@ export default function TabelaDana({ unosi, onPromena }: { unosi: Unos[] | null;
           if (!grupa.length) return null
           const z = zbir(grupa)
           return (
-            <tbody key={o.id} className={zatvoreni.includes(o.id) ? 'zatvoren' : undefined}>
+            <tbody key={o.id} className={otvoreni.includes(o.id) ? undefined : 'zatvoren'}>
               <tr className="grupa"><th scope="rowgroup" colSpan={2}>
                 {/* Skupljanje radi samo na telefonu (CSS); na računaru je dugme bez efekta */}
-                <button type="button" className="grupa-dugme" aria-expanded={!zatvoreni.includes(o.id)}
-                  onClick={() => setZatvoreni(zatvoreni.includes(o.id) ? zatvoreni.filter((x) => x !== o.id) : [...zatvoreni, o.id])}>
+                <button type="button" className="grupa-dugme" aria-expanded={!uski || otvoreni.includes(o.id)}
+                  onClick={() => setOtvoreni(otvoreni.includes(o.id) ? otvoreni.filter((x) => x !== o.id) : [...otvoreni, o.id])}>
                   {o.naziv}<ChevronDown size={18} strokeWidth={2.75} aria-hidden />
                 </button>
-              </th><td><Br n={z.kcal} /></td><td className="mak"><Br n={z.proteini} /></td><td className="mak"><Br n={z.uh} /></td><td className="mak"><Br n={z.masti} /></td><td /></tr>
+              </th><td><Br n={z.kcal} /><small className="jed-mob">kcal</small></td><td className="mak"><Br n={z.proteini} /></td><td className="mak"><Br n={z.uh} /></td><td className="mak"><Br n={z.masti} /></td>
+                {/* Na telefonu kolone P/UH/M nema, pa proteini obroka stoje u koloni akcija, kao u redu Ukupno */}
+                <td className="p-mob"><span>{fmt(z.proteini)}<small className="jed-mob">g proteina</small></span></td></tr>
               {grupa.flatMap((u) => [
                 <tr key={u.id} className="red">
                   <td>

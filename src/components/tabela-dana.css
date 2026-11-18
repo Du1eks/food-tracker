@@ -64,7 +64,13 @@
   .tabela .u-bazu { display: flex; width: fit-content; margin: 6px 0 2px; }
   .p-mob > span, .jed-mob { display: block; }
   .jed-mob { margin-top: 2px; color: var(--sivi-tekst); font-size: 13px; font-weight: 700; letter-spacing: 0; }
-  /* Obroci se skupljaju strelicom; zbir kcal obroka ostaje vidljiv u zaglavlju */
+  /* Zbir obroka: krupan i svetao, kcal pa proteini u dva reda, kao u redu Ukupno */
+  .tabela .grupa td { font-size: 20px; font-weight: 800; line-height: 1.1; color: var(--tekst); }
+  .tabela .grupa .jed-mob { font-size: 12px; }
+  .tabela .grupa .bez-dec { display: none; }
+  .tabela .grupa .p-mob { padding-left: 4px; }
+  .tabela .grupa .p-mob .jed-mob { width: min-content; }
+  /* Obroci su po default-u skupljeni (TabelaDana); strelica otvara, zbir kcal i proteina obroka ostaje vidljiv u zaglavlju */
   .grupa-dugme { cursor: pointer; min-height: 32px; }
   .grupa-dugme svg { display: block; }
   .zatvoren .grupa-dugme svg { transform: rotate(-90deg); }
