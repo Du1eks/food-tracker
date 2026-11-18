@@ -106,6 +106,9 @@ export default function Prijatelji() {
                         <span className="rang-red-naziv">
                           <b>{ja ? 'Ti' : r.nadimak}</b>
                           {opisPlamena(gori) && <span className="sr">, {opisPlamena(gori)}</span>}
+                          {/* Etikete pogođenog cilja; čitač ekrana čita opis iznad, pa su one samo za oko */}
+                          {gori.kalorije && <span className="etiketa kcal" aria-hidden>KCAL ✓</span>}
+                          {gori.proteini && <span className="etiketa proteini" aria-hidden><span className="dug">PROTEINI</span><span className="kratko">P</span> ✓</span>}
                         </span>
                         {r.ima_cilj && (gori.kalorije || gori.proteini ? (
                           // Napitak ključa: pogođen cilj = epruveta koja ključa (zlatno = kalorije, plavi mehurići i para = proteini)
