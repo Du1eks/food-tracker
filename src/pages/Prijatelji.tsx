@@ -14,6 +14,10 @@ import ImeUPlamenu from '../components/ImeUPlamenu'
 import './dan.css'
 import './prijatelji.css'
 
+const MEHURI = Array.from({ length: 10 }, (_, i) => <i key={i} />)
+const PARA = Array.from({ length: 5 }, (_, i) => <i key={i} />)
+const PENA = Array.from({ length: 11 }, (_, i) => <i key={i} />)
+
 const GRESKA = 'Ne mogu da završim akciju. Proveri internet pa probaj ponovo.'
 
 export default function Prijatelji() {
@@ -111,7 +115,15 @@ export default function Prijatelji() {
                             {gori.kalorije && <span className="oznaka kcal">Kalorije ostvarene</span>}
                           </span>
                         )}
-                        {r.ima_cilj && <span className="merac" aria-hidden><i style={{ width: `${pct}%` }} /></span>}
+                        {r.ima_cilj && (gori.kalorije || gori.proteini ? (
+                          // Napitak ključa: pogođen cilj = epruveta koja ključa (zlatno = kalorije, plavi mehurići i para = proteini)
+                          <span className={['kljuca', gori.kalorije && 'kcal', gori.proteini && 'proteini'].filter(Boolean).join(' ')}
+                            style={{ '--p': `${pct}%` } as React.CSSProperties} aria-hidden>
+                            <span className="kljuca-cev"><span className="kljuca-tecnost">{MEHURI}</span></span>
+                            <span className="kljuca-para">{PARA}</span>
+                            {gori.kalorije && <span className="kljuca-pena">{PENA}</span>}
+                          </span>
+                        ) : <span className="merac" aria-hidden><i style={{ width: `${pct}%` }} /></span>)}
                       </span>
                       {r.ima_cilj ? (
                         <span className="rang-red-broj num"><b>{pct}%</b><small>{fmt(r.kcal)} kcal</small></span>
