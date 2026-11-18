@@ -16,6 +16,7 @@ import './prijatelji.css'
 
 const MEHURI = Array.from({ length: 10 }, (_, i) => <i key={i} />)
 const PARA = Array.from({ length: 5 }, (_, i) => <i key={i} />)
+const PENA = Array.from({ length: 11 }, (_, i) => <i key={i} />)
 
 const GRESKA = 'Ne mogu da završim akciju. Proveri internet pa probaj ponovo.'
 
@@ -120,6 +121,7 @@ export default function Prijatelji() {
                             style={{ '--p': `${pct}%` } as React.CSSProperties} aria-hidden>
                             <span className="kljuca-cev"><span className="kljuca-tecnost">{MEHURI}</span></span>
                             <span className="kljuca-para">{PARA}</span>
+                            {gori.kalorije && <span className="kljuca-pena">{PENA}</span>}
                           </span>
                         ) : <span className="merac" aria-hidden><i style={{ width: `${pct}%` }} /></span>)}
                       </span>
