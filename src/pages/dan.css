@@ -171,14 +171,14 @@
   position: relative; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%;
   background: var(--ploca-2); color: var(--tekst); font-size: 14px; font-weight: 700; transition: background-color 120ms ease-out;
 }
-.nedelja-krug svg { position: absolute; inset: 0; transform: rotate(-90deg); fill: none; stroke-width: 2.5; stroke: var(--sivi-tekst); }
+.nedelja-krug svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); fill: none; stroke-width: 2.5; stroke: var(--sivi-tekst); }
 a.nedelja-dan:hover .nedelja-krug { background: var(--mint); }
 .nedelja-dan[data-stanje="pogodjen"] svg { stroke: var(--zelena); }
 .nedelja-dan[data-stanje="promasen"] svg { stroke: var(--greska); }
 .nedelja-dan[data-danas] .nedelja-krug { background: var(--zelena); color: var(--na-neonu); }
 .nedelja-krug .staza { stroke: none; }
 /* Danas: luk ide oko punog zelenog kruga (ne preko njega) i puni se do cilja */
-.nedelja-dan[data-danas] svg { inset: -16%; stroke: var(--zelena); filter: drop-shadow(0 0 4px rgb(140 255 90 / 0.6)); }
+.nedelja-dan[data-danas] svg { inset: -16%; width: 132%; height: 132%; stroke: var(--zelena); filter: drop-shadow(0 0 4px rgb(140 255 90 / 0.6)); }
 .nedelja-dan[data-danas] .staza { stroke: var(--spolja); filter: none; }
 .nedelja-dan[aria-current] .nedelja-ime { color: var(--zelena); }
 .nedelja-dan[aria-current]:not([data-danas]) .nedelja-krug { box-shadow: 0 0 0 2px var(--zelena); }
