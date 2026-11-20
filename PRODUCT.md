@@ -32,15 +32,7 @@ Mala, besplatna app za ekipu iz teretane: zajednička baza proizvoda koju drugar
 
 ## Brand Commitments
 - Ime: **Mouse's tracker**.
-- Paleta koju je korisnik zadao (obavezna):
-  - Zelena `#389600`
-  - Svetlozelena `#C2DCB8`
-  - Mint `#DFF6ED`
-  - Pozadina aplikacije `#E3EEE6`
-  - Spoljna pozadina `#D5DCD7`
-  - Bela `#FFFFFF`
-  - Glavni tekst `#111311`
-  - Sivi tekst `#818581`
+- Paleta i dizajn: vidi DESIGN.md (noćna laboratorija, neon zelena). Jedini ostatak stare svetle palete je zelena etiketa `#389600` ispod loga na prijavi.
 
 ## Evidence on Hand
 - `foods.json`: prvi stvarni proizvodi (obrani sir, pileća prsa narezak, tortilja...).

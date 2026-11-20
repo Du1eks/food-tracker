@@ -168,7 +168,7 @@ components:
 
 Aplikacija je noćna laboratorija: tamni sto sa tankom mrežom, ploče sa staklenom ivicom, a jedina prava svetlost na ekranu je neon tečnost. Dan je epruveta položena preko cele širine koja se puni posle svakog unosa do isprekidane crte CILJ i postane zlatna kad je cilj kalorija pogođen. Sve što svetli je živo (tečnost, glavna akcija, stranica na kojoj si, današnji dan); sve ostalo je mirna tama.
 
-Pravac je izabrao korisnik 2026-11-17 iz tri makete (`.impeccable/predlozi/laboratorija-1-tamno.html`) i on zamenjuje prethodni svet "Aerodromska tabla". Brand Commitments u PRODUCT.md još navode staru svetlu paletu (#389600 i svetlozelene tonove): ona je povučena iz interfejsa i preživljava samo kao zelena etiketa (#389600) ispod loga na ekranu prijave, jer je `logo-zeleno.webp` crtan za tu podlogu. Imena tokena su ostala iz stare palete da komponente ne moraju da se menjaju; vrednosti su nove (bela je sada površina ploče, tekst je svetao).
+Pravac je izabrao korisnik 2026-11-17 iz tri makete (`.impeccable/predlozi/laboratorija-1-tamno.html`). Svetla paleta sa #389600 preživljava samo kao zelena etiketa ispod loga na ekranu prijave, jer je `logo-zeleno.webp` crtan za tu podlogu. Imena tokena (bela, tekst...) su nasleđena, vrednosti su nove (bela je sada površina ploče, tekst je svetao).
 
 Masko miš ostaje bez kostima (bez naočara i mantila): na početnoj živi u panelu za unos, na stranici Laboratorija stoji pored neon boce, a na ostalim stranicama viri sa ivice ekrana. Svet odbija standard kategorije (bele kartice sa krugom napretka); napredak je tečnost u epruveti i trakama.
 
