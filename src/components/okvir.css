@@ -12,6 +12,13 @@
 .gornja .plocica[aria-current] { background: rgb(140 255 90 / 0.1); color: var(--zelena); }
 .gornja .plocica[aria-current] svg { filter: drop-shadow(0 0 6px rgb(140 255 90 / 0.8)); }
 .gornja-desno { display: flex; gap: 8px; }
+/* Rang za danas (RangZnacka): pehar u boji mesta i mesto, uz ikonu Prijatelji; ista pločica, ali široka koliko treba */
+.gornja .rang-znacka { width: auto; display: flex; gap: 6px; padding: 0 10px 0 6px; text-decoration: none; white-space: nowrap; }
+.rang-znacka .pehar { height: 32px; width: auto; }
+.rang-znacka-mesto {
+  font-family: var(--font-d); font-size: 18px; line-height: 1; color: var(--varnica);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--varnica) 60%, transparent);
+}
 .gornja-profil { position: relative; }
 .tacka {
   position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; border-radius: 50%;

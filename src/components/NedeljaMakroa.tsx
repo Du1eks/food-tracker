@@ -16,8 +16,7 @@ const MAKROI = [
 const grama = (m: Makrosi) => m.proteini + m.uh + m.masti
 
 // "Tvoj napredak": naslagani stubići P/UH/M po danu za jednu nedelju (pon–ned)
-// kljuc: kad se promeni (npr. zbir kcal posle unosa na početnoj), grafik se ponovo učita
-export default function NedeljaMakroa({ kljuc }: { kljuc?: number }) {
+export default function NedeljaMakroa() {
   const danasIso = danas()
   const ova = pomeri(danasIso, -((izIso(danasIso).getDay() + 6) % 7))
   const [pon, setPon] = useState(ova)
@@ -29,7 +28,7 @@ export default function NedeljaMakroa({ kljuc }: { kljuc?: number }) {
     makroiPoDanima(pon, pomeri(pon, 6))
       .then((m) => { setUcitano({ pon, m }); setGreska(false) })
       .catch(() => setGreska(true))
-  }, [pon, kljuc])
+  }, [pon])
 
   const dani = Array.from({ length: 7 }, (_, i) => pomeri(pon, i))
   const maks = Math.max(1, ...dani.map((d) => { const m = makroi?.get(d); return m ? grama(m) : 0 }))

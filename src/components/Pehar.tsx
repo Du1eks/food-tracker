@@ -1,10 +1,11 @@
 import { useId } from 'react'
+import '../pages/prijatelji.css'
 
 // Pehar mesta u stilu laboratorije: debelo providno staklo u obliku pehara (tulipan čaša, drške, noga sa prstenom,
 // postolje u dva sloja sa urezanim brojem mesta), napunjen svetlećim napitkom u boji mesta (zlato, srebro, bronza;
 // "drvo" = mutan napitak za poslednje mesto ili kad nema drugara). Na staklu su podeoci kao na menzuri, iz napitka
 // se diže para, površina se talasa, mehurići idu gore, a preko stakla povremeno pređe odsjaj.
-// Boja dolazi iz --varnica (prijatelji.css, .pehar-zlato...), pa se pehar i varnice pri udaru uvek slažu.
+// Boja dolazi iz --varnica (prijatelji.css, .pehar-zlato...), pa su pehar i broj mesta u traci (RangZnacka) iste boje.
 const MEHURICI = [
   { x: 21, r: 1.7, d: '2.4s', k: '0s' }, { x: 29, r: 1.1, d: '1.8s', k: '0.7s' }, { x: 38, r: 2, d: '2.8s', k: '1.2s' },
   { x: 25, r: 0.9, d: '1.6s', k: '1.6s' }, { x: 34, r: 1.4, d: '2.2s', k: '0.3s' }, { x: 43, r: 1, d: '1.9s', k: '0.9s' },

@@ -6,10 +6,9 @@ import { fmt, zbir, type Unos } from '../lib/ishrana'
 import { kcalPoDanima, unosiZaDan } from '../lib/podaci'
 import { plamen } from '../lib/plamen'
 import { useProfil } from '../components/useProfil'
+import { useRangGovor } from '../components/useRangGovor'
 import DodajNamirnicu from '../components/DodajNamirnicu'
 import TabelaDana from '../components/TabelaDana'
-import RangPolje from '../components/RangPolje'
-import NedeljaMakroa from '../components/NedeljaMakroa'
 import Eksplozija from '../components/Eksplozija'
 import CiljPostignut, { NATPIS_TRAJE } from '../components/CiljPostignut'
 import { konfete } from '../components/konfete'
@@ -18,11 +17,10 @@ import './dan.css'
 export default function Dan() {
   const param = useParams().datum
   const datum = param ?? danas()
-  const { profil } = useProfil()
+  const { profil, rang, osveziRang } = useProfil()
   // Pamtimo za koji su datum unosi, da se pri promeni dana ne prikažu stari.
   const [ucitano, setUcitano] = useState<{ datum: string; unosi: Unos[] } | null>(null)
   const [greska, setGreska] = useState('')
-  const [govor, setGovor] = useState<string | null>(null) // šta miš usput kaže o rangu (bira RangPolje, izgovara miš)
   const unosi = ucitano?.datum === datum ? ucitano.unosi : null
 
   const ucitaj = useCallback(async () => {
@@ -38,10 +36,17 @@ export default function Dan() {
     ucitaj()
   }, [ucitaj])
 
-  if (param && !ispravan(param)) return <Navigate to="/" replace />
-
   const jeDanas = datum === danas()
   const uneto = zbir(unosi ?? [])
+  // Značka ranga je u gornjoj traci (Okvir): kad se unosi (ponovo) učitaju, npr. posle novog unosa, rang se preračuna iznova.
+  useEffect(() => {
+    if (jeDanas && unosi) osveziRang()
+  }, [jeDanas, unosi, osveziRang])
+  // Miš usput govori o rangu samo na današnjem danu
+  const govor = useRangGovor(jeDanas ? rang : null, profil?.id)
+
+  if (param && !ispravan(param)) return <Navigate to="/" replace />
+
   return (
     <>
       <Nedelja datum={datum} kcalDana={unosi && uneto.kcal} cilj={profil?.cilj_kcal ?? null} />
@@ -51,11 +56,9 @@ export default function Dan() {
       {/* dan je "učitan" tek kad stignu i unosi i profil: bez profila nema ciljeva, pa bi profil koji stigne kasnije
           izgledao kao da su svi već pogođeni ciljevi upravo pređeni (slavlje pri učitavanju) */}
       <Traka uneto={uneto} cilj={profil} dan={unosi && profil ? datum : null} />
-      {/* Ispod epruvete: računar = unos levo, grafik makroa i rang desno, tabela preko cele širine; telefon = rang, unos, tabela (dan.css) */}
+      {/* Ispod epruvete "šta sam jeo": računar = unos levo, tabela desno; telefon = unos pa tabela ispod (dan.css) */}
       <main className="dan">
-        {jeDanas && <RangPolje kljuc={uneto.kcal} onGovor={setGovor} />}
         <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} govor={govor} />
-        <NedeljaMakroa kljuc={uneto.kcal} />
         <section className="dan-tabela" aria-label="Unosi za dan">
           {greska ? <p className="greska" role="alert">{greska}</p> : <TabelaDana unosi={unosi} onPromena={ucitaj} />}
         </section>
@@ -153,8 +156,7 @@ function Traka({ uneto, cilj, dan }: { uneto: ReturnType<typeof zbir>; cilj: Cil
               {MEHURICI.map((m, i) => <i key={i} style={m} />)}
             </div>
           </div>
-          {c && <span className="cev-cilj"><span><b>CILJ</b> {fmt(c)}</span></span>}
-          {c && <span className="cev-procenat num" style={{ left: `${(p / PREKO) * 100}%` }}>{Math.round(odnos * 100)}%</span>}
+          {c && <span className="cev-cilj" />}
         </div>
         {c && <p className="traka-ostatak num">{razlika < 0 ? `Preko cilja ${fmt(-razlika)} kcal` : `Ostalo ${fmt(razlika)} kcal`}</p>}
         <dl className="traka-makrosi">

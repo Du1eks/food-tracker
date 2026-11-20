@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { CalendarDays, FlaskConical, House, UserRound, Users } from 'lucide-react'
-import { ucitajProfil, type Profil } from '../lib/podaci'
+import { danas } from '../lib/datum'
+import { ucitajProfil, zbirZaDan, type Profil } from '../lib/podaci'
+import type { Zbir } from '../lib/rang'
 import type { OkvirKontekst } from './useProfil'
 import MisViri from './MisViri'
+import RangZnacka from './RangZnacka'
 import './okvir.css'
 
 export default function Okvir() {
@@ -20,8 +23,23 @@ export default function Okvir() {
     osveziProfil()
   }, [])
 
-  const nepopunjen = ucitan && !profil?.cilj_kcal
   const { pathname } = useLocation()
+  // Rang za značku u traci: učitava se pri svakom prelasku na drugu stranu (npr. posle prihvaćenog drugara), a početna ga
+  // osvežava posle unosa. Brojač: stariji odgovor koji stigne posle novijeg se odbacuje.
+  const [rang, setRang] = useState<Zbir[] | 'greska' | null>(null)
+  const poslednjiZahtev = useRef(0)
+  const osveziRang = useCallback(() => {
+    const n = ++poslednjiZahtev.current
+    zbirZaDan(danas()).then(
+      (r) => { if (n === poslednjiZahtev.current) setRang(r) },
+      () => { if (n === poslednjiZahtev.current) setRang('greska') },
+    )
+  }, [])
+  useEffect(() => {
+    osveziRang()
+  }, [pathname, osveziRang])
+
+  const nepopunjen = ucitan && !profil?.cilj_kcal
   const naDanu = pathname === '/' || pathname.startsWith('/dan/') // tamo je živi miš u panelu
   const svojMis = naDanu || pathname === '/kuhinja' // Laboratorija ima svog miša na stranici
   return (
@@ -41,6 +59,7 @@ export default function Okvir() {
           <NavLink to="/kuhinja" className="plocica svetla" aria-label="Laboratorija, moja jela">
             <FlaskConical size={22} strokeWidth={2.25} aria-hidden />
           </NavLink>
+          <RangZnacka redovi={rang} profilId={profil?.id} />
           <NavLink to="/prijatelji" className="plocica svetla" aria-label="Prijatelji">
             <Users size={22} strokeWidth={2.25} aria-hidden />
           </NavLink>
@@ -50,7 +69,7 @@ export default function Okvir() {
           </NavLink>
         </div>
       </header>
-      <Outlet context={{ profil, osveziProfil } satisfies OkvirKontekst} />
+      <Outlet context={{ profil, osveziProfil, rang, osveziRang } satisfies OkvirKontekst} />
       {/* ključ na stranici: pri svakom prelasku miš ponovo proviri */}
       {!svojMis && ucitan && <MisViri key={pathname} cilj={profil} />}
     </>

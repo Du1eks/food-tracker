@@ -13,7 +13,7 @@
 .traka-sitno { font-weight: 600; font-size: 20px; color: var(--sivi-tekst); }
 /* Epruveta položena preko cele širine (Dan.tsx): staklo, neon tečnost sa mehurićima, isprekidana crta cilja */
 .cev { --tecnost-1: #b8ff95; --tecnost-2: var(--zelena); --tecnost-3: var(--zelena-duboka); --tecnost-sjaj: rgb(140 255 90 / 0.7);
-  position: relative; width: 100%; height: 96px; margin: 30px 0 26px; }
+  position: relative; width: 100%; height: 96px; margin: 14px 0 6px; }
 /* pogođen cilj kalorija: tečnost postane zlatna (--sir-*, eksplozija.css), iste boje kao prekipeli napitak na karticama makroa (eksplozija.css) */
 .cev.ispunjen { --tecnost-1: var(--sir-vrh); --tecnost-2: var(--sir-lice); --tecnost-3: var(--sir-bok); --tecnost-sjaj: rgb(255 194 26 / 0.7); }
 .cev-staklo {
@@ -32,14 +32,8 @@
   position: absolute; bottom: -10px; left: var(--x); width: var(--s); height: var(--s); border-radius: 50%;
   background: rgb(240 255 235 / 0.85); opacity: 0;
 }
-/* crta cilja na 1/1,15 dužine (Dan.tsx: PREKO) */
-.cev-cilj { position: absolute; left: calc(100% / 1.15); top: -28px; bottom: -6px; border-left: 2px dashed var(--tekst); }
-.cev-cilj > span { position: absolute; left: 8px; top: 0; font-size: 13px; font-weight: 700; white-space: nowrap; color: var(--tekst); }
-.cev-cilj b { color: var(--zelena); letter-spacing: 0.06em; }
-.cev-procenat {
-  position: absolute; top: 100%; margin-top: 6px; transform: translateX(-50%);
-  font-weight: 800; font-size: 13px; color: var(--sivi-tekst); white-space: nowrap;
-}
+/* crta cilja na 1/1,15 dužine (Dan.tsx: PREKO); broj cilja je u redu iznad epruvete */
+.cev-cilj { position: absolute; left: calc(100% / 1.15); top: -8px; bottom: -8px; border-left: 2px dashed var(--tekst); }
 .traka-ostatak { font-weight: 700; font-size: 16px; }
 .traka-makrosi { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 8px 0 0; }
 .traka-makrosi > div { background: var(--bela); border: 1px solid var(--spolja); border-radius: var(--r); padding: 10px 12px 12px; box-shadow: var(--senka); min-width: 0; }
@@ -150,7 +144,6 @@
 @media (prefers-reduced-motion: no-preference) {
   .cev-tecnost { transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
   .cev-tecnost i { animation: mehur var(--d) linear var(--k) infinite; }
-  .cev-procenat { transition: left 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
 }
 @keyframes mehur {
   0% { transform: translateY(0); opacity: 0; }
@@ -357,11 +350,6 @@ a.nedelja-dan:hover .nedelja-krug { background: var(--mint); }
 .unos.mali { height: 38px; width: 90px; font-size: 16px; padding: 0 10px; text-align: right; }
 .prazno-dan { padding: 32px 0; display: grid; gap: 6px; }
 
-/* Računar: unos levo (preko dva reda), desno grafik makroa pa rang, tabela ispod preko cele širine */
-.dan > #unos { grid-column: 1; grid-row: 1 / span 2; }
-.dan > .kal-napredak { grid-column: 2; grid-row: 1; margin-top: 0; }
-.dan > .rang-omot { grid-column: 2; grid-row: 2; }
-.dan > .dan-tabela { grid-column: 1 / -1; }
 /* Računar: broj levo, kartice makroa desno i krupnije, epruveta ispod preko cele širine */
 @media (min-width: 961px) {
   .traka { grid-template-columns: 1fr; }
@@ -380,18 +368,16 @@ a.nedelja-dan:hover .nedelja-krug { background: var(--mint); }
   .traka-makrosi dd small { font-size: 18px; }
   .makro-traka { height: 8px; margin-top: 14px; }
 }
-@media (max-width: 960px) {
+/* Tabela dana traži ~700px (šest kolona, zbir u Bungee); tek na ~1240px staje pored unosa (340–440px).
+   Ispod toga unos pa tabela ispod, kao na telefonu. */
+@media (max-width: 1239px) {
   .dan { grid-template-columns: minmax(0, 1fr); }
-  .dan > .rang-omot, .dan > #unos { grid-column: auto; grid-row: auto; }
-  /* telefon ostaje kao pre: bez grafika makroa (on je na Kalendaru) */
-  .dan > .kal-napredak { display: none; }
 }
 @media (max-width: 640px) {
   /* Telefon: epruveta preko cele širine, glava miša u gornjem desnom uglu kartice */
   .traka { position: relative; grid-template-columns: 1fr; gap: 14px; padding: 14px 16px 18px; }
   .napredak { width: 100%; }
-  .cev { height: 72px; margin: 30px 0 22px; }
-  .cev-cilj > span { left: auto; right: 8px; }
+  .cev { height: 72px; margin: 14px 0 6px; }
   .traka-broj { font-size: 52px; }
   .traka-profil { grid-column: auto; }
   .traka-makrosi > div { padding: 8px 8px 10px; }
