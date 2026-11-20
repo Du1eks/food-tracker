@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
-import { Check, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { danas, ispravan, izIso, lepDatum, pomeri } from '../lib/datum'
 import { fmt, zbir, type Unos } from '../lib/ishrana'
 import { kcalPoDanima, unosiZaDan } from '../lib/podaci'
@@ -196,7 +196,7 @@ function mesec(od: string, doDana: string) {
 }
 const putanja = (d: string) => (d === danas() ? '/' : `/dan/${d}`)
 
-// Nedelja izabranog dana: kvačica = pogođen cilj kalorija, "!" = prošao dan sa unosom a bez cilja, krug = budući ili prazan dan.
+// Nedelja izabranog dana: luk oko broja = kcal prema cilju; zelen = cilj pogođen, crven = prošao dan bez cilja, bez luka = budući ili prazan dan.
 // kcalDana je sveži zbir izabranog dana (null dok se učitava), da se kvačica pokaže odmah posle unosa.
 function Nedelja({ datum, kcalDana, cilj }: { datum: string; kcalDana: number | null; cilj: number | null }) {
   const pon = pomeri(datum, -((izIso(datum).getDay() + 6) % 7))
@@ -222,12 +222,15 @@ function Nedelja({ datum, kcalDana, cilj }: { datum: string; kcalDana: number | 
           const d = pomeri(pon, i)
           const kcal = d === datum && kcalDana != null ? kcalDana : ucitano?.pon === pon ? ucitano.kcal.get(d) : undefined
           const stanje = kcal && pogodio(kcal, cilj) ? 'pogodjen' : kcal && cilj && d < dan0 ? 'promasen' : 'prazan'
+          const deo = kcal && cilj ? Math.min(kcal / cilj, 1) : 0
           const opis = stanje === 'pogodjen' ? ', cilj pogođen' : stanje === 'promasen' ? ', cilj nije pogođen' : ''
           const sadrzaj = (
             <>
-              <span className="nedelja-ime">{ime}</span>
-              <span className="nedelja-broj num">{izIso(d).getDate()}.</span>
-              <span className="nedelja-znak">{stanje === 'pogodjen' ? <Check size={20} strokeWidth={3} aria-hidden /> : stanje === 'promasen' ? '!' : null}</span>
+              <span className="nedelja-ime">{ime[0]}</span>
+              <span className="nedelja-krug">
+                <svg viewBox="0 0 36 36" aria-hidden><circle className="staza" cx="18" cy="18" r="16.75" /><circle cx="18" cy="18" r="16.75" pathLength="100" strokeDasharray={`${deo * 100} 100`} /></svg>
+                <span className="num">{izIso(d).getDate()}</span>
+              </span>
             </>
           )
           return (

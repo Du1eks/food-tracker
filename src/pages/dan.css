@@ -164,23 +164,25 @@
 .nedelja-sredina { flex: 1; min-width: 0; max-width: 560px; margin: 0 auto; display: grid; gap: 6px; }
 .nedelja-mesec { text-align: center; font-family: var(--font-d); font-size: 15px; }
 .nedelja-dani { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
-.nedelja-dan {
-  display: grid; justify-items: center; gap: 4px; padding: 6px 0 8px;
-  border: 2px solid transparent; border-radius: var(--r); color: var(--tekst); text-decoration: none;
+/* Dan kao krug sa brojem; luk oko kruga = kcal prema cilju (zelen pogođen, crven promašen). Tiho: bez kartice, sitno. */
+.nedelja-dan { display: grid; justify-items: center; gap: 6px; padding: 4px 0; color: var(--sivi-tekst); text-decoration: none; }
+.nedelja-ime { font-size: 12px; font-weight: 700; line-height: 1; }
+.nedelja-krug {
+  position: relative; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%;
+  background: var(--ploca-2); color: var(--tekst); font-size: 14px; font-weight: 700; transition: background-color 120ms ease-out;
 }
-a.nedelja-dan:hover { background: var(--mint); }
-.nedelja-dan[aria-current] { background: var(--bela); border-color: var(--zelena); box-shadow: 0 0 22px -8px rgb(140 255 90 / 0.6); }
-.nedelja-ime { font-weight: 700; font-size: 13px; line-height: 1; padding: 3px 6px; border-radius: 999px; }
-.nedelja-broj { font-family: var(--font-d); font-size: 16px; line-height: 1; }
-.nedelja-dan[data-danas] .nedelja-ime { background: var(--zelena); color: var(--na-neonu); }
-.nedelja-znak {
-  width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%;
-  border: 2px solid var(--sivi); font-weight: 900; font-size: 20px; line-height: 1;
-}
-.nedelja-dan[data-stanje="pogodjen"] .nedelja-znak { background: var(--zelena); border-color: var(--zelena); color: var(--na-neonu); box-shadow: 0 0 14px -2px rgb(140 255 90 / 0.7); }
-.nedelja-dan[data-stanje="promasen"] .nedelja-znak { background: var(--greska-bg); border-color: var(--greska); color: var(--greska); }
-.nedelja-dan.buduci { opacity: 0.55; }
-.nedelja-dan.buduci .nedelja-znak { border-style: dashed; }
+.nedelja-krug svg { position: absolute; inset: 0; transform: rotate(-90deg); fill: none; stroke-width: 2.5; stroke: var(--sivi-tekst); }
+a.nedelja-dan:hover .nedelja-krug { background: var(--mint); }
+.nedelja-dan[data-stanje="pogodjen"] svg { stroke: var(--zelena); }
+.nedelja-dan[data-stanje="promasen"] svg { stroke: var(--greska); }
+.nedelja-dan[data-danas] .nedelja-krug { background: var(--zelena); color: var(--na-neonu); }
+.nedelja-krug .staza { stroke: none; }
+/* Danas: luk ide oko punog zelenog kruga (ne preko njega) i puni se do cilja */
+.nedelja-dan[data-danas] svg { inset: -16%; stroke: var(--zelena); filter: drop-shadow(0 0 4px rgb(140 255 90 / 0.6)); }
+.nedelja-dan[data-danas] .staza { stroke: var(--spolja); filter: none; }
+.nedelja-dan[aria-current] .nedelja-ime { color: var(--zelena); }
+.nedelja-dan[aria-current]:not([data-danas]) .nedelja-krug { box-shadow: 0 0 0 2px var(--zelena); }
+.nedelja-dan.buduci { opacity: 0.45; }
 .dan-naslov { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; padding: 4px clamp(16px, 4vw, 32px) 14px; }
 .dan-naslov h1 { font-size: 20px; }
 
@@ -398,8 +400,7 @@ a.nedelja-dan:hover { background: var(--mint); }
   .traka-makrosi dd small { font-size: 12px; }
   .nedelja { gap: 4px; }
   .nedelja-dani { gap: 2px; }
-  .nedelja-znak { width: 30px; height: 30px; font-size: 18px; }
-  .nedelja-ime { padding: 3px 4px; font-size: 12px; }
+  .nedelja-krug { width: 32px; height: 32px; font-size: 13px; }
   .dan-tabela { padding: 4px 14px 12px; }
 }
 

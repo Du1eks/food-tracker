@@ -13,21 +13,25 @@
 .kal-graf-legenda li { display: flex; align-items: center; gap: 8px; }
 .kal-graf-legenda li::before { content: ''; width: 12px; height: 12px; border-radius: 3px; background: var(--boja); }
 .kal-graf {
-  list-style: none; margin: 0; padding: 14px 18px 18px;
+  list-style: none; margin: 0; padding: 12px 18px 18px;
   display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px;
 }
-.kal-graf li { display: grid; justify-items: center; gap: 4px; }
-/* tiše od trake dana na vrhu: sitnije, bez sjaja, prigušene boje */
-.kal-graf-dan { font-size: 12px; font-weight: 700; line-height: 1; padding: 3px 6px; border-radius: 999px; color: var(--sivi-tekst); }
-.kal-graf-broj { font-family: var(--font-d); font-size: 14px; line-height: 1; color: var(--sivi-tekst); }
-.kal-dan { position: relative; width: min(100%, 30px); aspect-ratio: 1; margin-top: 2px; opacity: 0.8; }
-.kal-dan svg { width: 100%; height: 100%; transform: rotate(-90deg); fill: none; stroke-width: 4; }
-.kal-dan .staza { stroke: var(--spolja); stroke-dasharray: 3 3; }
-.kal-dan circle[data-makro] { stroke: var(--boja); stroke-linecap: butt; }
-.kal-graf .danas .kal-graf-dan { background: var(--zelena); color: var(--na-neonu); }
-.kal-graf .danas .kal-graf-broj { color: var(--tekst); }
+.kal-graf li { display: grid; justify-items: center; gap: 6px; }
+.kal-graf-zbir { min-height: 1.3em; font-size: 13px; font-weight: 700; color: var(--sivi-tekst); }
+.kal-stubic {
+  display: flex; flex-direction: column-reverse; gap: 3px;
+  width: min(100%, 40px); height: 180px;
+}
+/* 6px = dva razmaka između tri segmenta, da najviši stubić ne izađe iz okvira */
+.kal-stubic i { height: calc((100% - 6px) * var(--d)); min-height: 3px; border-radius: 4px; background: var(--boja); box-shadow: 0 0 10px -2px var(--boja); }
+.kal-stubic .prazan { height: 100%; background: var(--pozadina); }
+.kal-graf-dan { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sivi-tekst); padding: 0 6px; }
+.kal-graf .danas .kal-graf-dan { background: var(--zelena); color: var(--na-neonu); border-radius: 999px; }
 
 @media (max-width: 640px) {
   .kal-graf { gap: 4px; padding: 10px 12px 14px; }
   .kal-graf-legenda { padding: 14px 12px 0; }
+  .kal-stubic { height: 150px; }
+  .kal-graf-zbir, .kal-graf-dan { font-size: 11px; }
+  .kal-graf-dan { padding: 0 4px; }
 }

@@ -59,23 +59,17 @@ export default function NedeljaMakroa({ kljuc }: { kljuc?: number }) {
         {dani.map((d, i) => {
           const m = makroi?.get(d)
           const ima = m && grama(m) > 0
-          // prsten: dužina = gramaža dana prema najpunijem danu nedelje, podeljena na P/UH/M (pathLength=100)
-          let od = 0
           return (
             <li key={d} className={d === danasIso ? 'danas' : undefined}>
-              <span className="kal-graf-dan" aria-hidden>{DANI[i]}</span>
-              <span className="kal-graf-broj num" aria-hidden>{izIso(d).getDate()}.</span>
-              <span className="kal-dan" aria-hidden>
-                <svg viewBox="0 0 40 40">
-                  <circle className="staza" cx="20" cy="20" r="17" />
-                  {ima && MAKROI.map((x) => {
-                    const duz = (m[x.k] / maks) * 100
-                    const el = <circle key={x.k} data-makro={x.k} cx="20" cy="20" r="17" pathLength="100" strokeDasharray={`${duz} 100`} strokeDashoffset={-od} />
-                    od += duz
-                    return el
-                  })}
-                </svg>
+              <span className="kal-graf-zbir num" aria-hidden>{ima ? fmt(Math.round(grama(m))) : ''}</span>
+              <span className="kal-stubic" aria-hidden>
+                {ima
+                  ? MAKROI.filter((x) => m[x.k] > 0).map((x) => (
+                      <i key={x.k} data-makro={x.k} style={{ '--d': m[x.k] / maks } as React.CSSProperties} />
+                    ))
+                  : <i className="prazan" />}
               </span>
+              <span className="kal-graf-dan" aria-hidden>{DANI[i]}</span>
               <span className="sr">
                 {DANI_PUNI[i]}: {ima ? MAKROI.map((x) => `${x.slovo} ${fmt(m[x.k])} g`).join(', ') : 'nema unosa'}
               </span>
