@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { ArrowRight, Calculator, LogOut, UserRound } from 'lucide-react'
+import { ArrowRight, Calculator, CircleHelp, LogOut, UserRound } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { dnevniCilj, fmt, godineOd, type Makrosi, type Telo } from '../lib/ishrana'
 import { NADIMAK_PORUKA, nadimakIspravan, sacuvajProfil, type Profil as ProfilTip } from '../lib/podaci'
@@ -21,12 +21,12 @@ const GRANICE: Record<string, [number, number, string]> = {
 }
 
 export default function Profil() {
-  const { profil, osveziProfil } = useProfil()
+  const { profil, osveziProfil, otvoriUputstvo } = useProfil()
   if (!profil) return <p className="tiho-tekst" role="status" style={{ padding: 32 }}>Učitavam profil…</p>
-  return <Forma profil={profil} osveziProfil={osveziProfil} />
+  return <Forma profil={profil} osveziProfil={osveziProfil} otvoriUputstvo={otvoriUputstvo} />
 }
 
-function Forma({ profil, osveziProfil }: { profil: ProfilTip; osveziProfil: () => Promise<void> }) {
+function Forma({ profil, osveziProfil, otvoriUputstvo }: { profil: ProfilTip; osveziProfil: () => Promise<void>; otvoriUputstvo: () => void }) {
   const idi = useNavigate()
   const [f, setF] = useState({
     nadimak: profil.nadimak ?? '', ime: profil.ime ?? '', pol: profil.pol ?? '', datum_rodjenja: profil.datum_rodjenja ?? '',
@@ -139,6 +139,9 @@ function Forma({ profil, osveziProfil }: { profil: ProfilTip; osveziProfil: () =
             <button className="dugme glavno" type="submit" disabled={radi}>
               {radi ? 'Čuvam…' : 'Sačuvaj'}
               <span className="plocica" aria-hidden><ArrowRight size={22} strokeWidth={2.5} /></span>
+            </button>
+            <button type="button" className="dugme tiho" onClick={otvoriUputstvo}>
+              <CircleHelp size={18} aria-hidden /> Kako radi aplikacija
             </button>
             <button type="button" className="dugme tiho odjava" onClick={() => supabase.auth.signOut()}>
               <LogOut size={18} aria-hidden /> Odjavi se
