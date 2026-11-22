@@ -57,7 +57,7 @@ export default function Dan() {
           izgledao kao da su svi već pogođeni ciljevi upravo pređeni (slavlje pri učitavanju) */}
       <Traka uneto={uneto} cilj={profil} dan={unosi && profil ? datum : null} />
       {/* Ispod epruvete "šta sam jeo": računar = unos levo, tabela desno; telefon = unos pa tabela ispod (dan.css) */}
-      <main className="dan">
+      <main className="dan dan-pocetna">
         <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} govor={govor} />
         <section className="dan-tabela" aria-label="Unosi za dan">
           {greska ? <p className="greska" role="alert">{greska}</p> : <TabelaDana unosi={unosi} onPromena={ucitaj} />}

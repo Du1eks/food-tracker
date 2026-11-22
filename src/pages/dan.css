@@ -368,10 +368,13 @@ a.nedelja-dan:hover .nedelja-krug { background: var(--mint); }
   .traka-makrosi dd small { font-size: 18px; }
   .makro-traka { height: 8px; margin-top: 14px; }
 }
-/* Tabela dana traži ~700px (šest kolona, zbir u Bungee); tek na ~1240px staje pored unosa (340–440px).
-   Ispod toga unos pa tabela ispod, kao na telefonu. */
-@media (max-width: 1239px) {
+@media (max-width: 960px) {
   .dan { grid-template-columns: minmax(0, 1fr); }
+}
+/* Samo početna: tabela dana traži ~700px (šest kolona, zbir u Bungee); tek na ~1240px staje pored unosa (340–440px).
+   Ispod toga unos pa tabela ispod, kao na telefonu. (.dan koriste i Prijatelji i Profil, njima ostaje 960px.) */
+@media (max-width: 1239px) {
+  .dan-pocetna { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 640px) {
   /* Telefon: epruveta preko cele širine, glava miša u gornjem desnom uglu kartice */
