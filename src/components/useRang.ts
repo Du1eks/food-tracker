@@ -14,6 +14,14 @@ export function useRang(aktivan: boolean, unosi: unknown, profilId: string | und
   const [poruka, setPoruka] = useState<PorukaRanga | null>(null)
   const prethodno = useRef<number | null>(null)
 
+  // Dan nije više današnji (Dan.tsx se ne remountuje između / i /dan/:datum): obriši i poruku i redove, da se stara kartica
+  // ne vrati kad se vratim na danas. Promena stanja tokom renderovanja, ne u efektu (React preporuka za ovaj slučaj).
+  const [bioAktivan, setBioAktivan] = useState(aktivan)
+  if (bioAktivan !== aktivan) {
+    setBioAktivan(aktivan)
+    if (!aktivan) { setPoruka(null); setRedovi(null) }
+  }
+
   useEffect(() => {
     if (!aktivan || !unosi || !profilId) { prethodno.current = null; return }
     let vazi = true
@@ -29,5 +37,5 @@ export function useRang(aktivan: boolean, unosi: unknown, profilId: string | und
   }, [aktivan, unosi, profilId])
 
   const zatvori = useCallback(() => setPoruka(null), [])
-  return { redovi: aktivan ? redovi : null, poruka: aktivan ? poruka : null, zatvori }
+  return { redovi, poruka, zatvori }
 }
