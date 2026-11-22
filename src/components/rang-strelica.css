@@ -32,11 +32,8 @@
 .rang-strelica-karta .pehar { height: 38px; width: auto; flex: none; }
 .rang-strelica-mesto { font-family: var(--font-d); font-weight: 400; font-size: 20px; color: var(--varnica); text-shadow: 0 0 12px color-mix(in srgb, var(--varnica) 60%, transparent); }
 .rang-strelica-link:hover { color: var(--zelena); }
-.rang-strelica-zatvori {
-  flex: none; width: 44px; border: 0; border-left: 1px solid rgb(220 255 235 / 0.18);
-  background: none; color: var(--sivi-tekst); display: grid; place-items: center; cursor: pointer;
-}
-.rang-strelica-zatvori:hover { background: var(--mint); color: var(--tekst); }
+/* Otvoreno: karta i strelica su jedan oblik (strelica bez zaobljenog levog kraja, tanak razdelnik među njima) */
+.rang-strelica.otvoreno .rang-strelica-dugme { border-radius: 0; border-left: 1px solid rgb(220 255 235 / 0.18); }
 
 @media (prefers-reduced-motion: no-preference) {
   /* zatvorena je malo uvučena u ivicu, na hover/fokus/otvaranje se izvuče */

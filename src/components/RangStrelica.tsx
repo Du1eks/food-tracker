@@ -1,6 +1,6 @@
-import { useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { Link } from 'react-router'
-import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { Rang } from '../lib/rang'
 import Pehar from './Pehar'
 import './rang-strelica.css'
@@ -8,14 +8,24 @@ import './rang-strelica.css'
 const vrsta = (mesto: number) => ['zlato', 'srebro', 'bronza'][mesto - 1] ?? 'drvo'
 
 // Rang na početnoj: mala strelica na desnoj ivici. Mišem: na hover se izvuče i pokaže kartu sa mojim mestom; dodirom i
-// tastaturom: klik/tap/Enter/Space otvara i drži kartu (Escape, Zatvori ili ponovni klik zatvaraju). Kad se mesto promeni,
+// tastaturom: klik/tap/Enter/Space otvara i drži kartu (Escape, klik van nje ili ponovni klik na strelicu zatvaraju). Kad se mesto promeni,
 // strelica svetli (i tačka) i zatrepće dok je ne otvoriš ili preletiš.
 // Nema je dok se rang učitava, pri grešci i kad nema prijatelja (rang null ili samac).
 export default function RangStrelica({ rang, novo, onVidjeno }: { rang: Rang | null; novo: boolean; onVidjeno: () => void }) {
   const [otvoreno, setOtvoreno] = useState(false) // držim kartu otvorenu (klik, tap, tastatura)
   const [nad, setNad] = useState(false) // miš je iznad (samo pokazivač miša; dodir nema hover)
   const dugme = useRef<HTMLButtonElement>(null)
+  const omot = useRef<HTMLDivElement>(null)
   const kartaId = useId()
+
+  // Držana karta se zatvara i dodirom/klikom van nje (na dodiru nema drugog prirodnog načina bez dugmeta Zatvori)
+  useEffect(() => {
+    if (!otvoreno) return
+    const van = (e: PointerEvent) => { if (!omot.current?.contains(e.target as Node)) setOtvoreno(false) }
+    document.addEventListener('pointerdown', van)
+    return () => document.removeEventListener('pointerdown', van)
+  }, [otvoreno])
+
   if (!rang || rang.ukupno === 1) return null
 
   const prikazano = otvoreno || nad
@@ -29,7 +39,7 @@ export default function RangStrelica({ rang, novo, onVidjeno }: { rang: Rang | n
   const vrati = () => { zatvori(); dugme.current?.focus() }
 
   return (
-    <div className={`rang-strelica pehar-${vrsta(rang.mesto)}${prikazano ? ' otvoreno' : ''}${novo && !prikazano ? ' novo' : ''}`}
+    <div ref={omot} className={`rang-strelica pehar-${vrsta(rang.mesto)}${prikazano ? ' otvoreno' : ''}${novo && !prikazano ? ' novo' : ''}`}
       onPointerEnter={(e) => { if (e.pointerType === 'mouse') { setNad(true); onVidjeno() } }}
       onPointerLeave={(e) => { if (e.pointerType === 'mouse') setNad(false) }}
       onKeyDown={(e) => { if (e.key === 'Escape' && prikazano) vrati() }}>
@@ -44,7 +54,6 @@ export default function RangStrelica({ rang, novo, onVidjeno }: { rang: Rang | n
           <span><b className="rang-strelica-mesto num">{rang.mesto}.</b> mesto među prijateljima</span>
           <ChevronRight size={20} strokeWidth={2.5} aria-hidden />
         </Link>
-        <button type="button" className="rang-strelica-zatvori" aria-label="Zatvori" onClick={vrati}><X size={18} strokeWidth={2.5} aria-hidden /></button>
       </div>
       {/* signal za čitač ekrana (svetlo i treptanje strelice samo vide) */}
       <span className="sr" role="status">{novo && !prikazano ? `Promena na rang listi: ${rang.mesto}. mesto među prijateljima` : ''}</span>
