@@ -8,7 +8,7 @@ import { plamen } from '../lib/plamen'
 import { useProfil } from '../components/useProfil'
 import { useRang } from '../components/useRang'
 import { useRangGovor } from '../components/useRangGovor'
-import RangUsi from '../components/RangUsi'
+import RangStrelica from '../components/RangStrelica'
 import DodajNamirnicu from '../components/DodajNamirnicu'
 import TabelaDana from '../components/TabelaDana'
 import Eksplozija from '../components/Eksplozija'
@@ -40,7 +40,7 @@ export default function Dan() {
 
   const jeDanas = datum === danas()
   const uneto = zbir(unosi ?? [])
-  // Rang nema stalan prikaz: uši miša vire sa ivice i zatrepere kad se mesto promeni posle unosa, a miš usput govori o rangu (samo današnji dan)
+  // Rang nema stalan prikaz: strelica na ivici svetli i zatrepće kad se mesto promeni posle unosa, a miš usput govori o rangu (samo današnji dan)
   const { redovi: rangRedovi, mesto: mestoRanga, novo: novoRanga, potvrdi: potvrdiRang } = useRang(jeDanas, unosi, profil?.id)
   const govor = useRangGovor(rangRedovi, profil?.id)
 
@@ -56,8 +56,8 @@ export default function Dan() {
           izgledao kao da su svi već pogođeni ciljevi upravo pređeni (slavlje pri učitavanju) */}
       <Traka uneto={uneto} cilj={profil} dan={unosi && profil ? datum : null} />
       {/* Ispod epruvete "šta sam jeo": računar = unos levo, tabela desno; telefon = unos pa tabela ispod (dan.css) */}
-      {/* key: kad dan prestane da bude današnji, uši se remountuju zatvorene (RangUsi vraća null, ali stanje čuva) */}
-      <RangUsi key={String(jeDanas)} rang={mestoRanga} novo={novoRanga} onVidjeno={potvrdiRang} />
+      {/* key: kad dan prestane da bude današnji, strelica se remountuje zatvorena (RangStrelica vraća null, ali stanje čuva) */}
+      <RangStrelica key={String(jeDanas)} rang={mestoRanga} novo={novoRanga} onVidjeno={potvrdiRang} />
       <main className="dan dan-pocetna">
         <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} govor={govor} />
         <section className="dan-tabela" aria-label="Unosi za dan">

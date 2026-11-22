@@ -3,7 +3,7 @@ import { danas } from '../lib/datum'
 import { zbirZaDan } from '../lib/podaci'
 import { promenaMesta, rang, type Zbir } from '../lib/rang'
 
-// Rang na početnoj bez stalnog prikaza (uši miša, RangUsi): učitava današnje zbirove ja + prijatelji i daje moje mesto,
+// Rang na početnoj bez stalnog prikaza (strelica na ivici, RangStrelica): učitava današnje zbirove ja + prijatelji i daje moje mesto,
 // a `novo` postaje true samo kad se mesto promeni (lib/rang promenaMesta) i ostaje dok ga ne potvrdim (potvrdi).
 // Računa se čim stignu unosi dana, a posle svakog ponovnog učitavanja unosa (novi unos, izmena, brisanje) iznova.
 // Prvo računanje samo upamti mesto, bez signala. Redovi idu i mišu za ćaskanje o rangu (useRangGovor).
@@ -31,7 +31,7 @@ export function useRang(aktivan: boolean, unosi: unknown, profilId: string | und
       if (ja) prethodno.current = ja.mesto
       setRedovi(r)
       if (promena) setNovo(true)
-    }, () => {}) // shortcut: rang je dodatak, kad upit padne nema uši ni ćaskanja; pri sledećem unosu se pokuša opet
+    }, () => {}) // shortcut: rang je dodatak, kad upit padne nema strelice ni ćaskanja; pri sledećem unosu se pokuša opet
     return () => { vazi = false }
   }, [aktivan, unosi, profilId])
 

@@ -1,0 +1,51 @@
+/* Strelica na desnoj ivici početne (RangStrelica): zatvoreno je mala pločica, na hover se izvuče i pokaže kartu sa mestom.
+   Boja (--varnica) dolazi iz klase pehar-<vrsta> (prijatelji.css). Omot ne hvata dodir, samo dugme i karta. */
+.rang-strelica { position: fixed; right: 0; top: 58%; z-index: 30; display: flex; flex-direction: row-reverse; align-items: center; pointer-events: none; }
+.rang-strelica > * { pointer-events: auto; }
+.rang-strelica-dugme {
+  display: grid; place-items: center; width: 36px; height: 64px; padding: 0; cursor: pointer;
+  background: var(--crna); color: var(--sivi-tekst); border: 1.5px solid rgb(220 255 235 / 0.3); border-right: 0;
+  border-radius: var(--r) 0 0 var(--r); box-shadow: 0 6px 18px -8px rgb(0 0 0 / 0.7);
+}
+.rang-strelica-dugme:hover, .rang-strelica-dugme:focus-visible, .rang-strelica.otvoreno .rang-strelica-dugme {
+  color: var(--varnica); border-color: color-mix(in srgb, var(--varnica) 70%, transparent);
+  box-shadow: 0 0 16px -2px color-mix(in srgb, var(--varnica) 70%, transparent);
+}
+
+/* Promena mesta: strelica svetli (i tačka) dok se ne otvori; zatrepće samo bez prefers-reduced-motion */
+.rang-strelica.novo .rang-strelica-dugme { position: relative; color: var(--zelena); border-color: var(--zelena); box-shadow: 0 0 14px 1px rgb(140 255 90 / 0.55); }
+.rang-strelica.novo .rang-strelica-dugme::after {
+  content: ''; position: absolute; top: 6px; left: 6px; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--zelena); border: 2px solid var(--crna); box-shadow: 0 0 8px var(--zelena);
+}
+
+.rang-strelica-karta {
+  display: flex; align-items: stretch; max-width: calc(100vw - 36px - 12px);
+  background: var(--crna); border: 1.5px solid rgb(220 255 235 / 0.35); border-right: 0; border-radius: var(--r) 0 0 var(--r);
+  box-shadow: 0 12px 30px -10px rgb(0 0 0 / 0.7), 0 0 26px -6px color-mix(in srgb, var(--varnica) 65%, transparent);
+}
+.rang-strelica-karta[hidden] { display: none; }
+.rang-strelica-link {
+  display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 6px 8px 14px;
+  color: var(--tekst); text-decoration: none; font-weight: 700; font-size: 17px; line-height: 1.25;
+}
+.rang-strelica-karta .pehar { height: 38px; width: auto; flex: none; }
+.rang-strelica-mesto { font-family: var(--font-d); font-weight: 400; font-size: 20px; color: var(--varnica); text-shadow: 0 0 12px color-mix(in srgb, var(--varnica) 60%, transparent); }
+.rang-strelica-link:hover { color: var(--zelena); }
+.rang-strelica-zatvori {
+  flex: none; width: 44px; border: 0; border-left: 1px solid rgb(220 255 235 / 0.18);
+  background: none; color: var(--sivi-tekst); display: grid; place-items: center; cursor: pointer;
+}
+.rang-strelica-zatvori:hover { background: var(--mint); color: var(--tekst); }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* zatvorena je malo uvučena u ivicu, na hover/fokus/otvaranje se izvuče */
+  .rang-strelica-dugme { transform: translateX(6px); transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms, color 200ms; }
+  .rang-strelica-dugme:hover, .rang-strelica-dugme:focus-visible, .rang-strelica.otvoreno .rang-strelica-dugme { transform: none; }
+  .rang-strelica.novo .rang-strelica-dugme { animation: strelica-treperi 600ms ease-in-out 5; }
+  .rang-strelica.novo .rang-strelica-dugme::after { animation: strelica-tacka 600ms ease-in-out 5; }
+  .rang-strelica.otvoreno .rang-strelica-karta { animation: strelica-karta 260ms cubic-bezier(0.16, 1, 0.3, 1); }
+}
+@keyframes strelica-treperi { 0%, 100% { transform: translateX(6px); } 40% { transform: translateX(-8px); } 70% { transform: translateX(2px); } }
+@keyframes strelica-tacka { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.5); } }
+@keyframes strelica-karta { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
