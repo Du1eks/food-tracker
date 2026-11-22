@@ -27,7 +27,7 @@ const SLAVI_POSLE_UPISA = 4000 // ms
 // U pregledu se može ručno dodati namirnica koju je miš preskočio (DodajUPregled).
 export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
   datum: string; unosi: Unos[] | null; onDodato: () => void; onRucno: () => void
-  govor: string | null // usputna rečenica o rangu (RangPolje); samo kad miš nema šta važnije da kaže
+  govor: string | null // usputna rečenica o rangu (useRangGovor); samo kad miš nema šta važnije da kaže
 }) {
   const { profil } = useProfil()
   const [tekst, setTekst] = useState('')
