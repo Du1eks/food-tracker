@@ -6,7 +6,9 @@ import { fmt, zbir, type Unos } from '../lib/ishrana'
 import { kcalPoDanima, unosiZaDan } from '../lib/podaci'
 import { plamen } from '../lib/plamen'
 import { useProfil } from '../components/useProfil'
+import { useRang } from '../components/useRang'
 import { useRangGovor } from '../components/useRangGovor'
+import RangPoruka from '../components/RangPoruka'
 import DodajNamirnicu from '../components/DodajNamirnicu'
 import TabelaDana from '../components/TabelaDana'
 import Eksplozija from '../components/Eksplozija'
@@ -17,7 +19,7 @@ import './dan.css'
 export default function Dan() {
   const param = useParams().datum
   const datum = param ?? danas()
-  const { profil, rang, osveziRang } = useProfil()
+  const { profil } = useProfil()
   // Pamtimo za koji su datum unosi, da se pri promeni dana ne prikažu stari.
   const [ucitano, setUcitano] = useState<{ datum: string; unosi: Unos[] } | null>(null)
   const [greska, setGreska] = useState('')
@@ -38,12 +40,9 @@ export default function Dan() {
 
   const jeDanas = datum === danas()
   const uneto = zbir(unosi ?? [])
-  // Značka ranga je u gornjoj traci (Okvir): kad se unosi (ponovo) učitaju, npr. posle novog unosa, rang se preračuna iznova.
-  useEffect(() => {
-    if (jeDanas && unosi) osveziRang()
-  }, [jeDanas, unosi, osveziRang])
-  // Miš usput govori o rangu samo na današnjem danu
-  const govor = useRangGovor(jeDanas ? rang : null, profil?.id)
+  // Rang nema stalan prikaz: kartica se pojavi kad se mesto promeni posle unosa, a miš usput govori o rangu (samo današnji dan)
+  const { redovi: rangRedovi, poruka: porukaRanga, zatvori: zatvoriRang } = useRang(jeDanas, unosi, profil?.id)
+  const govor = useRangGovor(rangRedovi, profil?.id)
 
   if (param && !ispravan(param)) return <Navigate to="/" replace />
 
@@ -57,6 +56,7 @@ export default function Dan() {
           izgledao kao da su svi već pogođeni ciljevi upravo pređeni (slavlje pri učitavanju) */}
       <Traka uneto={uneto} cilj={profil} dan={unosi && profil ? datum : null} />
       {/* Ispod epruvete "šta sam jeo": računar = unos levo, tabela desno; telefon = unos pa tabela ispod (dan.css) */}
+      <RangPoruka poruka={porukaRanga} onKraj={zatvoriRang} />
       <main className="dan dan-pocetna">
         <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} govor={govor} />
         <section className="dan-tabela" aria-label="Unosi za dan">

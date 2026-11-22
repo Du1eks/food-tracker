@@ -39,6 +39,13 @@ export function rang(redovi: Zbir[], mojId: string): Rang | null {
   return { mesto: m, ukupno: redovi.length, poza }
 }
 
+// Poruka o rangu na početnoj: samo kad se moje mesto promeni. `prethodno` je poslednje poznato mesto na ovom danu;
+// null = prvo računanje (učitavanje strane), pa se tada ne javlja. Samac nema sa kim da se poredi.
+export function promenaMesta(prethodno: number | null, r: Rang | null): { mesto: number; ukupno: number } | null {
+  if (!r || r.ukupno === 1 || prethodno === null || prethodno === r.mesto) return null
+  return { mesto: r.mesto, ukupno: r.ukupno }
+}
+
 // Šta miš kod leaderboarda nasumično kaže: par rečenica iz mog mesta i procenta, plus opšte.
 export function staKaze(r: Rang, ja: Zbir): string[] {
   const opste = [

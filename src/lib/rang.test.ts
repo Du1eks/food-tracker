@@ -1,6 +1,6 @@
 // Pokretanje: node src/lib/rang.test.ts
 import assert from 'node:assert/strict'
-import { rang, poRangu, staKaze, sufiksMesta, type Zbir } from './rang.ts'
+import { rang, poRangu, promenaMesta, staKaze, sufiksMesta, type Zbir } from './rang.ts'
 
 import { mesto, stanjeMisa } from './rang.ts'
 
@@ -93,4 +93,13 @@ assert.equal(stanjeMisa(nista, ciljM, u(12, 1), null).gladan, true)
 assert.equal(stanjeMisa(nista, ciljM, u(13), u(1)).gladan, true) // ponoćni unos ne odlaže glad posle buđenja
 assert.equal(stanjeMisa({ kcal: 3000, proteini: 0 }, ciljM, u(20), u(9)).gladan, false)
 assert.equal(stanjeMisa(nista, ciljM, u(3), null).gladan, false)
+// poruka o rangu: samo kad se mesto promeni, nikad pri prvom računanju i nikad za samca
+const r3 = { mesto: 3, ukupno: 5, poza: 'hoda' as const }
+assert.equal(promenaMesta(null, r3), null) // učitavanje strane: nema prethodnog mesta
+assert.equal(promenaMesta(3, r3), null) // isto mesto
+assert.deepEqual(promenaMesta(4, r3), { mesto: 3, ukupno: 5 }) // popeo se
+assert.deepEqual(promenaMesta(2, r3), { mesto: 3, ukupno: 5 }) // pao
+assert.equal(promenaMesta(2, null), null) // profil bez reda u zbiru
+assert.equal(promenaMesta(1, { mesto: 1, ukupno: 1, poza: 'hoda' }), null) // samac
+
 console.log('rang: ok')

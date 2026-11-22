@@ -20,7 +20,7 @@ const PENA = Array.from({ length: 11 }, (_, i) => <i key={i} />)
 const GRESKA = 'Ne mogu da završim akciju. Proveri internet pa probaj ponovo.'
 
 export default function Prijatelji() {
-  const { profil, osveziRang } = useProfil()
+  const { profil } = useProfil()
   const [zbirovi, setZbirovi] = useState<Zbir[] | null>(null)
   const [zahtevi, setZahtevi] = useState<Zahtev[]>([])
   const [greska, setGreska] = useState('')
@@ -38,13 +38,11 @@ export default function Prijatelji() {
     osvezi()
   }, [osvezi])
 
-  // Akcija nad zahtevom; posle nje se sve učita iznova (baza je izvor istine), pa i značka ranga u gornjoj traci
-  // (prihvaćen ili uklonjen drugar menja mesto)
+  // Akcija nad zahtevom; posle nje se sve učita iznova (baza je izvor istine)
   const radnja = (posao: () => Promise<void>) => async () => {
     try {
       await posao()
       await osvezi()
-      osveziRang()
     } catch {
       setGreska(GRESKA)
     }
