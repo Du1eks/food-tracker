@@ -56,7 +56,8 @@ export default function Dan() {
           izgledao kao da su svi već pogođeni ciljevi upravo pređeni (slavlje pri učitavanju) */}
       <Traka uneto={uneto} cilj={profil} dan={unosi && profil ? datum : null} />
       {/* Ispod epruvete "šta sam jeo": računar = unos levo, tabela desno; telefon = unos pa tabela ispod (dan.css) */}
-      <RangUsi rang={mestoRanga} novo={novoRanga} onVidjeno={potvrdiRang} />
+      {/* key: kad dan prestane da bude današnji, uši se remountuju zatvorene (RangUsi vraća null, ali stanje čuva) */}
+      <RangUsi key={String(jeDanas)} rang={mestoRanga} novo={novoRanga} onVidjeno={potvrdiRang} />
       <main className="dan dan-pocetna">
         <DodajNamirnicu key={datum} datum={datum} unosi={unosi} onDodato={ucitaj} govor={govor} />
         <section className="dan-tabela" aria-label="Unosi za dan">

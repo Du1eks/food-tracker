@@ -21,7 +21,8 @@ export default function RangUsi({ rang, novo, onVidjeno }: { rang: Rang | null; 
   const kartaId = useId()
   if (!rang || rang.ukupno === 1) return null
 
-  const zatvori = () => { setOtvoreno(false); setPomak(0) }
+  // i zatvaranje potvrđuje: promena koja je stigla dok je karta bila otvorena je viđena, uši ne treba opet da trepere
+  const zatvori = () => { setOtvoreno(false); setPomak(0); onVidjeno() }
   const prebaci = () => {
     if (otvoreno) return zatvori()
     setOtvoreno(true)
