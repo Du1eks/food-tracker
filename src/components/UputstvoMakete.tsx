@@ -57,7 +57,7 @@ export function MaketaEpruveta() {
   )
 }
 
-// 4. Laboratorija: sastojci upadaju u jelo, jelo se dodaje jednim klikom
+// 4. Laboratorija: sastojci upadaju u jelo, jelo se posle bira na početnoj ("Uzmi svoje jelo")
 export function MaketaLab() {
   return (
     <div className="um um-lab">
@@ -68,7 +68,7 @@ export function MaketaLab() {
       </div>
       <div className="um-jelo" style={k(4)}>
         <span><b>Piletina sa pirinčem</b><small className="num">480 kcal</small></span>
-        <span className="um-jelo-dugme">Dodaj</span>
+        <span className="um-jelo-dugme">Uzmi</span>
       </div>
     </div>
   )

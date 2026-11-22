@@ -7,9 +7,9 @@ import './uputstvo.css'
 // Redosled je važan: bez cilja ništa ne radi (epruveta, ciljevi, rang).
 const KORACI = [
   { naslov: 'Profil i dnevni cilj', tekst: 'Upiši podatke i dnevni cilj (kalorije i proteini). Bez cilja nema epruvete ni ranga.', Maketa: MaketaProfil },
-  { naslov: 'Dodaj hranu', tekst: 'Napiši mišu šta si jeo, on pročita i predloži pregled. Možeš i ručno preko „+“ ili uzeti svoje jelo iz Laboratorije. Ispravke su u tabeli dana.', Maketa: MaketaUnos },
+  { naslov: 'Dodaj hranu', tekst: 'Napiši mišu šta si jeo i on predloži pregled, ili izaberi „Uzmi svoje jelo“ iz Laboratorije, ili „Unesi ručno“. Ispravke su u tabeli dana.', Maketa: MaketaUnos },
   { naslov: 'Epruveta i ciljevi', tekst: 'Tečnost raste do isprekidane crte cilja. Kad ga pogodiš, epruveta postane zlatna, a kartice proteina i masti puknu kad dostigneš njihove ciljeve.', Maketa: MaketaEpruveta },
-  { naslov: 'Laboratorija', tekst: 'Napiši mišu šta ide u jelo i sačuvaj ga. Posle ga dodaješ na početnoj jednim klikom.', Maketa: MaketaLab },
+  { naslov: 'Laboratorija', tekst: 'Napiši mišu šta ide u jelo i sačuvaj ga. Posle ga biraš na početnoj preko „Uzmi svoje jelo“.', Maketa: MaketaLab },
   { naslov: 'Kalendar i grafik', tekst: 'Kalendar pokazuje svaki dan sa trakom do cilja, a ispod je grafik makroa po danima u nedelji.', Maketa: MaketaKalendar },
   { naslov: 'Prijatelji i rang', tekst: 'Dodaj drugare po nadimku i takmičite se ko je danas bliže cilju. Strelica na desnoj ivici početne pokazuje tvoje mesto.', Maketa: MaketaRang },
 ]
