@@ -62,7 +62,7 @@ export default function Kuhinja() {
     if (!urednik || !tekst.trim() || cita) return
     setCita(true); setGreska('')
     try {
-      const stavke = await razumiObrok(tekst)
+      const stavke = await razumiObrok(tekst, false)
       if (stavke.length === 0) return setGreska('Nisam našao hranu u poruci. Napiši npr. „2 jaja i 100 g pirinča“.')
       const redovi = urednik.redovi
       if (redovi.length + stavke.length > MAX_STAVKI) return setGreska(`Jelo može imati najviše ${MAX_STAVKI} stavki.`)
@@ -70,8 +70,8 @@ export default function Kuhinja() {
       setUrednik({ ...urednik, redovi: [...redovi, ...stavke.map((s, i) => uRed(s, sledeci + i))] })
       setTekst('')
     } catch (e) {
-      // poruke iz razumi.ts upućuju na ručni unos preko +, kog u Kuhinji nema
-      setGreska(e instanceof Error ? e.message.replace(' Dodaj ručno preko +.', '').replace(' ili dodaj ručno preko +', '') : 'Ne mogu sad da pročitam.')
+      // razumiObrok(tekst, false): poruka bez saveta o ručnom unosu i sačuvanim jelima, kojih u Laboratoriji nema
+      setGreska(e instanceof Error ? e.message : 'Ne mogu sad da pročitam.')
     } finally {
       setCita(false)
     }

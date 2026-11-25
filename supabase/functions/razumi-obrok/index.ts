@@ -3,6 +3,7 @@
 // Čista logika (provera ulaza, prompt, provera odgovora) je u ../_shared/obrok.ts i ima testove.
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { MAX_PROIZVODA, ocistiTekst, sredi, tekstIzOdgovora, zahtevZaAI, type ProizvodBaze } from '../_shared/obrok.ts'
+import { izborModela, pozoviSaPonavljanjem } from '../_shared/ponovi.ts'
 
 // Pristup čuva token korisnika, ne kolačić, pa "*" ne otvara ništa; treba zbog web-a i Tauri-ja (drugi origin).
 const CORS = {
@@ -49,25 +50,23 @@ Deno.serve(async (req) => {
       .select('id,ime,brend,jedinica,kcal,proteini,uh,masti').order('ime').limit(MAX_PROIZVODA)
     const proizvodi = (baza.data ?? []) as ProizvodBaze[]
 
-    // 5. AI. Besplatni modeli povremeno javljaju preopterećenje (503) ili limit (429), pa tad probamo rezervni model.
-    const modeli = [Deno.env.get('GEMINI_MODEL') ?? 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']
-    let r: Response | null = null
-    for (const model of modeli) {
-      r = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
+    // 5. AI. Besplatni modeli često vrate preopterećenje (503) ili limit (429): proba se svaki model redom, više krugova sa
+    // pauzom, ukupno najviše ~10 s (_shared/ponovi.ts). Dnevni limit je potrošen gore, jednom po zahtevu, ne po pokušaju.
+    const modeli = izborModela(Deno.env.get('GEMINI_MODELI'), Deno.env.get('GEMINI_MODEL'))
+    const ishod = await pozoviSaPonavljanjem(modeli, {
+      pozovi: (model, signal) => fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
         method: 'POST',
         headers: { 'x-goog-api-key': kljuc, 'Content-Type': 'application/json', 'Api-Revision': '2026-05-20' },
         body: JSON.stringify(zahtevZaAI(tekst, proizvodi, model)),
-        signal: AbortSignal.timeout(20000),
-      })
-      if (r.ok) break
-      console.error('AI status', model, r.status, (await r.text()).slice(0, 500))
-      if (r.status !== 503 && r.status !== 429) break
-    }
-    if (!r?.ok) {
-      const zauzet = r?.status === 503 || r?.status === 429
-      return odgovor(zauzet ? 503 : 502, { greska: zauzet ? 'ai_limit' : 'ai' })
-    }
-    const izlaz = tekstIzOdgovora(await r.json())
+        signal,
+      }),
+      sada: () => Date.now(),
+      spavaj: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+      nasumicno: Math.random,
+      log: console.error,
+    })
+    if (!ishod.ok) return odgovor(ishod.kod === 'ai_limit' ? 503 : 502, { greska: ishod.kod })
+    const izlaz = tekstIzOdgovora(await ishod.odgovor.json())
     if (!izlaz) return odgovor(502, { greska: 'ai' })
     let ai: unknown
     try { ai = JSON.parse(izlaz) } catch { return odgovor(502, { greska: 'ai' }) }

@@ -69,7 +69,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
       setRedovi(stavke.map((s, id) => ({ ...uRed(s, id), grupa: s.obrok ?? '?' })))
       setObroci(Object.fromEntries(stavke.map((s) => [s.obrok ?? '?', s.obrok])))
     } catch (e) {
-      setGreska(e instanceof Error ? e.message : 'Ne mogu sad da pročitam. Dodaj ručno preko +.')
+      setGreska(e instanceof Error ? e.message : 'Ne mogu sad da pročitam. Unesi ručno ili izaberi svoje jelo.')
     } finally {
       setCita(false)
     }
