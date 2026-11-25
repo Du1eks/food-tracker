@@ -17,6 +17,8 @@ assert.doesNotMatch(porukaZaGresku('server', true), /internet/)
 assert.equal(porukaZaGresku('nepoznato', true), porukaZaGresku('server', true))
 assert.equal(porukaZaGresku('', true), porukaZaGresku('server', true))
 assert.equal(porukaZaGresku(null, true), porukaZaGresku('server', true))
+// kod iz tela odgovora ne sme da pogodi nasleđene ključeve objekta
+for (const kod of ['constructor', 'toString', '__proto__', 'hasOwnProperty', 'valueOf']) assert.equal(porukaZaGresku(kod, true), porukaZaGresku('server', true))
 
 // u Laboratoriji (bez ručnog unosa) ostaje samo osnova, bez saveta o ručnom unosu i jelima
 for (const kod of ['limit', 'ai_limit', 'ai', 'server']) assert.doesNotMatch(porukaZaGresku(kod, true, false), /ručno|jelo/)

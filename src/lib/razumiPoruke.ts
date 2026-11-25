@@ -13,7 +13,8 @@ const PORUKE: Record<string, [osnova: string, savet: string]> = {
 
 // kod: `greska` iz odgovora funkcije; '' = nema odgovora (mreža). Odgovor sa nepoznatim kodom je greška na našoj strani.
 export function porukaZaGresku(kod: string | null, imaOdgovor: boolean, rucno = true): string {
-  const k = !imaOdgovor ? 'mreza' : kod && kod in PORUKE ? kod : 'server'
+  // hasOwn, ne `in`: kod dolazi iz tela odgovora, a `in` propušta i nasleđene ključeve ('constructor', '__proto__')
+  const k = !imaOdgovor ? 'mreza' : kod && Object.hasOwn(PORUKE, kod) ? kod : 'server'
   const [osnova, savet] = PORUKE[k]
   return rucno && savet ? `${osnova} ${savet}` : osnova
 }

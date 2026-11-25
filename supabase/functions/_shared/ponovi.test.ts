@@ -74,13 +74,31 @@ const M = ['a', 'b', 'c']
   assert.deepEqual(t.spavanja, [], 'posle dva spora poziva nema vremena ni za pauzu')
 }
 
-// (d) 400/401/403 prekidaju odmah, bez ponavljanja i bez drugog modela
-for (const status of [400, 401, 403]) {
-  const t = lazno(() => status)
-  const i = await pozoviSaPonavljanjem(M, t.z)
-  assert.deepEqual(i, { ok: false, kod: 'ai' })
+// (d) 401 (loš ključ) prekida odmah: jedan poziv, bez pauze i bez drugog modela
+{
+  const t = lazno(() => 401)
+  assert.deepEqual(await pozoviSaPonavljanjem(M, t.z), { ok: false, kod: 'ai' })
   assert.equal(t.pozivi.length, 1)
   assert.equal(t.spavanja.length, 0)
+}
+// 400/403 sa svih modela: svaki se zove jednom, bez pauze, ishod 'ai'
+for (const status of [400, 403]) {
+  const t = lazno(() => status)
+  assert.deepEqual(await pozoviSaPonavljanjem(M, t.z), { ok: false, kod: 'ai' })
+  assert.equal(t.pozivi.length, 3)
+  assert.equal(t.spavanja.length, 0)
+}
+// neproveren rezervni model vraća 400, a ostali su samo zauzeti: ponavljanje se nastavlja, treći se više ne zove, ishod ai_limit
+{
+  const t = lazno((m) => (m === 'c' ? 400 : 503), 100)
+  assert.deepEqual(await pozoviSaPonavljanjem(M, t.z), { ok: false, kod: 'ai_limit' })
+  assert.equal(t.pozivi.filter((p) => p.model === 'c').length, 1)
+  assert.deepEqual(t.spavanja, [1000, 2000])
+  assert.ok(t.vreme() <= BUDZET_MS)
+  // i uspeh u kasnijem krugu radi uprkos modelu koji ne prihvata zahtev
+  const t2 = lazno((m, n) => (m === 'c' ? 403 : n <= 3 ? 503 : 200))
+  const i2 = await pozoviSaPonavljanjem(M, t2.z)
+  assert.ok(i2.ok && i2.model === 'a')
 }
 
 // (e) 404: model se preskače bez pauze i ne zove se ponovo; ostali rade

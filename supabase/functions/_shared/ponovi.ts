@@ -30,17 +30,17 @@ export type Zavisnosti = {
   log: (...args: unknown[]) => void
 }
 
-// ok: uspešan odgovor; ai_limit: svi zauzeti (503/429/istek) do isteka budžeta; ai: greška koja se ne popravlja ponavljanjem
+// ok: uspešan odgovor; ai_limit: svi zauzeti (503/429/istek) do isteka budžeta; ai: loš ključ (401) ili nijedan model ne radi
 export type Ishod = { ok: true; odgovor: Response; model: string } | { ok: false; kod: 'ai_limit' | 'ai' }
 
 export async function pozoviSaPonavljanjem(modeli: string[], z: Zavisnosti, budzetMs = BUDZET_MS): Promise<Ishod> {
   const rok = z.sada() + budzetMs
-  const nepostoji = new Set<string>() // 404: naziv modela ne postoji, preskače se do kraja zahteva
+  const neradi = new Set<string>() // 404/400/403...: taj model ne radi za nas, preskače se do kraja zahteva (ostali se i dalje ponavljaju)
   let zauzet = false
 
   for (let krug = 0; krug <= PAUZE_MS.length; krug++) {
     for (const model of modeli) {
-      if (nepostoji.has(model)) continue
+      if (neradi.has(model)) continue
       const preostalo = rok - z.sada()
       if (preostalo < MIN_POZIV_MS) return { ok: false, kod: zauzet ? 'ai_limit' : 'ai' }
       let r: Response
@@ -55,10 +55,12 @@ export async function pozoviSaPonavljanjem(modeli: string[], z: Zavisnosti, budz
       const telo = await r.text().then((t) => t.slice(0, 500), () => '')
       z.log('AI status', model, r.status, telo)
       if (r.status === 503 || r.status === 429) { zauzet = true; continue }
-      if (r.status === 404) { nepostoji.add(model); continue }
-      return { ok: false, kod: 'ai' } // 400/401/403 i ostalo: ključ ili zahtev, ponavljanje ne pomaže
+      if (r.status === 401) return { ok: false, kod: 'ai' } // loš ključ važi za sve modele, ponavljanje ne pomaže
+      // 404 (nepostojeći naziv), 400/403 (model ne prihvata zahtev ili nema pristup) i ostalo: samo taj model otpada. Neproveren
+      // rezervni model ne sme da ugasi ponavljanje dok su ostali samo zauzeti; ako otpadnu svi, vraća se 'ai' posle kruga.
+      neradi.add(model)
     }
-    if (modeli.every((m) => nepostoji.has(m))) return { ok: false, kod: 'ai' } // svi modeli su 404: nema šta da se ponavlja
+    if (modeli.every((m) => neradi.has(m))) return { ok: false, kod: 'ai' } // svi modeli otpali (404/400/403): nema šta da se ponavlja
     if (krug === PAUZE_MS.length) break
     const pauza = PAUZE_MS[krug] + Math.floor(z.nasumicno() * JITTER_MS)
     if (z.sada() + pauza + MIN_POZIV_MS > rok) break // pauza i još jedan poziv ne staju u rok
