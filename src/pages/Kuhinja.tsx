@@ -129,7 +129,7 @@ export default function Kuhinja() {
       <main className="namirnice kuhinja">
         {!urednik && (
           <button type="button" className="kuhinja-poziv" onClick={() => otvori({ ime: '', redovi: [] })}>
-            <MisKuvar />
+            <MisKuvar gotovo={!!sacuvano} />
             <span className="mis-oblacic">Šta kuvamo? Klikni me, pa mi reci šta ide u jelo.</span>
             <span className="plocica" aria-hidden><ArrowRight size={22} strokeWidth={2.5} /></span>
           </button>
@@ -145,7 +145,7 @@ export default function Kuhinja() {
             </div>
             <div className="panel-telo">
               <div className={`mis${cita ? ' cita' : ''}`}>
-                <MisKuvar id="mis-kuvar" />
+                <MisKuvar id="mis-kuvar" kuva={cita || cuva || !!tekst.trim()} greska={greska} sastojaka={redovi.length} />
                 <p key={poruka} className={`mis-oblacic${greska ? ' lose' : ''}`} role={greska ? 'alert' : 'status'}>{poruka}</p>
               </div>
 

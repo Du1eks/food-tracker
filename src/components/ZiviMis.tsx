@@ -1,29 +1,31 @@
-// Živi miš iz Masko-a: canvas "Miš u aplikaciji" (stanja i prelaze bira Masko player), a app samo javlja šta se dešava (useMouseMascot).
-// Učitava se lenjo (ReciMisu), pa ko ga ne vidi ne skida ni player.
-import { useState, type ReactElement } from 'react'
-import { MaskoPlayer, type MaskoHandle } from '@masko/player/react'
-import { useMouseMascot, type StanjeMisa } from './useMouseMascot'
+// Živi miš u panelu "Dodaj hranu": video miš iz mis-figura. App javlja stanje i događaje mozgu, a mozak bira klip
+// po prioritetu (kratka reakcija > jede > slavi > ljut > spava > miruje).
+import { useEffect, useRef, type ReactElement } from 'react'
+import { MisFigura } from 'mis-figura/react'
+import { useMozak } from './useMis'
 
-// Ključ aplikacije sme u kod: Masko ga pravi za ugrađivanje u app, čita samo objavljene canvase ovog miša (docs: player/app-keys).
-const CANVAS = 'https://api.masko.ai/v1/canvases/70035d46-c087-455a-83da-3077aa739123/delivery'
-const APP_KEY = 'masko_app_434dad1fce66b8845b28f4cf720c73479b80a06bb24b3e936e5749d5d8532845'
+export type StanjeMisa = {
+  unosi: boolean // u polju je tekst ili pregled obroka: jede
+  slavi: boolean // upravo upisano ili cilj ispunjen
+  ljut: boolean // dugo nisi jeo (gladan)
+  spava: boolean // noć
+  greska: string // greška pri unosu: miš se kratko naljuti
+  brojUnosa: number | null // null dok se unosi učitavaju; novi unos = miš grickne
+}
 
-export default function ZiviMis({ rezerva, alt, ...stanje }: StanjeMisa & { rezerva: ReactElement; alt: string }) {
-  const [mis, setMis] = useState<MaskoHandle | null>(null)
-  const [spreman, setSpreman] = useState(false)
-  const [pao, setPao] = useState(false)
-  useMouseMascot(spreman ? mis : null, stanje)
+export default function ZiviMis({ unosi, slavi, ljut, spava, greska, brojUnosa }: StanjeMisa & { rezerva: ReactElement; alt: string }) {
+  const mozak = useMozak()
+  useEffect(() => { mozak?.postavi({ unosi, cilj: slavi, gladan: ljut, noc: spava }) }, [mozak, unosi, slavi, ljut, spava])
+  useEffect(() => { if (greska) mozak?.javi('greska') }, [mozak, greska])
 
-  // Bez interneta ili kad Masko ne radi: obična slika. Osvežavanje linkova player sam ponavlja posle 30 s, to nije pad.
-  // Dok se učitava, mesto stoji prazno (bez stare slike), a kad je prva poza spremna miš iskoči (dan.css: mis-pojava).
-  if (pao) return rezerva
-  return (
-    <>
-      <div className={`maskota ziv${spreman ? ' spreman' : ''}`} role="img" aria-label={alt} onClick={() => mis?.fire('action::click', { instant: true })}
-        style={spreman ? undefined : { opacity: 0, pointerEvents: 'none' }}>
-        <MaskoPlayer ref={setMis} url={CANVAS} appKey={APP_KEY} sound={false} style={{ width: '100%', height: '100%' }}
-          onPose={() => setSpreman(true)} onError={(e) => { if (e.code !== 'refresh_failed') setPao(true) }} />
-      </div>
-    </>
-  )
+  // Novi unos ručno preko + (upis iz poruke mišu ide u slavlje): miš grickne, pa se vraća na stanje koje traje
+  const prosliBroj = useRef<number | null>(null)
+  useEffect(() => {
+    if (brojUnosa == null) return
+    if (mozak && !slavi && prosliBroj.current != null && brojUnosa > prosliBroj.current) mozak.javi('novUnos')
+    prosliBroj.current = brojUnosa
+  }, [mozak, brojUnosa, slavi])
+
+  if (!mozak) return <div className="maskota ziv" aria-hidden />
+  return <MisFigura mozak={mozak} sirina={124} className="maskota ziv" onClick={() => mozak.javi('klik')} />
 }

@@ -6,11 +6,10 @@ import { dodajUnos, mojaJela } from '../lib/podaci'
 import { razumiObrok, type Stavka } from '../lib/razumi'
 import { stanjeMisa, type Poza } from '../lib/rang'
 import { useProfil } from './useProfil'
-import { useSad } from './useMouseMascot'
+import { useSad, zivMis } from './useMis'
 import Maskota from './Maskota'
-// Živi miš se učitava lenjo; ako se ne skine (nema interneta), ostaje slika
+// Živi miš se učitava lenjo; ako se ne skine (nema interneta), ostaje slika. Bez pokreta i u Safariju: slika (useMis.zivMis)
 const ZiviMis = lazy(() => import('./ZiviMis').catch(() => ({ default: ({ rezerva }: { rezerva: React.ReactElement }) => rezerva })))
-const bezPokreta = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 import { letMakrosa } from './letMakrosa'
 import PregledStavki, { ispravna, izStavke, kolicina, makrosiReda, uRed, type RedPregleda } from './PregledStavki'
 import BiracJela from './BiracJela'
@@ -144,7 +143,7 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
       <div className="panel-telo">
         <div className={`mis${cita ? ' cita' : ''}`}>
           {/* ključ na pozi: slika miša "poskoči" kad se stanje promeni; živi miš (bez prefers-reduced-motion) sam bira klip */}
-          {bezPokreta() ? <Maskota key={poza} poza={poza} /> : (
+          {!zivMis() ? <Maskota key={poza} poza={poza} /> : (
             <Suspense fallback={<div className="maskota ziv" aria-hidden />}>
               <ZiviMis rezerva={<Maskota poza={poza} />} alt="Miš" unosi={unosiTekst} slavi={slaviUpis || misStanje.slavi}
                 ljut={gladan} spava={misStanje.spava} greska={greska} brojUnosa={unosi?.length ?? null} />

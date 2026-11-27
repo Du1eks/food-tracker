@@ -1,7 +1,40 @@
-// Miš u Laboratoriji: postojeća slika miša (public/maskota/hoda.webp, 160×200), bez kostima, a pored njega neon boca.
-// Sve je jedan SVG, pa se miš i boca skaliraju zajedno. Namirnice iz letNamirnica sleću u element sa data-cilj (boca).
-// Boje su iz tokena (index.css); mehurići i sjaj su u kuhinja.css.
-export default function MisKuvar({ id }: { id?: string }) {
+// Miš u Laboratoriji: video miš iz mis-figura u laboratorijskom načinu (drži bocu sa napitkom, mućka, kuva, slavi gotovo jelo).
+// Preko boce je nevidljiv element sa data-cilj, da namirnice iz letNamirnica sleću u bocu.
+// Bez pokreta i u Safariju (useMis.zivMis): stara slika miša sa SVG neon bocom; boje i mehurići su u kuhinja.css.
+import { useEffect, useRef } from 'react'
+import { MisFigura } from 'mis-figura/react'
+import { useMozak, zivMis } from './useMis'
+
+const SIRINA = 120 // px; MisFigura je fiksne širine, visina iz nje (oko 135)
+
+export default function MisKuvar({ id, kuva = false, greska = '', sastojaka = 0, gotovo = false }: {
+  id?: string
+  kuva?: boolean // čita poruku, kuva ili je tekst u polju
+  greska?: string
+  sastojaka?: number // broj stavki u jelu; kad poraste, sastojak je uleteo
+  gotovo?: boolean // jelo je upravo sačuvano
+}) {
+  const mozak = useMozak({ lab: true })
+  useEffect(() => { mozak?.postavi({ kuva }) }, [mozak, kuva])
+  useEffect(() => { if (greska) mozak?.javi('greska') }, [mozak, greska])
+  useEffect(() => { if (gotovo) mozak?.javi('gotovo') }, [mozak, gotovo])
+  const prosli = useRef(sastojaka)
+  useEffect(() => {
+    if (mozak && sastojaka > prosli.current) mozak.javi('sastojak')
+    prosli.current = sastojaka
+  }, [mozak, sastojaka])
+
+  if (!zivMis()) return <MisKuvarSlika id={id} />
+  return (
+    <div id={id} className="mis-kuvar ziv" role="img" aria-label="Miš u laboratoriji">
+      {mozak && <MisFigura mozak={mozak} sirina={SIRINA} />}
+      {/* boca je u desnoj šaci miša (klip "mucka"); ovde sleću namirnice */}
+      <span className="mis-kuvar-cilj" data-cilj aria-hidden />
+    </div>
+  )
+}
+
+function MisKuvarSlika({ id }: { id?: string }) {
   return (
     <svg id={id} className="mis-kuvar" viewBox="0 0 228 200" role="img" aria-label="Miš u laboratoriji">
       <image href="/maskota/hoda.webp" width="160" height="200" />
