@@ -29,7 +29,7 @@ export function MaketaUnos() {
   return (
     <div className="um um-unos">
       <div className="um-pisi">
-        <img src="/maskota/hoda.webp" alt="" width={160} height={200} />
+        <img src="/maskota/mis.webp" alt="" width={160} height={214} />
         <span className="um-tekst"><span>Pojeo sam 2 jaja i ovsene pahuljice</span></span>
       </div>
       <ul className="um-redovi">

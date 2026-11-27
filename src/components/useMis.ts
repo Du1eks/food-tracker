@@ -15,12 +15,8 @@ export function useMozak(pocetno?: Parameters<Mozak['postavi']>[0]) {
   return mozak
 }
 
-// Video miš: ne uz prefers-reduced-motion, i ne u WebKit-u (Safari, svi iOS pregledači), koji ne crta providnost WebM klipa
-export function zivMis() {
-  const ua = navigator.userAgent
-  const webkit = /AppleWebKit/.test(ua) && !/Chrome|Chromium|Edg/.test(ua)
-  return !webkit && !matchMedia('(prefers-reduced-motion: reduce)').matches
-}
+// Bez pokreta (podešavanje sistema): miš stoji na prvom kadru radnje
+export const bezPokreta = () => matchMedia('(prefers-reduced-motion: reduce)').matches
 
 // Trenutno vreme koje se osvežava svakog minuta (za noć i za "dugo nisi jeo")
 export function useSad() {

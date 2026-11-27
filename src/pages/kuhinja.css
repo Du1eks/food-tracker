@@ -10,9 +10,8 @@
 .kuhinja .nam-red.menja { background: var(--mint); margin-inline: -12px; padding-inline: 12px; border-radius: var(--r); }
 .kuhinja-baza { justify-self: center; font-weight: 700; padding: 12px; }
 
-/* Miš u laboratoriji: slika miša i neon boca (components/MisKuvar) */
-/* živi (video) miš: širinu daje CSS (visina ide iz odnosa klipa); cilj leta namirnica stoji preko grlića boce u šaci, u % okvira */
-.mis-kuvar.ziv { position: relative; animation: none; }
+/* Miš u laboratoriji (components/MisKuvar), video miš: širinu daje CSS (visina ide iz odnosa klipa); cilj leta namirnica stoji preko grlića boce u šaci, u % okvira */
+.mis-kuvar.ziv { display: block; position: relative; }
 .mis-kuvar.ziv > div { width: 100%; }
 .mis-kuvar-cilj { position: absolute; left: 72%; top: 35%; width: 14%; height: 14%; pointer-events: none; }
 .mis:has(.mis-kuvar.ziv) { grid-template-columns: 180px minmax(0, 1fr); }
@@ -21,16 +20,6 @@
   .mis:has(.mis-kuvar.ziv) { grid-template-columns: 130px minmax(0, 1fr); }
   .mis .mis-kuvar.ziv { width: 130px; }
 }
-.mis-kuvar { display: block; width: 120px; height: auto; overflow: visible; }
-.mis .mis-kuvar { width: 120px; }
-.mis-boca { filter: drop-shadow(0 0 10px rgb(140 255 90 / 0.7)); }
-.boca-mehur { fill: rgb(240 255 235 / 0.9); }
-@media (prefers-reduced-motion: no-preference) {
-  .boca-mehur { animation: boca-mehur 1.6s linear infinite; }
-  .mis.cita .mis-boca { animation: boca-kljuca 500ms ease-in-out infinite alternate; transform-origin: 190px 178px; }
-}
-@keyframes boca-mehur { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-34px); opacity: 0; } }
-@keyframes boca-kljuca { to { transform: rotate(4deg) translateY(-2px); } }
 /* Poziv iznad spiska: veliko dugme, miš levo, oblačić, strelica uz desnu ivicu */
 .kuhinja-poziv {
   display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; align-items: center; gap: 16px;

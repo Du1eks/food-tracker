@@ -1,8 +1,8 @@
 // Živi miš u panelu "Dodaj hranu": video miš iz mis-figura. App javlja stanje i događaje mozgu, a mozak bira klip
 // po prioritetu (kratka reakcija > jede > slavi > ljut > spava > miruje).
-import { useEffect, useRef, type ReactElement } from 'react'
+import { useEffect, useRef } from 'react'
 import { MisFigura } from 'mis-figura/react'
-import { useMozak } from './useMis'
+import { bezPokreta, useMozak } from './useMis'
 
 export type StanjeMisa = {
   unosi: boolean // u polju je tekst ili pregled obroka: jede
@@ -13,7 +13,7 @@ export type StanjeMisa = {
   brojUnosa: number | null // null dok se unosi učitavaju; novi unos = miš grickne
 }
 
-export default function ZiviMis({ unosi, slavi, ljut, spava, greska, brojUnosa }: StanjeMisa & { rezerva: ReactElement; alt: string }) {
+export default function ZiviMis({ unosi, slavi, ljut, spava, greska, brojUnosa }: StanjeMisa) {
   const mozak = useMozak()
   useEffect(() => { mozak?.postavi({ unosi, cilj: slavi, gladan: ljut, noc: spava }) }, [mozak, unosi, slavi, ljut, spava])
   useEffect(() => { if (greska) mozak?.javi('greska') }, [mozak, greska])
@@ -27,5 +27,5 @@ export default function ZiviMis({ unosi, slavi, ljut, spava, greska, brojUnosa }
   }, [mozak, brojUnosa, slavi])
 
   if (!mozak) return <div className="maskota ziv" aria-hidden />
-  return <MisFigura mozak={mozak} className="maskota ziv" onClick={() => mozak.javi('klik')} />
+  return <MisFigura mozak={mozak} miran={bezPokreta()} className="maskota ziv" onClick={() => mozak.javi('klik')} />
 }

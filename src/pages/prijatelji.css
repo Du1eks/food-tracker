@@ -39,19 +39,6 @@
   30% { opacity: 0.55; }
   100% { transform: translateY(-6px) scaleY(1.1); opacity: 0; }
 }
-/* Miš "živi": diše, povremeno se nagne ili poskoči; kad priča, poskakuje uz reči. Samo bez prefers-reduced-motion. */
-@media (prefers-reduced-motion: no-preference) {
-  .maskota { transform-origin: 50% 100%; animation: zivi 7s ease-in-out infinite; }
-}
-@keyframes zivi {
-  0%, 30%, 100% { transform: none; }
-  15% { transform: scaleY(1.03); }
-  40% { transform: rotate(-4deg); }
-  48% { transform: rotate(3deg); }
-  56% { transform: none; }
-  80% { transform: translateY(-6px); }
-  86% { transform: none; }
-}
 /* Strana Prijatelji */
 .prijatelji { align-items: start; }
 .prijatelji-levo { display: grid; gap: 16px; }
@@ -108,9 +95,6 @@ a.rang-red:hover { background: var(--mint); }
 .prijatelj-makrosi dt { font-size: 14px; font-weight: 700; color: var(--sivi-tekst); }
 .prijatelj-makrosi dd { margin: 2px 0 0; font-size: 26px; font-weight: 800; }
 
-
-/* Živi miš (Masko klip) sam sebe animira: bez CSS pokreta, i prima dodir (postane "prejak") */
-.maskota.ziv { animation: none !important; pointer-events: auto; cursor: pointer; }
 
 /* Rang lista: ko je pogodio cilj kalorija ima narandžast broj mesta; glavni znak je epruveta koja ključa (ispod).
    Ime je običan tekst; čitač ekrana dobija opis pogođenog cilja (lib/plamen). */

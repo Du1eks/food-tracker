@@ -1,15 +1,13 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowRight, MessageSquareText, PencilLine } from 'lucide-react'
 import { OBROCI, fmt, zbir, type Jelo, type Obrok, type Unos } from '../lib/ishrana'
 import { danas } from '../lib/datum'
 import { dodajUnos, mojaJela } from '../lib/podaci'
 import { razumiObrok, type Stavka } from '../lib/razumi'
-import { stanjeMisa, type Poza } from '../lib/rang'
+import { stanjeMisa } from '../lib/rang'
 import { useProfil } from './useProfil'
-import { useSad, zivMis } from './useMis'
-import Maskota from './Maskota'
-// Živi miš se učitava lenjo; ako se ne skine (nema interneta), ostaje slika. Bez pokreta i u Safariju: slika (useMis.zivMis)
-const ZiviMis = lazy(() => import('./ZiviMis').catch(() => ({ default: ({ rezerva }: { rezerva: React.ReactElement }) => rezerva })))
+import { useSad } from './useMis'
+import ZiviMis from './ZiviMis'
 import { letMakrosa } from './letMakrosa'
 import PregledStavki, { ispravna, izStavke, kolicina, makrosiReda, uRed, type RedPregleda } from './PregledStavki'
 import BiracJela from './BiracJela'
@@ -143,8 +141,6 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
     : gladan && !unosiTekst ? 'Nisi dugo jeo, mišu!'
     : govor && !unosiTekst ? govor
     : ostatak || (pise ? 'Šta si jeo? Napiši mi, ja upisujem.' : 'Reci mi šta si jeo ili uzmi svoje jelo.')
-  // Slika (bez pokreta i dok se živi miš učitava): dok pišeš jede; greška ili gladan: ljut; upisano ili cilj: slavi
-  const poza: Poza = unosiTekst ? 'jede' : greska || gladan ? 'cilj' : upisano || pogodjen ? 'slavi' : 'hoda'
 
   return (
     <section className="panel" id="unos" aria-labelledby="unos-naslov">
@@ -153,13 +149,8 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
       </div>
       <div className="panel-telo">
         <div className={`mis${cita ? ' cita' : ''}`}>
-          {/* ključ na pozi: slika miša "poskoči" kad se stanje promeni; živi miš (bez prefers-reduced-motion) sam bira klip */}
-          {!zivMis() ? <Maskota key={poza} poza={poza} /> : (
-            <Suspense fallback={<div className="maskota ziv" aria-hidden />}>
-              <ZiviMis rezerva={<Maskota poza={poza} />} alt="Miš" unosi={unosiTekst} slavi={slaviUpis || misStanje.slavi}
-                ljut={gladan} spava={misStanje.spava} greska={greska} brojUnosa={unosi?.length ?? null} />
-            </Suspense>
-          )}
+          <ZiviMis unosi={unosiTekst} slavi={slaviUpis || misStanje.slavi}
+            ljut={gladan} spava={misStanje.spava} greska={greska} brojUnosa={unosi?.length ?? null} />
           <p key={poruka} className={`mis-oblacic${greska ? ' lose' : ''}`} role={greska ? 'alert' : 'status'}>{poruka}</p>
         </div>
 

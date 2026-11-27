@@ -35,3 +35,6 @@ CLAUDE.md
 SPEC.md
 DESIGN.md
 PRODUCT.md
+
+# klipovi miša: kopira ih npm postinstall iz node_modules/mis-figura (scripts/kopiraj-klipove.mjs)
+public/klipovi/
