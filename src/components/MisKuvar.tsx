@@ -5,8 +5,6 @@ import { useEffect, useRef } from 'react'
 import { MisFigura } from 'mis-figura/react'
 import { useMozak, zivMis } from './useMis'
 
-const SIRINA = 120 // px; MisFigura je fiksne širine, visina iz nje (oko 135)
-
 export default function MisKuvar({ id, kuva = false, greska = '', sastojaka = 0, gotovo = false }: {
   id?: string
   kuva?: boolean // čita poruku, kuva ili je tekst u polju
@@ -27,7 +25,7 @@ export default function MisKuvar({ id, kuva = false, greska = '', sastojaka = 0,
   if (!zivMis()) return <MisKuvarSlika id={id} />
   return (
     <div id={id} className="mis-kuvar ziv" role="img" aria-label="Miš u laboratoriji">
-      {mozak && <MisFigura mozak={mozak} sirina={SIRINA} />}
+      {mozak && <MisFigura mozak={mozak} />}
       {/* boca je u desnoj šaci miša (klip "mucka"); ovde sleću namirnice */}
       <span className="mis-kuvar-cilj" data-cilj aria-hidden />
     </div>

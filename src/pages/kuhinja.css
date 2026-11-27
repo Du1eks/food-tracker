@@ -11,9 +11,16 @@
 .kuhinja-baza { justify-self: center; font-weight: 700; padding: 12px; }
 
 /* Miš u laboratoriji: slika miša i neon boca (components/MisKuvar) */
-/* živi (video) miš: okvir zauzima samo MisFigura, a cilj leta namirnica stoji preko boce u šaci */
-.mis-kuvar.ziv { position: relative; width: auto; animation: none; }
-.mis-kuvar-cilj { position: absolute; left: 80px; top: 58px; width: 22px; height: 26px; pointer-events: none; }
+/* živi (video) miš: širinu daje CSS (visina ide iz odnosa klipa); cilj leta namirnica stoji preko grlića boce u šaci, u % okvira */
+.mis-kuvar.ziv { position: relative; animation: none; }
+.mis-kuvar.ziv > div { width: 100%; }
+.mis-kuvar-cilj { position: absolute; left: 72%; top: 35%; width: 14%; height: 14%; pointer-events: none; }
+.mis:has(.mis-kuvar.ziv) { grid-template-columns: 180px minmax(0, 1fr); }
+.mis .mis-kuvar.ziv { width: 180px; }
+@media (max-width: 640px) {
+  .mis:has(.mis-kuvar.ziv) { grid-template-columns: 130px minmax(0, 1fr); }
+  .mis .mis-kuvar.ziv { width: 130px; }
+}
 .mis-kuvar { display: block; width: 120px; height: auto; overflow: visible; }
 .mis .mis-kuvar { width: 120px; }
 .mis-boca { filter: drop-shadow(0 0 10px rgb(140 255 90 / 0.7)); }

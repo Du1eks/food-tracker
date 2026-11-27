@@ -83,7 +83,7 @@ assert.equal(stanjeMisa(nista, ciljM, u(6, 59), null).spava, true)
 assert.equal(stanjeMisa(nista, ciljM, u(7), null).spava, false)
 assert.equal(stanjeMisa(nista, ciljM, u(23), u(22)).spava, false)
 assert.equal(stanjeMisa({ kcal: 3000, proteini: 10 }, ciljM, u(12), u(11)).slavi, true)
-assert.equal(stanjeMisa({ kcal: 100, proteini: 150 }, ciljM, u(12), u(11)).slavi, true)
+assert.equal(stanjeMisa({ kcal: 100, proteini: 150 }, ciljM, u(12), u(11)).slavi, false) // proteini daju samo kratko slavlje (ReciMisu)
 assert.deepEqual(stanjeMisa({ kcal: 5000, proteini: 500 }, null, u(12), u(11)), { spava: false, slavi: false, gladan: false })
 // gladan: tačno 5 h nije, preko 5 h jeste; bez unosa danas broji se od 07:00; ispunjen cilj ili noć nikad
 assert.equal(stanjeMisa(nista, ciljM, u(15), u(10)).gladan, false)

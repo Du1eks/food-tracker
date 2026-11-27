@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { ArrowRight, MessageSquareText, PencilLine } from 'lucide-react'
 import { OBROCI, fmt, zbir, type Jelo, type Obrok, type Unos } from '../lib/ishrana'
 import { danas } from '../lib/datum'
@@ -58,6 +58,18 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
     return () => clearTimeout(t)
   }, [slaviUpis])
 
+  // Cilj za proteine, masti ili UH upravo pređen na istom, već učitanom danu: miš kratko slavi (kalorije: slavi do kraja dana, stanjeMisa)
+  const uneto = zbir(unosi ?? [])
+  const makroi = (['proteini', 'masti', 'uh'] as const).filter((k) => { const c = profil?.[`cilj_${k}`]; return !!c && uneto[k] >= c })
+  const potpisMakroa = makroi.join(',')
+  const prosliMakroi = useRef<{ datum: string; potpis: string } | null>(null)
+  useEffect(() => {
+    if (unosi == null || !profil) return
+    const p = prosliMakroi.current
+    if (p?.datum === datum && potpisMakroa.split(',').some((k) => k && !p.potpis.split(',').includes(k))) setSlaviUpis(true) // eslint-disable-line react-hooks/set-state-in-effect -- prelazak cilja dolazi iz unosa
+    prosliMakroi.current = { datum, potpis: potpisMakroa }
+  }, [potpisMakroa, datum, unosi, profil])
+
   async function procitaj(e?: React.FormEvent) {
     e?.preventDefault()
     if (!tekst.trim() || cita) return
@@ -112,7 +124,6 @@ export default function ReciMisu({ datum, unosi, onDodato, onRucno, govor }: {
   const spremno = !!redovi && !bezObroka && redovi.every(ispravna)
 
   // Šta miš kaže i kako stoji: iz stanja unosa i iz brojeva dana
-  const uneto = zbir(unosi ?? [])
   const cilj = profil?.cilj_kcal ?? 0
   const pogodjen = cilj > 0 && uneto.kcal >= cilj
   const poslednji = unosi?.reduce<Date | null>((p, u) => (u.kreirano && (!p || new Date(u.kreirano) > p) ? new Date(u.kreirano) : p), null) ?? null

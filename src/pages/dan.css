@@ -267,18 +267,19 @@ a.nedelja-dan:hover .nedelja-krug { background: var(--mint); }
 .panel-glava .nazad-misu { margin-left: auto; }
 .mis { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 16px; align-items: center; min-height: 100px; }
 .mis .maskota { width: 92px; height: 100px; object-fit: contain; object-position: 50% 100%; }
-/* Živi miš (Masko klip) je veći od slike */
-.mis:has(.maskota.ziv) { grid-template-columns: 140px minmax(0, 1fr); }
-.mis .maskota.ziv { width: 140px; height: 140px; }
-/* Masko miš iskoči kad se učita: iz male tačke na podu naraste, odskoči i smiri se (player je unutra, jer .maskota.ziv ima animation: none) */
-@media (prefers-reduced-motion: no-preference) {
-  .maskota.ziv.spreman > * { transform-origin: 50% 100%; animation: mis-pojava 650ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+/* Živi (video) miš je veći od slike; visinu daje sam (odnos klipa), širina raste sa prostorom */
+.mis:has(.maskota.ziv) { grid-template-columns: 190px minmax(0, 1fr); }
+.mis .maskota.ziv { width: 190px; height: auto; aspect-ratio: 500 / 670; }
+@media (max-width: 640px) {
+  .mis:has(.maskota.ziv) { grid-template-columns: 140px minmax(0, 1fr); }
+  .mis .maskota.ziv { width: 140px; }
 }
-@keyframes mis-pojava {
-  0% { transform: translateY(18px) scale(0.2, 0.05); opacity: 0; }
-  40% { transform: translateY(-10px) scale(0.92, 1.12); opacity: 1; }
-  70% { transform: translateY(0) scale(1.06, 0.94); }
-  100% { transform: none; }
+/* Široki desktop: kolona za unos je šira, pa i miš */
+@media (min-width: 1440px) {
+  .dan-pocetna { grid-template-columns: minmax(400px, 520px) 1fr; }
+  .mis:has(.maskota.ziv) { grid-template-columns: 230px minmax(0, 1fr); }
+  .mis .maskota.ziv { width: 230px; }
+  .mis-oblacic { font-size: 19px; }
 }
 .mis-oblacic {
   position: relative; justify-self: start; padding: 12px 14px;

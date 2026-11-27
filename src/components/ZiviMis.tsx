@@ -27,5 +27,5 @@ export default function ZiviMis({ unosi, slavi, ljut, spava, greska, brojUnosa }
   }, [mozak, brojUnosa, slavi])
 
   if (!mozak) return <div className="maskota ziv" aria-hidden />
-  return <MisFigura mozak={mozak} sirina={124} className="maskota ziv" onClick={() => mozak.javi('klik')} />
+  return <MisFigura mozak={mozak} className="maskota ziv" onClick={() => mozak.javi('klik')} />
 }

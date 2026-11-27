@@ -86,15 +86,16 @@ export const poRangu = (redovi: Zbir[]) =>
 // Jak unos (ono što je upravo upisano): pločica tog makroa duže stoji i jače udari u traku (components/letMakrosa)
 export const PROTEINI_JAKO = 50, KCAL_JAKO = 800
 
-// Stanje živog miša (mis.riv): noću (00–07 po lokalnom satu) spava; cilj ispunjen (proteini ili kalorije) = slavi;
+// Stanje živog miša (mis-figura): noću (00–07 po lokalnom satu) spava; cilj za kalorije ispunjen = slavi do kraja dana
+// (proteini, masti i UH daju samo kratko slavlje u trenutku prelaska, ReciMisu);
 // gladan (ljut, "nisi dugo jeo") = cilj nije ispunjen i od poslednjeg unosa danas prošlo je više od 5 sati
 // (bez unosa danas računa se od 07:00, kad se miš probudi). Noću nije gladan, spava.
 export type CiljMisa = { cilj_kcal: number | null; cilj_proteini: number | null }
 export const GLADAN_POSLE = 5 * 60 * 60 * 1000
 export function stanjeMisa(uneto: { kcal: number; proteini: number }, cilj: CiljMisa | null, sad: Date, poslednjiUnos: Date | null) {
-  const kcal = cilj?.cilj_kcal ?? 0, proteini = cilj?.cilj_proteini ?? 0
+  const kcal = cilj?.cilj_kcal ?? 0
   const spava = sad.getHours() < 7
-  const slavi = (kcal > 0 && uneto.kcal >= kcal) || (proteini > 0 && uneto.proteini >= proteini)
+  const slavi = kcal > 0 && uneto.kcal >= kcal
   const budjenje = new Date(sad.getFullYear(), sad.getMonth(), sad.getDate(), 7)
   const od = poslednjiUnos && poslednjiUnos > budjenje ? poslednjiUnos : budjenje
   return { spava, slavi, gladan: !spava && !slavi && sad.getTime() - od.getTime() > GLADAN_POSLE }
